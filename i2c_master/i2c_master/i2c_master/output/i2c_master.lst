@@ -180,11 +180,11 @@ FILE: .\boot.asm
 0025: 30       HALT                     
 0026: 30       HALT                     
 0027: 30       HALT                     
-0028: 7D 03 7B LJMP  0x037B             (0153)     ljmp	_UART_1_TX_ISR
+0028: 7D 03 81 LJMP  0x0381             (0153)     ljmp	_UART_1_TX_ISR
 002B: 7E       RETI                     (0154)     reti
                                         (0155) 
                                         (0156)     org   2Ch                      ;PSoC Block DCB03 Interrupt Vector
-002C: 7D 03 7C LJMP  0x037C             (0157)     ljmp	_UART_1_RX_ISR
+002C: 7D 03 82 LJMP  0x0382             (0157)     ljmp	_UART_1_RX_ISR
 002F: 7E       RETI                     (0158)     reti
                                         (0159) 
                                         (0160)     org   30h                      ;PSoC Block DBB10 Interrupt Vector
@@ -483,7 +483,7 @@ FILE: .\boot.asm
                                         (0411)     ; to minimize start up time; (2) We may still need to play with the
                                         (0412)     ; Sleep Timer.
                                         (0413)     ;
-00B1: 7C 03 19 LCALL 0x0319             (0414)     lcall LoadConfigInit
+00B1: 7C 03 1F LCALL 0x031F             (0414)     lcall LoadConfigInit
                                         (0415) 
                                         (0416)     ;-----------------------------------
                                         (0417)     ; Initialize C Run-Time Environment
@@ -523,7 +523,7 @@ FILE: .\boot.asm
                                         (0451)     ; text segment and may have been relocated by the Code Compressor.
                                         (0452)     ;
 00B7: 50 03    MOV   A,0x3              (0453)     mov   A, >__pXIData                ; Get the address of the flash
-00B9: 57 17    MOV   X,0x17             (0454)     mov   X, <__pXIData                ;   pointer to the xidata area.
+00B9: 57 1D    MOV   X,0x1D             (0454)     mov   X, <__pXIData                ;   pointer to the xidata area.
 00BB: 08       PUSH  A                  (0455)     push  A
 00BC: 28       ROMX                     (0456)     romx                               ; get the MSB of xidata's address
 00BD: 53 13    MOV   [__r0],A           (0457)     mov   [__r0], A
@@ -713,7 +713,7 @@ FILE: .\boot.asm
                                         (0641) IF ENABLE_LJMP_TO_MAIN
                                         (0642)     ljmp  _main                    ; goto main (no return)
                                         (0643) ELSE
-0135: 7C 03 F0 LCALL _main|__text_start|_main(0644)     lcall _main                    ; call main
+0135: 7C 05 E1 LCALL _main|__text_start|_main(0644)     lcall _main                    ; call main
                                         (0645) .Exit:
 0138: 8F FF    JMP   0x0138             (0646)     jmp  .Exit                     ; Wait here after return till power-off or reset
                                         (0647) ENDIF
@@ -871,96 +871,96 @@ FILE: lib\psocconfigtbl.asm
                                         (0091) ;  Ordered Global Register values
 
 (0092) 	M8C_SetBank1
-022D: 10       PUSH  X                  
-022E: 62 00 00 MOV   REG[0x0],0x0       (0093) 	mov	reg[00h], 00h		; Port_0_DriveMode_0 register (PRT0DM0)
-0231: 62 01 FF MOV   REG[0x1],0xFF      (0094) 	mov	reg[01h], ffh		; Port_0_DriveMode_1 register (PRT0DM1)
-0234: 70 EF    AND   F,0xEF             (0095) 	M8C_SetBank0
-0236: 62 03 FF MOV   REG[0x3],0xFF      (0096) 	mov	reg[03h], ffh		; Port_0_DriveMode_2 register (PRT0DM2)
-0239: 62 02 00 MOV   REG[0x2],0x0       (0097) 	mov	reg[02h], 00h		; Port_0_GlobalSelect register (PRT0GS)
-023C: 71 10    OR    F,0x10             (0098) 	M8C_SetBank1
-023E: 62 02 00 MOV   REG[0x2],0x0       (0099) 	mov	reg[02h], 00h		; Port_0_IntCtrl_0 register (PRT0IC0)
-0241: 62 03 00 MOV   REG[0x3],0x0       (0100) 	mov	reg[03h], 00h		; Port_0_IntCtrl_1 register (PRT0IC1)
-0244: 70 EF    AND   F,0xEF             (0101) 	M8C_SetBank0
-0246: 62 01 00 MOV   REG[0x1],0x0       (0102) 	mov	reg[01h], 00h		; Port_0_IntEn register (PRT0IE)
-0249: 71 10    OR    F,0x10             (0103) 	M8C_SetBank1
-024B: 62 04 00 MOV   REG[0x4],0x0       (0104) 	mov	reg[04h], 00h		; Port_1_DriveMode_0 register (PRT1DM0)
-024E: 62 05 FF MOV   REG[0x5],0xFF      (0105) 	mov	reg[05h], ffh		; Port_1_DriveMode_1 register (PRT1DM1)
-0251: 70 EF    AND   F,0xEF             (0106) 	M8C_SetBank0
-0253: 62 07 FF MOV   REG[0x7],0xFF      (0107) 	mov	reg[07h], ffh		; Port_1_DriveMode_2 register (PRT1DM2)
-0256: 62 06 00 MOV   REG[0x6],0x0       (0108) 	mov	reg[06h], 00h		; Port_1_GlobalSelect register (PRT1GS)
-0259: 71 10    OR    F,0x10             (0109) 	M8C_SetBank1
-025B: 62 06 00 MOV   REG[0x6],0x0       (0110) 	mov	reg[06h], 00h		; Port_1_IntCtrl_0 register (PRT1IC0)
-025E: 62 07 00 MOV   REG[0x7],0x0       (0111) 	mov	reg[07h], 00h		; Port_1_IntCtrl_1 register (PRT1IC1)
-0261: 70 EF    AND   F,0xEF             (0112) 	M8C_SetBank0
-0263: 62 05 00 MOV   REG[0x5],0x0       (0113) 	mov	reg[05h], 00h		; Port_1_IntEn register (PRT1IE)
-0266: 71 10    OR    F,0x10             (0114) 	M8C_SetBank1
-0268: 62 08 25 MOV   REG[0x8],0x25      (0115) 	mov	reg[08h], 25h		; Port_2_DriveMode_0 register (PRT2DM0)
-026B: 62 09 DE MOV   REG[0x9],0xDE      (0116) 	mov	reg[09h], deh		; Port_2_DriveMode_1 register (PRT2DM1)
-026E: 70 EF    AND   F,0xEF             (0117) 	M8C_SetBank0
-0270: 62 0B CA MOV   REG[0xB],0xCA      (0118) 	mov	reg[0bh], cah		; Port_2_DriveMode_2 register (PRT2DM2)
-0273: 62 0A 30 MOV   REG[0xA],0x30      (0119) 	mov	reg[0ah], 30h		; Port_2_GlobalSelect register (PRT2GS)
-0276: 71 10    OR    F,0x10             (0120) 	M8C_SetBank1
-0278: 62 0A 00 MOV   REG[0xA],0x0       (0121) 	mov	reg[0ah], 00h		; Port_2_IntCtrl_0 register (PRT2IC0)
-027B: 62 0B 00 MOV   REG[0xB],0x0       (0122) 	mov	reg[0bh], 00h		; Port_2_IntCtrl_1 register (PRT2IC1)
-027E: 70 EF    AND   F,0xEF             (0123) 	M8C_SetBank0
-0280: 62 09 00 MOV   REG[0x9],0x0       (0124) 	mov	reg[09h], 00h		; Port_2_IntEn register (PRT2IE)
-0283: 71 10    OR    F,0x10             (0125) 	M8C_SetBank1
-0285: 62 0C 00 MOV   REG[0xC],0x0       (0126) 	mov	reg[0ch], 00h		; Port_3_DriveMode_0 register (PRT3DM0)
-0288: 62 0D 00 MOV   REG[0xD],0x0       (0127) 	mov	reg[0dh], 00h		; Port_3_DriveMode_1 register (PRT3DM1)
-028B: 70 EF    AND   F,0xEF             (0128) 	M8C_SetBank0
-028D: 62 0F 00 MOV   REG[0xF],0x0       (0129) 	mov	reg[0fh], 00h		; Port_3_DriveMode_2 register (PRT3DM2)
-0290: 62 0E 00 MOV   REG[0xE],0x0       (0130) 	mov	reg[0eh], 00h		; Port_3_GlobalSelect register (PRT3GS)
-0293: 71 10    OR    F,0x10             (0131) 	M8C_SetBank1
-0295: 62 0E 00 MOV   REG[0xE],0x0       (0132) 	mov	reg[0eh], 00h		; Port_3_IntCtrl_0 register (PRT3IC0)
-0298: 62 0F 00 MOV   REG[0xF],0x0       (0133) 	mov	reg[0fh], 00h		; Port_3_IntCtrl_1 register (PRT3IC1)
-029B: 70 EF    AND   F,0xEF             (0134) 	M8C_SetBank0
-029D: 62 0D 00 MOV   REG[0xD],0x0       (0135) 	mov	reg[0dh], 00h		; Port_3_IntEn register (PRT3IE)
-02A0: 71 10    OR    F,0x10             (0136) 	M8C_SetBank1
-02A2: 62 10 00 MOV   REG[0x10],0x0      (0137) 	mov	reg[10h], 00h		; Port_4_DriveMode_0 register (PRT4DM0)
-02A5: 62 11 00 MOV   REG[0x11],0x0      (0138) 	mov	reg[11h], 00h		; Port_4_DriveMode_1 register (PRT4DM1)
-02A8: 70 EF    AND   F,0xEF             (0139) 	M8C_SetBank0
-02AA: 62 13 00 MOV   REG[0x13],0x0      (0140) 	mov	reg[13h], 00h		; Port_4_DriveMode_2 register (PRT4DM2)
-02AD: 62 12 00 MOV   REG[0x12],0x0      (0141) 	mov	reg[12h], 00h		; Port_4_GlobalSelect register (PRT4GS)
-02B0: 71 10    OR    F,0x10             (0142) 	M8C_SetBank1
-02B2: 62 12 00 MOV   REG[0x12],0x0      (0143) 	mov	reg[12h], 00h		; Port_4_IntCtrl_0 register (PRT4IC0)
-02B5: 62 13 00 MOV   REG[0x13],0x0      (0144) 	mov	reg[13h], 00h		; Port_4_IntCtrl_1 register (PRT4IC1)
-02B8: 70 EF    AND   F,0xEF             (0145) 	M8C_SetBank0
-02BA: 62 11 00 MOV   REG[0x11],0x0      (0146) 	mov	reg[11h], 00h		; Port_4_IntEn register (PRT4IE)
-02BD: 71 10    OR    F,0x10             (0147) 	M8C_SetBank1
-02BF: 62 14 00 MOV   REG[0x14],0x0      (0148) 	mov	reg[14h], 00h		; Port_5_DriveMode_0 register (PRT5DM0)
-02C2: 62 15 00 MOV   REG[0x15],0x0      (0149) 	mov	reg[15h], 00h		; Port_5_DriveMode_1 register (PRT5DM1)
-02C5: 70 EF    AND   F,0xEF             (0150) 	M8C_SetBank0
-02C7: 62 17 00 MOV   REG[0x17],0x0      (0151) 	mov	reg[17h], 00h		; Port_5_DriveMode_2 register (PRT5DM2)
-02CA: 62 16 00 MOV   REG[0x16],0x0      (0152) 	mov	reg[16h], 00h		; Port_5_GlobalSelect register (PRT5GS)
-02CD: 71 10    OR    F,0x10             (0153) 	M8C_SetBank1
-02CF: 62 16 00 MOV   REG[0x16],0x0      (0154) 	mov	reg[16h], 00h		; Port_5_IntCtrl_0 register (PRT5IC0)
-02D2: 62 17 00 MOV   REG[0x17],0x0      (0155) 	mov	reg[17h], 00h		; Port_5_IntCtrl_1 register (PRT5IC1)
-02D5: 70 EF    AND   F,0xEF             (0156) 	M8C_SetBank0
-02D7: 62 15 00 MOV   REG[0x15],0x0      (0157) 	mov	reg[15h], 00h		; Port_5_IntEn register (PRT5IE)
-02DA: 71 10    OR    F,0x10             (0158) 	M8C_SetBank1
-02DC: 62 18 00 MOV   REG[0x18],0x0      (0159) 	mov	reg[18h], 00h		; Port_6_DriveMode_0 register (PRT6DM0)
-02DF: 62 19 00 MOV   REG[0x19],0x0      (0160) 	mov	reg[19h], 00h		; Port_6_DriveMode_1 register (PRT6DM1)
-02E2: 70 EF    AND   F,0xEF             (0161) 	M8C_SetBank0
-02E4: 62 1B 00 MOV   REG[0x1B],0x0      (0162) 	mov	reg[1bh], 00h		; Port_6_DriveMode_2 register (PRT6DM2)
-02E7: 62 1A 00 MOV   REG[0x1A],0x0      (0163) 	mov	reg[1ah], 00h		; Port_6_GlobalSelect register (PRT6GS)
-02EA: 71 10    OR    F,0x10             (0164) 	M8C_SetBank1
-02EC: 62 1A 00 MOV   REG[0x1A],0x0      (0165) 	mov	reg[1ah], 00h		; Port_6_IntCtrl_0 register (PRT6IC0)
-02EF: 62 1B 00 MOV   REG[0x1B],0x0      (0166) 	mov	reg[1bh], 00h		; Port_6_IntCtrl_1 register (PRT6IC1)
-02F2: 70 EF    AND   F,0xEF             (0167) 	M8C_SetBank0
-02F4: 62 19 00 MOV   REG[0x19],0x0      (0168) 	mov	reg[19h], 00h		; Port_6_IntEn register (PRT6IE)
-02F7: 71 10    OR    F,0x10             (0169) 	M8C_SetBank1
-02F9: 62 1C 00 MOV   REG[0x1C],0x0      (0170) 	mov	reg[1ch], 00h		; Port_7_DriveMode_0 register (PRT7DM0)
-02FC: 62 1D 00 MOV   REG[0x1D],0x0      (0171) 	mov	reg[1dh], 00h		; Port_7_DriveMode_1 register (PRT7DM1)
-02FF: 70 EF    AND   F,0xEF             (0172) 	M8C_SetBank0
-0301: 62 1F 00 MOV   REG[0x1F],0x0      (0173) 	mov	reg[1fh], 00h		; Port_7_DriveMode_2 register (PRT7DM2)
-0304: 62 1E 00 MOV   REG[0x1E],0x0      (0174) 	mov	reg[1eh], 00h		; Port_7_GlobalSelect register (PRT7GS)
-0307: 71 10    OR    F,0x10             (0175) 	M8C_SetBank1
-0309: 62 1E 00 MOV   REG[0x1E],0x0      (0176) 	mov	reg[1eh], 00h		; Port_7_IntCtrl_0 register (PRT7IC0)
-030C: 62 1F 00 MOV   REG[0x1F],0x0      (0177) 	mov	reg[1fh], 00h		; Port_7_IntCtrl_1 register (PRT7IC1)
-030F: 70 EF    AND   F,0xEF             (0178) 	M8C_SetBank0
-0311: 62 1D 00 MOV   REG[0x1D],0x0      (0179) 	mov	reg[1dh], 00h		; Port_7_IntEn register (PRT7IE)
-0314: 70 EF    AND   F,0xEF             (0180) 	M8C_SetBank0
-0316: 7F       RET                      (0181) 	ret
+0233: 10       PUSH  X                  
+0234: 62 00 00 MOV   REG[0x0],0x0       (0093) 	mov	reg[00h], 00h		; Port_0_DriveMode_0 register (PRT0DM0)
+0237: 62 01 FF MOV   REG[0x1],0xFF      (0094) 	mov	reg[01h], ffh		; Port_0_DriveMode_1 register (PRT0DM1)
+023A: 70 EF    AND   F,0xEF             (0095) 	M8C_SetBank0
+023C: 62 03 FF MOV   REG[0x3],0xFF      (0096) 	mov	reg[03h], ffh		; Port_0_DriveMode_2 register (PRT0DM2)
+023F: 62 02 00 MOV   REG[0x2],0x0       (0097) 	mov	reg[02h], 00h		; Port_0_GlobalSelect register (PRT0GS)
+0242: 71 10    OR    F,0x10             (0098) 	M8C_SetBank1
+0244: 62 02 00 MOV   REG[0x2],0x0       (0099) 	mov	reg[02h], 00h		; Port_0_IntCtrl_0 register (PRT0IC0)
+0247: 62 03 00 MOV   REG[0x3],0x0       (0100) 	mov	reg[03h], 00h		; Port_0_IntCtrl_1 register (PRT0IC1)
+024A: 70 EF    AND   F,0xEF             (0101) 	M8C_SetBank0
+024C: 62 01 00 MOV   REG[0x1],0x0       (0102) 	mov	reg[01h], 00h		; Port_0_IntEn register (PRT0IE)
+024F: 71 10    OR    F,0x10             (0103) 	M8C_SetBank1
+0251: 62 04 00 MOV   REG[0x4],0x0       (0104) 	mov	reg[04h], 00h		; Port_1_DriveMode_0 register (PRT1DM0)
+0254: 62 05 FF MOV   REG[0x5],0xFF      (0105) 	mov	reg[05h], ffh		; Port_1_DriveMode_1 register (PRT1DM1)
+0257: 70 EF    AND   F,0xEF             (0106) 	M8C_SetBank0
+0259: 62 07 FF MOV   REG[0x7],0xFF      (0107) 	mov	reg[07h], ffh		; Port_1_DriveMode_2 register (PRT1DM2)
+025C: 62 06 00 MOV   REG[0x6],0x0       (0108) 	mov	reg[06h], 00h		; Port_1_GlobalSelect register (PRT1GS)
+025F: 71 10    OR    F,0x10             (0109) 	M8C_SetBank1
+0261: 62 06 00 MOV   REG[0x6],0x0       (0110) 	mov	reg[06h], 00h		; Port_1_IntCtrl_0 register (PRT1IC0)
+0264: 62 07 00 MOV   REG[0x7],0x0       (0111) 	mov	reg[07h], 00h		; Port_1_IntCtrl_1 register (PRT1IC1)
+0267: 70 EF    AND   F,0xEF             (0112) 	M8C_SetBank0
+0269: 62 05 00 MOV   REG[0x5],0x0       (0113) 	mov	reg[05h], 00h		; Port_1_IntEn register (PRT1IE)
+026C: 71 10    OR    F,0x10             (0114) 	M8C_SetBank1
+026E: 62 08 25 MOV   REG[0x8],0x25      (0115) 	mov	reg[08h], 25h		; Port_2_DriveMode_0 register (PRT2DM0)
+0271: 62 09 DE MOV   REG[0x9],0xDE      (0116) 	mov	reg[09h], deh		; Port_2_DriveMode_1 register (PRT2DM1)
+0274: 70 EF    AND   F,0xEF             (0117) 	M8C_SetBank0
+0276: 62 0B CA MOV   REG[0xB],0xCA      (0118) 	mov	reg[0bh], cah		; Port_2_DriveMode_2 register (PRT2DM2)
+0279: 62 0A 30 MOV   REG[0xA],0x30      (0119) 	mov	reg[0ah], 30h		; Port_2_GlobalSelect register (PRT2GS)
+027C: 71 10    OR    F,0x10             (0120) 	M8C_SetBank1
+027E: 62 0A 00 MOV   REG[0xA],0x0       (0121) 	mov	reg[0ah], 00h		; Port_2_IntCtrl_0 register (PRT2IC0)
+0281: 62 0B 00 MOV   REG[0xB],0x0       (0122) 	mov	reg[0bh], 00h		; Port_2_IntCtrl_1 register (PRT2IC1)
+0284: 70 EF    AND   F,0xEF             (0123) 	M8C_SetBank0
+0286: 62 09 00 MOV   REG[0x9],0x0       (0124) 	mov	reg[09h], 00h		; Port_2_IntEn register (PRT2IE)
+0289: 71 10    OR    F,0x10             (0125) 	M8C_SetBank1
+028B: 62 0C 00 MOV   REG[0xC],0x0       (0126) 	mov	reg[0ch], 00h		; Port_3_DriveMode_0 register (PRT3DM0)
+028E: 62 0D 00 MOV   REG[0xD],0x0       (0127) 	mov	reg[0dh], 00h		; Port_3_DriveMode_1 register (PRT3DM1)
+0291: 70 EF    AND   F,0xEF             (0128) 	M8C_SetBank0
+0293: 62 0F 00 MOV   REG[0xF],0x0       (0129) 	mov	reg[0fh], 00h		; Port_3_DriveMode_2 register (PRT3DM2)
+0296: 62 0E 00 MOV   REG[0xE],0x0       (0130) 	mov	reg[0eh], 00h		; Port_3_GlobalSelect register (PRT3GS)
+0299: 71 10    OR    F,0x10             (0131) 	M8C_SetBank1
+029B: 62 0E 00 MOV   REG[0xE],0x0       (0132) 	mov	reg[0eh], 00h		; Port_3_IntCtrl_0 register (PRT3IC0)
+029E: 62 0F 00 MOV   REG[0xF],0x0       (0133) 	mov	reg[0fh], 00h		; Port_3_IntCtrl_1 register (PRT3IC1)
+02A1: 70 EF    AND   F,0xEF             (0134) 	M8C_SetBank0
+02A3: 62 0D 00 MOV   REG[0xD],0x0       (0135) 	mov	reg[0dh], 00h		; Port_3_IntEn register (PRT3IE)
+02A6: 71 10    OR    F,0x10             (0136) 	M8C_SetBank1
+02A8: 62 10 00 MOV   REG[0x10],0x0      (0137) 	mov	reg[10h], 00h		; Port_4_DriveMode_0 register (PRT4DM0)
+02AB: 62 11 00 MOV   REG[0x11],0x0      (0138) 	mov	reg[11h], 00h		; Port_4_DriveMode_1 register (PRT4DM1)
+02AE: 70 EF    AND   F,0xEF             (0139) 	M8C_SetBank0
+02B0: 62 13 00 MOV   REG[0x13],0x0      (0140) 	mov	reg[13h], 00h		; Port_4_DriveMode_2 register (PRT4DM2)
+02B3: 62 12 00 MOV   REG[0x12],0x0      (0141) 	mov	reg[12h], 00h		; Port_4_GlobalSelect register (PRT4GS)
+02B6: 71 10    OR    F,0x10             (0142) 	M8C_SetBank1
+02B8: 62 12 00 MOV   REG[0x12],0x0      (0143) 	mov	reg[12h], 00h		; Port_4_IntCtrl_0 register (PRT4IC0)
+02BB: 62 13 00 MOV   REG[0x13],0x0      (0144) 	mov	reg[13h], 00h		; Port_4_IntCtrl_1 register (PRT4IC1)
+02BE: 70 EF    AND   F,0xEF             (0145) 	M8C_SetBank0
+02C0: 62 11 00 MOV   REG[0x11],0x0      (0146) 	mov	reg[11h], 00h		; Port_4_IntEn register (PRT4IE)
+02C3: 71 10    OR    F,0x10             (0147) 	M8C_SetBank1
+02C5: 62 14 00 MOV   REG[0x14],0x0      (0148) 	mov	reg[14h], 00h		; Port_5_DriveMode_0 register (PRT5DM0)
+02C8: 62 15 00 MOV   REG[0x15],0x0      (0149) 	mov	reg[15h], 00h		; Port_5_DriveMode_1 register (PRT5DM1)
+02CB: 70 EF    AND   F,0xEF             (0150) 	M8C_SetBank0
+02CD: 62 17 00 MOV   REG[0x17],0x0      (0151) 	mov	reg[17h], 00h		; Port_5_DriveMode_2 register (PRT5DM2)
+02D0: 62 16 00 MOV   REG[0x16],0x0      (0152) 	mov	reg[16h], 00h		; Port_5_GlobalSelect register (PRT5GS)
+02D3: 71 10    OR    F,0x10             (0153) 	M8C_SetBank1
+02D5: 62 16 00 MOV   REG[0x16],0x0      (0154) 	mov	reg[16h], 00h		; Port_5_IntCtrl_0 register (PRT5IC0)
+02D8: 62 17 00 MOV   REG[0x17],0x0      (0155) 	mov	reg[17h], 00h		; Port_5_IntCtrl_1 register (PRT5IC1)
+02DB: 70 EF    AND   F,0xEF             (0156) 	M8C_SetBank0
+02DD: 62 15 00 MOV   REG[0x15],0x0      (0157) 	mov	reg[15h], 00h		; Port_5_IntEn register (PRT5IE)
+02E0: 71 10    OR    F,0x10             (0158) 	M8C_SetBank1
+02E2: 62 18 00 MOV   REG[0x18],0x0      (0159) 	mov	reg[18h], 00h		; Port_6_DriveMode_0 register (PRT6DM0)
+02E5: 62 19 00 MOV   REG[0x19],0x0      (0160) 	mov	reg[19h], 00h		; Port_6_DriveMode_1 register (PRT6DM1)
+02E8: 70 EF    AND   F,0xEF             (0161) 	M8C_SetBank0
+02EA: 62 1B 00 MOV   REG[0x1B],0x0      (0162) 	mov	reg[1bh], 00h		; Port_6_DriveMode_2 register (PRT6DM2)
+02ED: 62 1A 00 MOV   REG[0x1A],0x0      (0163) 	mov	reg[1ah], 00h		; Port_6_GlobalSelect register (PRT6GS)
+02F0: 71 10    OR    F,0x10             (0164) 	M8C_SetBank1
+02F2: 62 1A 00 MOV   REG[0x1A],0x0      (0165) 	mov	reg[1ah], 00h		; Port_6_IntCtrl_0 register (PRT6IC0)
+02F5: 62 1B 00 MOV   REG[0x1B],0x0      (0166) 	mov	reg[1bh], 00h		; Port_6_IntCtrl_1 register (PRT6IC1)
+02F8: 70 EF    AND   F,0xEF             (0167) 	M8C_SetBank0
+02FA: 62 19 00 MOV   REG[0x19],0x0      (0168) 	mov	reg[19h], 00h		; Port_6_IntEn register (PRT6IE)
+02FD: 71 10    OR    F,0x10             (0169) 	M8C_SetBank1
+02FF: 62 1C 00 MOV   REG[0x1C],0x0      (0170) 	mov	reg[1ch], 00h		; Port_7_DriveMode_0 register (PRT7DM0)
+0302: 62 1D 00 MOV   REG[0x1D],0x0      (0171) 	mov	reg[1dh], 00h		; Port_7_DriveMode_1 register (PRT7DM1)
+0305: 70 EF    AND   F,0xEF             (0172) 	M8C_SetBank0
+0307: 62 1F 00 MOV   REG[0x1F],0x0      (0173) 	mov	reg[1fh], 00h		; Port_7_DriveMode_2 register (PRT7DM2)
+030A: 62 1E 00 MOV   REG[0x1E],0x0      (0174) 	mov	reg[1eh], 00h		; Port_7_GlobalSelect register (PRT7GS)
+030D: 71 10    OR    F,0x10             (0175) 	M8C_SetBank1
+030F: 62 1E 00 MOV   REG[0x1E],0x0      (0176) 	mov	reg[1eh], 00h		; Port_7_IntCtrl_0 register (PRT7IC0)
+0312: 62 1F 00 MOV   REG[0x1F],0x0      (0177) 	mov	reg[1fh], 00h		; Port_7_IntCtrl_1 register (PRT7IC1)
+0315: 70 EF    AND   F,0xEF             (0178) 	M8C_SetBank0
+0317: 62 1D 00 MOV   REG[0x1D],0x0      (0179) 	mov	reg[1dh], 00h		; Port_7_IntEn register (PRT7IE)
+031A: 70 EF    AND   F,0xEF             (0180) 	M8C_SetBank0
+031C: 7F       RET                      (0181) 	ret
 (0182) 
 (0183) 
 (0184) ; PSoC Configuration file trailer PsocConfig.asm
@@ -1023,12 +1023,13 @@ FILE: lib\psocconfig.asm
                                         (0056)     RAM_PROLOGUE RAM_USE_CLASS_4
                                         (0057)     
 
-0319: 7C 03 20 LCALL 0x0320             (0058) 	lcall	LoadConfig_i2c_master
-031C: 7C 02 2C LCALL 0x022C             (0059) 	lcall	LoadConfigTBL_i2c_master_Ordered
+(0058) 	lcall	LoadConfig_i2c_master
+0320: 03 26    ADD   A,[X+38]           
+0322: 7C 02 32 LCALL 0x0232             (0059) 	lcall	LoadConfigTBL_i2c_master_Ordered
                                         (0060) 
                                         (0061) 
                                         (0062)     RAM_EPILOGUE RAM_USE_CLASS_4
-031F: 7F       RET                      (0063)     ret
+0325: 7F       RET                      (0063)     ret
                                         (0064) 
                                         (0065) ;---------------------------------------------------------------------------
                                         (0066) ; Load Configuration i2c_master
@@ -1053,27 +1054,27 @@ FILE: lib\psocconfig.asm
                                         (0085)  LoadConfig_i2c_master:
                                         (0086)     RAM_PROLOGUE RAM_USE_CLASS_4
                                         (0087) 
-0320: 10       PUSH  X                  (0088) 	push	x
-0321: 70 EF    AND   F,0xEF             (0089)     M8C_SetBank0                    ; Force bank 0
-0323: 50 00    MOV   A,0x0              (0090)     mov     a, 0                    ; Specify bank 0
-0325: 67       ASR   A                  (0091)     asr     a                       ; Store in carry flag
+0326: 10       PUSH  X                  (0088) 	push	x
+0327: 70 EF    AND   F,0xEF             (0089)     M8C_SetBank0                    ; Force bank 0
+0329: 50 00    MOV   A,0x0              (0090)     mov     a, 0                    ; Specify bank 0
+032B: 67       ASR   A                  (0091)     asr     a                       ; Store in carry flag
                                         (0092)                                     ; Load bank 0 table:
-0326: 50 01    MOV   A,0x1              (0093)     mov     A, >LoadConfigTBL_i2c_master_Bank0
-0328: 57 A0    MOV   X,0xA0             (0094)     mov     X, <LoadConfigTBL_i2c_master_Bank0
-032A: 7C 03 3B LCALL 0x033B             (0095)     lcall   LoadConfig              ; Load the bank 0 values
+032C: 50 01    MOV   A,0x1              (0093)     mov     A, >LoadConfigTBL_i2c_master_Bank0
+032E: 57 A6    MOV   X,0xA6             (0094)     mov     X, <LoadConfigTBL_i2c_master_Bank0
+0330: 7C 03 41 LCALL 0x0341             (0095)     lcall   LoadConfig              ; Load the bank 0 values
                                         (0096) 
-032D: 50 01    MOV   A,0x1              (0097)     mov     a, 1                    ; Specify bank 1
-032F: 67       ASR   A                  (0098)     asr     a                       ; Store in carry flag
+0333: 50 01    MOV   A,0x1              (0097)     mov     a, 1                    ; Specify bank 1
+0335: 67       ASR   A                  (0098)     asr     a                       ; Store in carry flag
                                         (0099)                                     ; Load bank 1 table:
-0330: 50 01    MOV   A,0x1              (0100)     mov     A, >LoadConfigTBL_i2c_master_Bank1
-0332: 57 FB    MOV   X,0xFB             (0101)     mov     X, <LoadConfigTBL_i2c_master_Bank1
-0334: 7C 03 3B LCALL 0x033B             (0102)     lcall   LoadConfig              ; Load the bank 1 values
+0336: 50 02    MOV   A,0x2              (0100)     mov     A, >LoadConfigTBL_i2c_master_Bank1
+0338: 57 01    MOV   X,0x1              (0101)     mov     X, <LoadConfigTBL_i2c_master_Bank1
+033A: 7C 03 41 LCALL 0x0341             (0102)     lcall   LoadConfig              ; Load the bank 1 values
                                         (0103) 
-0337: 70 EF    AND   F,0xEF             (0104)     M8C_SetBank0                    ; Force return to bank 0
-0339: 20       POP   X                  (0105) 	pop		x
+033D: 70 EF    AND   F,0xEF             (0104)     M8C_SetBank0                    ; Force return to bank 0
+033F: 20       POP   X                  (0105) 	pop		x
                                         (0106) 
                                         (0107)     RAM_EPILOGUE RAM_USE_CLASS_4
-033A: 7F       RET                      (0108)     ret
+0340: 7F       RET                      (0108)     ret
                                         (0109) 
                                         (0110) 
                                         (0111) 
@@ -1095,51 +1096,51 @@ FILE: lib\psocconfig.asm
                                         (0127) ;
                                         (0128) LoadConfig:
                                         (0129)     RAM_PROLOGUE RAM_USE_CLASS_2
-033B: 38 02    ADD   SP,0x2             (0130)     add     SP, 2                   ; Set up local vars
-033D: 10       PUSH  X                  (0131)     push    X                       ; Save config table address on stack
-033E: 08       PUSH  A                  (0132)     push    A
-033F: 4F       MOV   X,SP               (0133)     mov     X, SP
-0340: 56 FC 00 MOV   [X-4],0x0          (0134)     mov     [X-4], 0                ; Set default Destination to Bank 0
-0343: D0 04    JNC   0x0348             (0135)     jnc     .BankSelectSaved        ; Carry says Bank 0 is OK
-0345: 56 FC 01 MOV   [X-4],0x1          (0136)     mov     [X-4], 1                ; No Carry: default to Bank 1
+0341: 38 02    ADD   SP,0x2             (0130)     add     SP, 2                   ; Set up local vars
+0343: 10       PUSH  X                  (0131)     push    X                       ; Save config table address on stack
+0344: 08       PUSH  A                  (0132)     push    A
+0345: 4F       MOV   X,SP               (0133)     mov     X, SP
+0346: 56 FC 00 MOV   [X-4],0x0          (0134)     mov     [X-4], 0                ; Set default Destination to Bank 0
+0349: D0 04    JNC   0x034E             (0135)     jnc     .BankSelectSaved        ; Carry says Bank 0 is OK
+034B: 56 FC 01 MOV   [X-4],0x1          (0136)     mov     [X-4], 1                ; No Carry: default to Bank 1
                                         (0137) .BankSelectSaved:
-0348: 18       POP   A                  (0138)     pop     A
-0349: 20       POP   X                  (0139)     pop     X
+034E: 18       POP   A                  (0138)     pop     A
+034F: 20       POP   X                  (0139)     pop     X
                                         (0140) 
                                         (0141) LoadConfigLp:
-034A: 70 EF    AND   F,0xEF             (0142)     M8C_SetBank0                    ; Switch to bank 0
-034C: 62 E3 00 MOV   REG[0xE3],0x0      (0143)     M8C_ClearWDT                    ; Clear the watchdog for long inits
-034F: 10       PUSH  X                  (0144)     push    X                       ; Preserve the config table address
-0350: 08       PUSH  A                  (0145)     push    A
-0351: 28       ROMX                     (0146)     romx                            ; Load register address from table
-0352: 39 FF    CMP   A,0xFF             (0147)     cmp     A, END_CONFIG_TABLE     ; End of table?
-0354: A0 1F    JZ    0x0374             (0148)     jz      EndLoadConfig           ;   Yes, go wrap it up
-0356: 4F       MOV   X,SP               (0149)     mov     X, SP                   ;
-0357: 48 FC 01 TST   [X-4],0x1          (0150)     tst     [X-4], 1                ; Loading IO Bank 1?
-035A: A0 03    JZ    0x035E             (0151)     jz      .IOBankNowSet           ;    No, Bank 0 is fine
-035C: 71 10    OR    F,0x10             (0152)     M8C_SetBank1                    ;   Yes, switch to Bank 1
+0350: 70 EF    AND   F,0xEF             (0142)     M8C_SetBank0                    ; Switch to bank 0
+0352: 62 E3 00 MOV   REG[0xE3],0x0      (0143)     M8C_ClearWDT                    ; Clear the watchdog for long inits
+0355: 10       PUSH  X                  (0144)     push    X                       ; Preserve the config table address
+0356: 08       PUSH  A                  (0145)     push    A
+0357: 28       ROMX                     (0146)     romx                            ; Load register address from table
+0358: 39 FF    CMP   A,0xFF             (0147)     cmp     A, END_CONFIG_TABLE     ; End of table?
+035A: A0 1F    JZ    0x037A             (0148)     jz      EndLoadConfig           ;   Yes, go wrap it up
+035C: 4F       MOV   X,SP               (0149)     mov     X, SP                   ;
+035D: 48 FC 01 TST   [X-4],0x1          (0150)     tst     [X-4], 1                ; Loading IO Bank 1?
+0360: A0 03    JZ    0x0364             (0151)     jz      .IOBankNowSet           ;    No, Bank 0 is fine
+0362: 71 10    OR    F,0x10             (0152)     M8C_SetBank1                    ;   Yes, switch to Bank 1
                                         (0153) .IOBankNowSet:
-035E: 54 FD    MOV   [X-3],A            (0154)     mov     [X-3], A                ; Stash the register address
-0360: 18       POP   A                  (0155)     pop     A                       ; Retrieve the table address
-0361: 20       POP   X                  (0156)     pop     X
-0362: 75       INC   X                  (0157)     inc     X                       ; Advance to the data byte
-0363: 09 00    ADC   A,0x0              (0158)     adc     A, 0
-0365: 10       PUSH  X                  (0159)     push    X                       ; Save the config table address again
-0366: 08       PUSH  A                  (0160)     push    A
-0367: 28       ROMX                     (0161)     romx                            ; load config data from the table
-0368: 4F       MOV   X,SP               (0162)     mov     X, SP                   ; retrieve the register address
-0369: 59 FD    MOV   X,[X-3]            (0163)     mov     X, [X-3]
-036B: 61 00    MOV   REG[X+0x0],A       (0164)     mov     reg[X], A               ; Configure the register
-036D: 18       POP   A                  (0165)     pop     A                       ; retrieve the table address
-036E: 20       POP   X                  (0166)     pop     X
-036F: 75       INC   X                  (0167)     inc     X                       ; advance to next table entry
-0370: 09 00    ADC   A,0x0              (0168)     adc     A, 0
-0372: 8F D7    JMP   0x034A             (0169)     jmp     LoadConfigLp            ; loop to configure another register
+0364: 54 FD    MOV   [X-3],A            (0154)     mov     [X-3], A                ; Stash the register address
+0366: 18       POP   A                  (0155)     pop     A                       ; Retrieve the table address
+0367: 20       POP   X                  (0156)     pop     X
+0368: 75       INC   X                  (0157)     inc     X                       ; Advance to the data byte
+0369: 09 00    ADC   A,0x0              (0158)     adc     A, 0
+036B: 10       PUSH  X                  (0159)     push    X                       ; Save the config table address again
+036C: 08       PUSH  A                  (0160)     push    A
+036D: 28       ROMX                     (0161)     romx                            ; load config data from the table
+036E: 4F       MOV   X,SP               (0162)     mov     X, SP                   ; retrieve the register address
+036F: 59 FD    MOV   X,[X-3]            (0163)     mov     X, [X-3]
+0371: 61 00    MOV   REG[X+0x0],A       (0164)     mov     reg[X], A               ; Configure the register
+0373: 18       POP   A                  (0165)     pop     A                       ; retrieve the table address
+0374: 20       POP   X                  (0166)     pop     X
+0375: 75       INC   X                  (0167)     inc     X                       ; advance to next table entry
+0376: 09 00    ADC   A,0x0              (0168)     adc     A, 0
+0378: 8F D7    JMP   0x0350             (0169)     jmp     LoadConfigLp            ; loop to configure another register
                                         (0170) EndLoadConfig:
-0374: 38 FC    ADD   SP,0xFC            (0171)     add     SP, -4
-0376: 70 3F    AND   F,0x3F             
-0378: 71 C0    OR    F,0xC0             (0172)     RAM_EPILOGUE RAM_USE_CLASS_2
-037A: 7F       RET                      (0173)     ret
+037A: 38 FC    ADD   SP,0xFC            (0171)     add     SP, -4
+037C: 70 3F    AND   F,0x3F             
+037E: 71 C0    OR    F,0xC0             (0172)     RAM_EPILOGUE RAM_USE_CLASS_2
+0380: 7F       RET                      (0173)     ret
 (0174) 
 (0175) AREA InterruptRAM(ram, rel)
 (0176) 
@@ -1246,7 +1247,7 @@ FILE: lib\uart_1int.asm
                                         (0098)    ; Insert your custom code above this banner
                                         (0099)    ;---------------------------------------------------
                                         (0100)    ;@PSoC_UserCode_END@ (Do not change this line.)
-037B: 7E       RETI                     (0101)    reti
+0381: 7E       RETI                     (0101)    reti
                                         (0102) 
                                         (0103) 
                                         (0104) ;-----------------------------------------------------------------------------
@@ -1297,62 +1298,62 @@ FILE: lib\uart_1int.asm
                                         (0149)    ;@PSoC_UserCode_END@ (Do not change this line.)
                                         (0150) 
                                         (0151) IF (UART_1_RXBUF_ENABLE)
-037C: 08       PUSH  A                  (0152)    push A
-037D: 10       PUSH  X                  (0153)    push X
+0382: 08       PUSH  A                  (0152)    push A
+0383: 10       PUSH  X                  (0153)    push X
                                         (0154)    
                                         (0155)    IF SYSTEM_LARGE_MEMORY_MODEL
-037E: 5D D3    MOV   A,REG[0xD3]        
-0380: 08       PUSH  A                  (0156)       REG_PRESERVE IDX_PP
+0384: 5D D3    MOV   A,REG[0xD3]        
+0386: 08       PUSH  A                  (0156)       REG_PRESERVE IDX_PP
                                         (0157)    ENDIF
                                         (0158)    
-0381: 58 01    MOV   X,[0x1]            (0159)    mov  X,[UART_1_bRxCnt]                                  ; Load X with byte counter
-0383: 5D 2F    MOV   A,REG[0x2F]        (0160)    mov  A,REG[UART_1_RX_CONTROL_REG]                       ; Read the control register
-0385: 08       PUSH  A                  (0161)    push A                                                  ; Store copy for later test
+0387: 58 01    MOV   X,[0x1]            (0159)    mov  X,[UART_1_bRxCnt]                                  ; Load X with byte counter
+0389: 5D 2F    MOV   A,REG[0x2F]        (0160)    mov  A,REG[UART_1_RX_CONTROL_REG]                       ; Read the control register
+038B: 08       PUSH  A                  (0161)    push A                                                  ; Store copy for later test
                                         (0162)                                                            ; IF real RX interrupt
-0386: 21 08    AND   A,0x8              (0163)    and  A,UART_1_RX_REG_FULL                               ; Did really really get an IRQ
-0388: B0 04    JNZ   0x038D             (0164)    jnz  .UARTRX_ReadRx                                     ; Data ready, go get it
-038A: 18       POP   A                  (0165)    pop  A                                                  ; Restore stack
-038B: 80 5E    JMP   0x03EA             (0166)    jmp  .RESTORE_IDX_PP
+038C: 21 08    AND   A,0x8              (0163)    and  A,UART_1_RX_REG_FULL                               ; Did really really get an IRQ
+038E: B0 04    JNZ   0x0393             (0164)    jnz  .UARTRX_ReadRx                                     ; Data ready, go get it
+0390: 18       POP   A                  (0165)    pop  A                                                  ; Restore stack
+0391: 80 5E    JMP   0x03F0             (0166)    jmp  .RESTORE_IDX_PP
                                         (0167) 
                                         (0168) .UARTRX_ReadRx:
-038D: 18       POP   A                  (0169)    pop  A                                                  ; Restore status flags
+0393: 18       POP   A                  (0169)    pop  A                                                  ; Restore status flags
                                         (0170)                                                            ; IF there is no error, get data
                                         (0171)                                                            ; Check for parity or framing error
-038E: 21 E0    AND   A,0xE0             (0172)    and  A,UART_1_RX_ERROR
-0390: A0 12    JZ    0x03A3             (0173)    jz   .UARTRX_NO_ERROR                                   ; If there is not an Error go read data
+0394: 21 E0    AND   A,0xE0             (0172)    and  A,UART_1_RX_ERROR
+0396: A0 12    JZ    0x03A9             (0173)    jz   .UARTRX_NO_ERROR                                   ; If there is not an Error go read data
                                         (0174) 
-0392: 2C 00    OR    [0x0],A            (0175)    or   [UART_1_fStatus],A                                 ; Set error flags (parity,framing,overrun) bits
-0394: 49 2E 00 TST   REG[0x2E],0x0      (0176)    tst  REG[UART_1_RX_BUFFER_REG], 0x00                    ; Read the data buffer to clear it.
-0397: 21 20    AND   A,0x20             (0177)    and  A,UART_1_RX_FRAMING_ERROR                          ; Check for framing error special case
-0399: A0 50    JZ    0x03EA             (0178)    jz   .RESTORE_IDX_PP                                    ; Not framing error, all done
+0398: 2C 00    OR    [0x0],A            (0175)    or   [UART_1_fStatus],A                                 ; Set error flags (parity,framing,overrun) bits
+039A: 49 2E 00 TST   REG[0x2E],0x0      (0176)    tst  REG[UART_1_RX_BUFFER_REG], 0x00                    ; Read the data buffer to clear it.
+039D: 21 20    AND   A,0x20             (0177)    and  A,UART_1_RX_FRAMING_ERROR                          ; Check for framing error special case
+039F: A0 50    JZ    0x03F0             (0178)    jz   .RESTORE_IDX_PP                                    ; Not framing error, all done
                                         (0179) 
                                         (0180)                                                            ; Disable and re-enable RX to reset after
                                         (0181)                                                            ; framing error.
-039B: 41 2F FE AND   REG[0x2F],0xFE     (0182)    and   REG[UART_1_RX_CONTROL_REG], ~UART_1_RX_ENABLE     ; Disable RX
-039E: 43 2F 01 OR    REG[0x2F],0x1      (0183)    or    REG[UART_1_RX_CONTROL_REG],  UART_1_RX_ENABLE     ; Enable RX
-03A1: 80 48    JMP   0x03EA             (0184)    jmp  .RESTORE_IDX_PP                                    ; Done with framing error, leave.
+03A1: 41 2F FE AND   REG[0x2F],0xFE     (0182)    and   REG[UART_1_RX_CONTROL_REG], ~UART_1_RX_ENABLE     ; Disable RX
+03A4: 43 2F 01 OR    REG[0x2F],0x1      (0183)    or    REG[UART_1_RX_CONTROL_REG],  UART_1_RX_ENABLE     ; Enable RX
+03A7: 80 48    JMP   0x03F0             (0184)    jmp  .RESTORE_IDX_PP                                    ; Done with framing error, leave.
                                         (0185) 
                                         (0186) 
                                         (0187) .UARTRX_NO_ERROR:
-03A3: 5D 2E    MOV   A,REG[0x2E]        (0188)    mov  A,REG[UART_1_RX_BUFFER_REG ]                       ; Read the data buffer
+03A9: 5D 2E    MOV   A,REG[0x2E]        (0188)    mov  A,REG[UART_1_RX_BUFFER_REG ]                       ; Read the data buffer
                                         (0189) 
                                         (0190)                                                            ; IF buffer not full
-03A5: 47 00 01 TST   [0x0],0x1          (0191)    tst  [UART_1_fStatus],UART_1_RX_BUF_CMDTERM             ; Check for buffer full
-03A8: B0 41    JNZ   0x03EA             (0192)    jnz  .RESTORE_IDX_PP                                    ; All done
+03AB: 47 00 01 TST   [0x0],0x1          (0191)    tst  [UART_1_fStatus],UART_1_RX_BUF_CMDTERM             ; Check for buffer full
+03AE: B0 41    JNZ   0x03F0             (0192)    jnz  .RESTORE_IDX_PP                                    ; All done
                                         (0193) 
-03AA: 39 0D    CMP   A,0xD              (0194)    cmp  A,UART_1_CMD_TERM                                  ; Check for End of command
-03AC: B0 14    JNZ   0x03C1             (0195)    jnz  .UARTRX_CHK_BACKSPACE
-03AE: 2E 00 01 OR    [0x0],0x1          (0196)    or   [UART_1_fStatus],UART_1_RX_BUF_CMDTERM             ; Set command ready bit
+03B0: 39 0D    CMP   A,0xD              (0194)    cmp  A,UART_1_CMD_TERM                                  ; Check for End of command
+03B2: B0 14    JNZ   0x03C7             (0195)    jnz  .UARTRX_CHK_BACKSPACE
+03B4: 2E 00 01 OR    [0x0],0x1          (0196)    or   [UART_1_fStatus],UART_1_RX_BUF_CMDTERM             ; Set command ready bit
                                         (0197) 
                                         (0198) 
                                         (0199) 
-03B1: 62 D3 00 MOV   REG[0xD3],0x0      (0200)    RAM_SETPAGE_IDX >UART_1_aRxBuffer
-03B4: 70 3F    AND   F,0x3F             
-03B6: 71 80    OR    F,0x80             (0201)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_10b
-03B8: 56 02 00 MOV   [X+2],0x0          (0202)    mov  [X + UART_1_aRxBuffer],00h                         ; Zero out last data
-03BB: 70 3F    AND   F,0x3F             
-03BD: 71 00    OR    F,0x0              (0203)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_00b
-03BF: 80 2A    JMP   0x03EA             (0204)    jmp  .RESTORE_IDX_PP
+03B7: 62 D3 00 MOV   REG[0xD3],0x0      (0200)    RAM_SETPAGE_IDX >UART_1_aRxBuffer
+03BA: 70 3F    AND   F,0x3F             
+03BC: 71 80    OR    F,0x80             (0201)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_10b
+03BE: 56 02 00 MOV   [X+2],0x0          (0202)    mov  [X + UART_1_aRxBuffer],00h                         ; Zero out last data
+03C1: 70 3F    AND   F,0x3F             
+03C3: 71 00    OR    F,0x0              (0203)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_00b
+03C5: 80 2A    JMP   0x03F0             (0204)    jmp  .RESTORE_IDX_PP
                                         (0205) 
                                         (0206) .UARTRX_CHK_BACKSPACE:                                     ; 
                                         (0207) IF(UART_1_BACKSPACE_ENABLE)                                ; Enable if backspace/delete mode
@@ -1366,50 +1367,1476 @@ FILE: lib\uart_1int.asm
                                         (0215) 
                                         (0216) .UARTRX_IGNORE:
                                         (0217) IF(UART_1_RX_IGNORE_BELOW)                                 ; Ignore charaters below this value
-03C1: 39 20    CMP   A,0x20             (0218)    cmp  A,UART_1_RX_IGNORE_BELOW                           ; If ignore char is set to 0x00, do not
-03C3: C0 26    JC    0x03EA             (0219)    jc   .RESTORE_IDX_PP                                    ; ignore any characters.
+03C7: 39 20    CMP   A,0x20             (0218)    cmp  A,UART_1_RX_IGNORE_BELOW                           ; If ignore char is set to 0x00, do not
+03C9: C0 26    JC    0x03F0             (0219)    jc   .RESTORE_IDX_PP                                    ; ignore any characters.
                                         (0220) ENDIF
                                         (0221) 
                                         (0222) .UARTRX_CHK_OVFL:                                          ; Check for MAX String here
                                         (0223) 	
-03C5: 62 D3 00 MOV   REG[0xD3],0x0      (0224)    RAM_SETPAGE_IDX >UART_1_aRxBuffer                       ;   using idexed address mode
-03C8: 3C 01 0F CMP   [0x1],0xF          (0225)    cmp  [UART_1_bRxCnt],(UART_1_RX_BUFFER_SIZE - 1)
-03CB: C0 11    JC    0x03DD             (0226)    jc   .UARTRX_ISR_GETDATA
-03CD: 70 3F    AND   F,0x3F             
-03CF: 71 80    OR    F,0x80             (0227)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_10b
-03D1: 56 02 00 MOV   [X+2],0x0          (0228)    mov  [X + UART_1_aRxBuffer],00h                         ; Zero out last data in the buffer
-03D4: 70 3F    AND   F,0x3F             
-03D6: 71 00    OR    F,0x0              (0229)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_00b
-03D8: 2E 00 10 OR    [0x0],0x10         (0230)    or   [UART_1_fStatus],UART_1_RX_BUF_OVERRUN             ; Set error flags (parity,framing,overrun) bits
-03DB: 80 0E    JMP   0x03EA             (0231)    jmp  .RESTORE_IDX_PP
+03CB: 62 D3 00 MOV   REG[0xD3],0x0      (0224)    RAM_SETPAGE_IDX >UART_1_aRxBuffer                       ;   using idexed address mode
+03CE: 3C 01 0F CMP   [0x1],0xF          (0225)    cmp  [UART_1_bRxCnt],(UART_1_RX_BUFFER_SIZE - 1)
+03D1: C0 11    JC    0x03E3             (0226)    jc   .UARTRX_ISR_GETDATA
+03D3: 70 3F    AND   F,0x3F             
+03D5: 71 80    OR    F,0x80             (0227)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_10b
+03D7: 56 02 00 MOV   [X+2],0x0          (0228)    mov  [X + UART_1_aRxBuffer],00h                         ; Zero out last data in the buffer
+03DA: 70 3F    AND   F,0x3F             
+03DC: 71 00    OR    F,0x0              (0229)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_00b
+03DE: 2E 00 10 OR    [0x0],0x10         (0230)    or   [UART_1_fStatus],UART_1_RX_BUF_OVERRUN             ; Set error flags (parity,framing,overrun) bits
+03E1: 80 0E    JMP   0x03F0             (0231)    jmp  .RESTORE_IDX_PP
                                         (0232) 
                                         (0233) .UARTRX_ISR_GETDATA:                                       ; IF input data == "CR", then end of command
                                         (0234)                                                            ; X is already loaded with pointer
-03DD: 70 3F    AND   F,0x3F             
-03DF: 71 80    OR    F,0x80             (0235)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_10b
-03E1: 54 02    MOV   [X+2],A            (0236)    mov  [X+UART_1_aRxBuffer],A                             ; store data in array
 03E3: 70 3F    AND   F,0x3F             
-03E5: 71 00    OR    F,0x0              (0237)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_00b
-03E7: 75       INC   X                  (0238)    inc  X                                                  ; Inc the pointer
-03E8: 5A 01    MOV   [0x1],X            (0239)    mov  [UART_1_bRxCnt],X                                  ; Restore the pointer
+03E5: 71 80    OR    F,0x80             (0235)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_10b
+03E7: 54 02    MOV   [X+2],A            (0236)    mov  [X+UART_1_aRxBuffer],A                             ; store data in array
+03E9: 70 3F    AND   F,0x3F             
+03EB: 71 00    OR    F,0x0              (0237)    RAM_CHANGE_PAGE_MODE FLAG_PGMODE_00b
+03ED: 75       INC   X                  (0238)    inc  X                                                  ; Inc the pointer
+03EE: 5A 01    MOV   [0x1],X            (0239)    mov  [UART_1_bRxCnt],X                                  ; Restore the pointer
                                         (0240)                                                            ; ENDIF max string size
                                         (0241) .RESTORE_IDX_PP:
                                         (0242)    IF SYSTEM_LARGE_MEMORY_MODEL
-03EA: 18       POP   A                  
-03EB: 60 D3    MOV   REG[0xD3],A        (0243)       REG_RESTORE IDX_PP
+03F0: 18       POP   A                  
+03F1: 60 D3    MOV   REG[0xD3],A        (0243)       REG_RESTORE IDX_PP
                                         (0244)    ENDIF
                                         (0245) 
                                         (0246) .END_UARTRX_ISR:
-03ED: 20       POP   X                  (0247)    pop  X
-03EE: 18       POP   A                  (0248)    pop  A
+03F3: 20       POP   X                  (0247)    pop  X
+03F4: 18       POP   A                  (0248)    pop  A
                                         (0249) 
                                         (0250) ENDIF
                                         (0251) 
                                         (0252) UART_1_RX_ISR_END:
-03EF: 7E       RETI                     (0253)    reti
+03F5: 7E       RETI                     (0253)    reti
 (0254) 
 (0255) ; end of file UART_1INT.asm
 (0256) 
+FILE: lib\uart_1.asm
+                                        (0001) ;;*****************************************************************************
+                                        (0002) ;;*****************************************************************************
+                                        (0003) ;;  Filename:   UART_1.asm
+                                        (0004) ;;  Version: 5.2, Updated on 2009/10/23 at 10:13:12
+                                        (0005) ;;  Generated by PSoC Designer 5.0.1127.0
+                                        (0006) ;;
+                                        (0007) ;;  DESCRIPTION:  UART User Module software implementation file for the
+                                        (0008) ;;                22/24/25/26/27xxx families.
+                                        (0009) ;;
+                                        (0010) ;;
+                                        (0011) ;;  NOTE: User Module APIs conform to the fastcall16 convention for marshalling
+                                        (0012) ;;        arguments and observe the associated "Registers are volatile" policy.
+                                        (0013) ;;        This means it is the caller's responsibility to preserve any values
+                                        (0014) ;;        in the X and A registers that are still needed after the API functions
+                                        (0015) ;;        returns. For Large Memory Model devices it is also the caller's 
+                                        (0016) ;;        responsibility to perserve any value in the CUR_PP, IDX_PP, MVR_PP and 
+                                        (0017) ;;        MVW_PP registers. Even though some of these registers may not be modified
+                                        (0018) ;;        now, there is no guarantee that will remain the case in future releases.
+                                        (0019) ;;-----------------------------------------------------------------------------
+                                        (0020) ;;  Copyright (c) Cypress Semiconductor 2009. All Rights Reserved.
+                                        (0021) ;;*****************************************************************************
+                                        (0022) ;;*****************************************************************************
+                                        (0023) 
+                                        (0024) 
+                                        (0025) include "m8c.inc"
+                                        (0026) include "memory.inc"
+                                        (0027) include "UART_1.inc"
+                                        (0028) 
+                                        (0029) ;-----------------------------------------------
+                                        (0030) ;  Global Symbols
+                                        (0031) ;-----------------------------------------------
+                                        (0032) ;-------------------------------------------------------------------
+                                        (0033) ;  Declare the functions global for both assembler and C compiler.
+                                        (0034) ;
+                                        (0035) ;  Note that there are two names for each API. First name is
+                                        (0036) ;  assembler reference. Name with underscore is name refence for
+                                        (0037) ;  C compiler.  Calling function in C source code does not require
+                                        (0038) ;  the underscore.
+                                        (0039) ;-------------------------------------------------------------------
+                                        (0040) export  UART_1_SetTxIntMode
+                                        (0041) export _UART_1_SetTxIntMode
+                                        (0042) export  UART_1_EnableInt
+                                        (0043) export _UART_1_EnableInt
+                                        (0044) export  UART_1_DisableInt
+                                        (0045) export _UART_1_DisableInt
+                                        (0046) 
+                                        (0047) export  UART_1_Start
+                                        (0048) export _UART_1_Start
+                                        (0049) export  UART_1_Stop
+                                        (0050) export _UART_1_Stop
+                                        (0051) export  UART_1_SendData
+                                        (0052) export _UART_1_SendData
+                                        (0053) export  UART_1_bReadTxStatus
+                                        (0054) export _UART_1_bReadTxStatus
+                                        (0055) export  UART_1_bReadRxData
+                                        (0056) export _UART_1_bReadRxData
+                                        (0057) export  UART_1_bReadRxStatus
+                                        (0058) export _UART_1_bReadRxStatus
+                                        (0059) 
+                                        (0060) export  UART_1_IntCntl
+                                        (0061) export _UART_1_IntCntl
+                                        (0062) 
+                                        (0063) export  UART_1_TxIntMode
+                                        (0064) export _UART_1_TxIntMode
+                                        (0065) 
+                                        (0066) export  UART_1_PutSHexByte
+                                        (0067) export _UART_1_PutSHexByte
+                                        (0068) export  UART_1_PutSHexInt
+                                        (0069) export _UART_1_PutSHexInt
+                                        (0070) 
+                                        (0071) export  UART_1_CPutString
+                                        (0072) export _UART_1_CPutString
+                                        (0073) export  UART_1_PutString
+                                        (0074) export _UART_1_PutString
+                                        (0075) export  UART_1_PutChar
+                                        (0076) export _UART_1_PutChar
+                                        (0077) export  UART_1_Write
+                                        (0078) export _UART_1_Write
+                                        (0079) export  UART_1_CWrite
+                                        (0080) export _UART_1_CWrite
+                                        (0081) 
+                                        (0082) export  UART_1_cGetChar
+                                        (0083) export _UART_1_cGetChar
+                                        (0084) export  UART_1_cReadChar
+                                        (0085) export _UART_1_cReadChar
+                                        (0086) export  UART_1_iReadChar
+                                        (0087) export _UART_1_iReadChar
+                                        (0088) export  UART_1_PutCRLF
+                                        (0089) export _UART_1_PutCRLF
+                                        (0090) 
+                                        (0091) IF (UART_1_RXBUF_ENABLE)
+                                        (0092) export  UART_1_CmdReset
+                                        (0093) export _UART_1_CmdReset
+                                        (0094) export  UART_1_bCmdCheck
+                                        (0095) export _UART_1_bCmdCheck
+                                        (0096) export  UART_1_bCmdLength
+                                        (0097) export _UART_1_bCmdLength
+                                        (0098) export  UART_1_bErrCheck
+                                        (0099) export _UART_1_bErrCheck
+                                        (0100) 
+                                        (0101) export  UART_1_szGetParam
+                                        (0102) export _UART_1_szGetParam
+                                        (0103) export  UART_1_szGetRestOfParams
+                                        (0104) export _UART_1_szGetRestOfParams
+                                        (0105) ENDIF
+                                        (0106) 
+                                        (0107) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                        (0108) ; WARNING WARNING WARNING
+                                        (0109) ; The following exports are for backwards compatibility only and should
+                                        (0110) ; not be used for new designs. They may be eliminated in a future release.
+                                        (0111) ; Their status is "NO FURTHER MAINTENANCE". 
+                                        (0112) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                        (0113) export  bUART_1_ReadTxStatus
+                                        (0114) export _bUART_1_ReadTxStatus
+                                        (0115) export  bUART_1_ReadRxData
+                                        (0116) export _bUART_1_ReadRxData
+                                        (0117) export  bUART_1_ReadRxStatus
+                                        (0118) export _bUART_1_ReadRxStatus
+                                        (0119) 	
+                                        (0120) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                        (0121) ;             END WARNING
+                                        (0122) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                                        (0123) 
+                                        (0124) ;-----------------------------------------------
+                                        (0125) ; Variable Allocation
+                                        (0126) ;-----------------------------------------------
+                                        (0127) IF (UART_1_RXBUF_ENABLE)
+                                        (0128)     
+                                        (0129) area UART_1_RAM (RAM, REL, CON)
+                                        (0130)     
+                                        (0131)  ptrParam:   BLK  1
+                                        (0132) 
+                                        (0133) ENDIF
+                                        (0134) 
+                                        (0135) area text (ROM,REL)
+                                        (0136) 
+                                        (0137) ;-----------------------------------------------
+                                        (0138) ;  EQUATES
+                                        (0139) ;-----------------------------------------------
+                                        (0140) bfCONTROL_REG_START_BIT:        equ    1    ; Control register start bit
+                                        (0141) bfFUNCTION_REG_TX_INT_MODE_BIT: equ 0x10    ; the TX Int Mode bit
+                                        (0142) 
+                                        (0143) area UserModules (ROM, REL, CON)
+                                        (0144) 
+                                        (0145) ;=============================================================================
+                                        (0146) ;=============================================================================
+                                        (0147) ;
+                                        (0148) ;     Low-Level Commands
+                                        (0149) ;
+                                        (0150) ;=============================================================================
+                                        (0151) ;=============================================================================
+                                        (0152) 
+                                        (0153) .SECTION
+                                        (0154) ;-----------------------------------------------------------------------------
+                                        (0155) ;  FUNCTION NAME: UART_1_EnableInt
+                                        (0156) ;
+                                        (0157) ;  DESCRIPTION:
+                                        (0158) ;     Enables this UART's interrupt by setting the interrupt enable mask
+                                        (0159) ;     bit associated with this User Module. Remember to call the global
+                                        (0160) ;     interrupt enable function by using the macro: M8C_EnableGInt.
+                                        (0161) ;-----------------------------------------------------------------------------
+                                        (0162) ;
+                                        (0163) ;  ARGUMENTS:
+                                        (0164) ;     none.
+                                        (0165) ;
+                                        (0166) ;  RETURNS:
+                                        (0167) ;     none.
+                                        (0168) ;
+                                        (0169) ;  SIDE EFFECTS:
+                                        (0170) ;    The A and X registers may be modified by this or future implementations
+                                        (0171) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0172) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0173) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0174) ;    functions.
+                                        (0175) ;
+                                        (0176)  UART_1_EnableInt:
+                                        (0177) _UART_1_EnableInt:
+                                        (0178)    RAM_PROLOGUE RAM_USE_CLASS_1
+03F6: 43 E1 04 OR    REG[0xE1],0x4      (0179)    M8C_EnableIntMask UART_1_TX_INT_REG, UART_1_TX_INT_MASK
+03F9: 43 E1 08 OR    REG[0xE1],0x8      (0180)    M8C_EnableIntMask UART_1_RX_INT_REG, UART_1_RX_INT_MASK
+                                        (0181)    RAM_EPILOGUE RAM_USE_CLASS_1
+03FC: 7F       RET                      (0182)    ret
+                                        (0183) .ENDSECTION
+                                        (0184) 
+                                        (0185)     
+                                        (0186) .SECTION
+                                        (0187) ;-----------------------------------------------------------------------------
+                                        (0188) ;  FUNCTION NAME: UART_1_DisableInt
+                                        (0189) ;
+                                        (0190) ;  DESCRIPTION:
+                                        (0191) ;     Disables this UART's interrupt by clearing the interrupt enable mask bit
+                                        (0192) ;     associated with this User Module.
+                                        (0193) ;-----------------------------------------------------------------------------
+                                        (0194) ;
+                                        (0195) ;  ARGUMENTS:
+                                        (0196) ;     none.
+                                        (0197) ;
+                                        (0198) ;  RETURNS:
+                                        (0199) ;     none.
+                                        (0200) ;
+                                        (0201) ;  SIDE EFFECTS:
+                                        (0202) ;    The A and X registers may be modified by this or future implementations
+                                        (0203) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0204) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0205) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0206) ;    functions.
+                                        (0207) ;
+                                        (0208)  UART_1_DisableInt:
+                                        (0209) _UART_1_DisableInt:
+                                        (0210)    RAM_PROLOGUE RAM_USE_CLASS_1
+03FD: 41 E1 FB AND   REG[0xE1],0xFB     (0211)    M8C_DisableIntMask UART_1_TX_INT_REG, UART_1_TX_INT_MASK
+0400: 41 E1 F7 AND   REG[0xE1],0xF7     (0212)    M8C_DisableIntMask UART_1_RX_INT_REG, UART_1_RX_INT_MASK
+                                        (0213)    RAM_EPILOGUE RAM_USE_CLASS_1
+0403: 7F       RET                      (0214)    ret
+                                        (0215) .ENDSECTION
+                                        (0216) 
+                                        (0217) 
+                                        (0218) .SECTION
+                                        (0219) ;-----------------------------------------------------------------------------
+                                        (0220) ;  FUNCTION NAME: UART_1_SetTxIntMode(BYTE bTxIntMode)
+                                        (0221) ;
+                                        (0222) ;  DESCRIPTION:
+                                        (0223) ;     Sets the Tx Interrupt Mode bit in the Function Register.
+                                        (0224) ;-----------------------------------------------------------------------------
+                                        (0225) ;
+                                        (0226) ;  ARGUMENTS:
+                                        (0227) ;     BYTE bTxIntMode - The TX Interrupt mode setting. Use defined masks.
+                                        (0228) ;        Passed in the A register
+                                        (0229) ;
+                                        (0230) ;  RETURNS:
+                                        (0231) ;     none.
+                                        (0232) ;
+                                        (0233) ;  SIDE EFFECTS:
+                                        (0234) ;    The A and X registers may be modified by this or future implementations
+                                        (0235) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0236) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0237) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0238) ;    functions.
+                                        (0239) ;
+                                        (0240) ;  THEORY of OPERATION OR PROCEDURE:
+                                        (0241) ;     Sets the TX interrupt mode bit to define whether the interrupt occurs
+                                        (0242) ;     on TX register empty or TX transmit complete
+                                        (0243) ;
+                                        (0244)  UART_1_SetTxIntMode:
+                                        (0245) _UART_1_SetTxIntMode:
+                                        (0246)    RAM_PROLOGUE RAM_USE_CLASS_1
+0404: 71 10    OR    F,0x10             (0247)    M8C_SetBank1
+0406: 21 01    AND   A,0x1              (0248)    and   A, UART_1_INT_MODE_TX_COMPLETE
+0408: A0 07    JZ    0x0410             (0249)    jz    .SetModeRegEmpty
+040A: 43 28 10 OR    REG[0x28],0x10     (0250)    or    REG[UART_1_TX_FUNC_REG], bfFUNCTION_REG_TX_INT_MODE_BIT
+040D: 70 EF    AND   F,0xEF             (0251)    M8C_SetBank0
+                                        (0252)    RAM_EPILOGUE RAM_USE_CLASS_1
+040F: 7F       RET                      (0253)    ret
+                                        (0254) 
+                                        (0255) .SetModeRegEmpty:
+0410: 41 28 EF AND   REG[0x28],0xEF     (0256)    and   REG[UART_1_TX_FUNC_REG], ~bfFUNCTION_REG_TX_INT_MODE_BIT
+0413: 70 EF    AND   F,0xEF             (0257)    M8C_SetBank0
+                                        (0258)    RAM_EPILOGUE RAM_USE_CLASS_1
+0415: 7F       RET                      (0259)    ret
+                                        (0260) .ENDSECTION
+                                        (0261) 
+                                        (0262) 
+                                        (0263) .SECTION
+                                        (0264) ;-----------------------------------------------------------------------------
+                                        (0265) ;  FUNCTION NAME: UART_1_Start(BYTE bParity)
+                                        (0266) ;
+                                        (0267) ;  DESCRIPTION:
+                                        (0268) ;     Sets the start bit and parity in the Control register of this user module.
+                                        (0269) ;-----------------------------------------------------------------------------
+                                        (0270) ;
+                                        (0271) ;  ARGUMENTS:
+                                        (0272) ;     BYTE bParity - parity setting for the Transmitter and receiver. Use defined masks.
+                                        (0273) ;        Passed in the A register.
+                                        (0274) ;
+                                        (0275) ;  RETURNS:
+                                        (0276) ;     none.
+                                        (0277) ;
+                                        (0278) ;  SIDE EFFECTS:
+                                        (0279) ;    The A and X registers may be modified by this or future implementations
+                                        (0280) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0281) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0282) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0283) ;    functions.
+                                        (0284) ;
+                                        (0285)  UART_1_Start:
+                                        (0286) _UART_1_Start:
+                                        (0287)    RAM_PROLOGUE RAM_USE_CLASS_1
+                                        (0288)    ; Note, Proxy Class 4 only if receive buffer used; otherwise Proxy Class 1.
+                                        (0289) 
+0416: 29 01    OR    A,0x1              (0290)    or    A, bfCONTROL_REG_START_BIT
+0418: 60 2B    MOV   REG[0x2B],A        (0291)    mov   REG[UART_1_TX_CONTROL_REG], A
+041A: 60 2F    MOV   REG[0x2F],A        (0292)    mov   REG[UART_1_RX_CONTROL_REG], A
+                                        (0293) IF ( UART_1_RXBUF_ENABLE )
+041C: 91 2A    CALL  0x0548             (0294)    call  _UART_1_CmdReset
+                                        (0295) ENDIF
+                                        (0296)    RAM_EPILOGUE RAM_USE_CLASS_1
+041E: 7F       RET                      (0297)    ret
+                                        (0298) .ENDSECTION
+                                        (0299) 
+                                        (0300) 
+                                        (0301) .SECTION
+                                        (0302) ;-----------------------------------------------------------------------------
+                                        (0303) ;  FUNCTION NAME: UART_1_Stop
+                                        (0304) ;
+                                        (0305) ;  DESCRIPTION:
+                                        (0306) ;     Disables UART operation.
+                                        (0307) ;-----------------------------------------------------------------------------
+                                        (0308) ;
+                                        (0309) ;  ARGUMENTS:
+                                        (0310) ;     none.
+                                        (0311) ;
+                                        (0312) ;  RETURNS:
+                                        (0313) ;     none.
+                                        (0314) ;
+                                        (0315) ;  SIDE EFFECTS:
+                                        (0316) ;    The A and X registers may be modified by this or future implementations
+                                        (0317) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0318) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0319) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0320) ;    functions.
+                                        (0321) ;
+                                        (0322)  UART_1_Stop:
+                                        (0323) _UART_1_Stop:
+                                        (0324)    RAM_PROLOGUE RAM_USE_CLASS_1
+041F: 41 2B FE AND   REG[0x2B],0xFE     (0325)    and   REG[UART_1_TX_CONTROL_REG], ~bfCONTROL_REG_START_BIT
+0422: 41 2F FE AND   REG[0x2F],0xFE     (0326)    and   REG[UART_1_RX_CONTROL_REG], ~bfCONTROL_REG_START_BIT
+                                        (0327)    RAM_EPILOGUE RAM_USE_CLASS_1
+0425: 7F       RET                      (0328)    ret
+                                        (0329) .ENDSECTION
+                                        (0330) 
+                                        (0331) 
+                                        (0332) .SECTION
+                                        (0333) ;-----------------------------------------------------------------------------
+                                        (0334) ;  FUNCTION NAME: UART_1_SendData
+                                        (0335) ;
+                                        (0336) ;  DESCRIPTION:
+                                        (0337) ;     Initiates a transmission of data.
+                                        (0338) ;-----------------------------------------------------------------------------
+                                        (0339) ;
+                                        (0340) ;  ARGUMENTS:
+                                        (0341) ;     BYTE  TxData - data to transmit. PASSED in A register.
+                                        (0342) ;
+                                        (0343) ;  RETURNS:
+                                        (0344) ;     none.
+                                        (0345) ;
+                                        (0346) ;  SIDE EFFECTS:
+                                        (0347) ;    The A and X registers may be modified by this or future implementations
+                                        (0348) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0349) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0350) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0351) ;    functions.
+                                        (0352) ;
+                                        (0353)  UART_1_SendData:
+                                        (0354) _UART_1_SendData:
+                                        (0355)    RAM_PROLOGUE RAM_USE_CLASS_1
+0426: 60 29    MOV   REG[0x29],A        (0356)    mov REG[UART_1_TX_BUFFER_REG], A
+                                        (0357)    RAM_EPILOGUE RAM_USE_CLASS_1
+0428: 7F       RET                      (0358)    ret
+                                        (0359) .ENDSECTION
+                                        (0360) 
+                                        (0361) 
+                                        (0362) .SECTION
+                                        (0363) ;-----------------------------------------------------------------------------
+                                        (0364) ;  FUNCTION NAME: UART_1_bReadTxStatus
+                                        (0365) ;
+                                        (0366) ;  DESCRIPTION:
+                                        (0367) ;     Reads the Tx Status bits in the Control/Status register.
+                                        (0368) ;-----------------------------------------------------------------------------
+                                        (0369) ;
+                                        (0370) ;  ARGUMENTS:
+                                        (0371) ;     none.
+                                        (0372) ;
+                                        (0373) ;  RETURNS:
+                                        (0374) ;     BYTE  bTxStatus - transmit status data.  Use defined masks for detecting
+                                        (0375) ;           status bits (returned in A)
+                                        (0376) ;
+                                        (0377) ;  SIDE EFFECTS:
+                                        (0378) ;    The A and X registers may be modified by this or future implementations
+                                        (0379) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0380) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0381) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0382) ;    functions.
+                                        (0383) ;
+                                        (0384)  UART_1_bReadTxStatus:
+                                        (0385) _UART_1_bReadTxStatus:
+                                        (0386)  bUART_1_ReadTxStatus:                           ; For backwards compatibility only
+                                        (0387) _bUART_1_ReadTxStatus:                           ; For backwards compatibility only
+                                        (0388)    RAM_PROLOGUE RAM_USE_CLASS_1
+0429: 5D 2B    MOV   A,REG[0x2B]        (0389)    mov A,  REG[UART_1_TX_CONTROL_REG]
+                                        (0390)    RAM_EPILOGUE RAM_USE_CLASS_1
+042B: 7F       RET                      (0391)    ret
+                                        (0392) .ENDSECTION
+                                        (0393) 
+                                        (0394) 
+                                        (0395) .SECTION
+                                        (0396) ;-----------------------------------------------------------------------------
+                                        (0397) ;  FUNCTION NAME: UART_1_bReadRxData
+                                        (0398) ;
+                                        (0399) ;  DESCRIPTION:
+                                        (0400) ;     Reads the RX buffer register.  Should check the status regiser to make
+                                        (0401) ;     sure data is valid.
+                                        (0402) ;-----------------------------------------------------------------------------
+                                        (0403) ;
+                                        (0404) ;  ARGUMENTS:
+                                        (0405) ;     none.
+                                        (0406) ;
+                                        (0407) ;  RETURNS:
+                                        (0408) ;     bRxData - returned in A.
+                                        (0409) ;
+                                        (0410) ;  SIDE EFFECTS:
+                                        (0411) ;    The A and X registers may be modified by this or future implementations
+                                        (0412) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0413) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0414) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0415) ;    functions.
+                                        (0416) ;
+                                        (0417)  UART_1_bReadRxData:
+                                        (0418) _UART_1_bReadRxData:
+                                        (0419)  bUART_1_ReadRxData:                             ; For backwards compatibility only
+                                        (0420) _bUART_1_ReadRxData:                             ; For backwards compatibility only
+                                        (0421)    RAM_PROLOGUE RAM_USE_CLASS_1
+042C: 5D 2E    MOV   A,REG[0x2E]        (0422)    mov A, REG[UART_1_RX_BUFFER_REG]
+                                        (0423)    RAM_EPILOGUE RAM_USE_CLASS_1
+042E: 7F       RET                      (0424)    ret
+                                        (0425) .ENDSECTION
+                                        (0426) 
+                                        (0427) 
+                                        (0428) .SECTION
+                                        (0429) ;-----------------------------------------------------------------------------
+                                        (0430) ;  FUNCTION NAME: UART_1_bReadRxStatus
+                                        (0431) ;
+                                        (0432) ;  DESCRIPTION:
+                                        (0433) ;     Reads the RX Status bits in the Control/Status register.
+                                        (0434) ;-----------------------------------------------------------------------------
+                                        (0435) ;
+                                        (0436) ;  ARGUMENTS:
+                                        (0437) ;     none.
+                                        (0438) ;
+                                        (0439) ;  RETURNS:
+                                        (0440) ;     BYTE  bRXStatus - receive status data.  Use the following defined bits
+                                        (0441) ;                       masks: RX_COMPLETE and RX_BUFFER_EMPTY
+                                        (0442) ;           returned in A.
+                                        (0443) ;
+                                        (0444) ;  SIDE EFFECTS:
+                                        (0445) ;    The A and X registers may be modified by this or future implementations
+                                        (0446) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0447) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0448) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0449) ;    functions.
+                                        (0450) ;
+                                        (0451)  UART_1_bReadRxStatus:
+                                        (0452) _UART_1_bReadRxStatus:
+                                        (0453)  bUART_1_ReadRxStatus:                           ; For backwards compatibility only
+                                        (0454) _bUART_1_ReadRxStatus:                           ; For backwards compatibility only
+                                        (0455)    RAM_PROLOGUE RAM_USE_CLASS_1
+042F: 5D 2F    MOV   A,REG[0x2F]        (0456)    mov A,  REG[UART_1_RX_CONTROL_REG]
+                                        (0457)    RAM_EPILOGUE RAM_USE_CLASS_1
+0431: 7F       RET                      (0458)    ret
+                                        (0459) .ENDSECTION
+                                        (0460) 
+                                        (0461) 
+                                        (0462) .SECTION
+                                        (0463) ;-----------------------------------------------------------------------------
+                                        (0464) ;  FUNCTION NAME: UART_1_TxIntMode
+                                        (0465) ;
+                                        (0466) ;  DESCRIPTION:
+                                        (0467) ;     This function is used to change the TX Interrupt mode.
+                                        (0468) ;-----------------------------------------------------------------------------
+                                        (0469) ;
+                                        (0470) ;  ARGUMENTS:
+                                        (0471) ;     A => Tx Interrupt mode
+                                        (0472) ;             0 => Interrupt on TX_Reg_Empty  (Default)
+                                        (0473) ;             1 => Interrupt on TX Complete
+                                        (0474) ;
+                                        (0475) ;  RETURNS:
+                                        (0476) ;     none.
+                                        (0477) ;
+                                        (0478) ;  SIDE EFFECTS:
+                                        (0479) ;    The A and X registers may be modified by this or future implementations
+                                        (0480) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0481) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0482) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0483) ;    functions.
+                                        (0484) ;
+                                        (0485)  UART_1_TxIntMode:
+                                        (0486) _UART_1_TxIntMode:
+                                        (0487)    RAM_PROLOGUE RAM_USE_CLASS_1
+                                        (0488) 
+0432: 21 01    AND   A,0x1              (0489)    and  A,UART_1_INT_MODE_TX_COMPLETE
+0434: 71 10    OR    F,0x10             (0490)    M8C_SetBank1
+0436: 39 01    CMP   A,0x1              (0491)    cmp  A,UART_1_INT_MODE_TX_COMPLETE
+0438: A0 06    JZ    0x043F             (0492)    jz   .SetTxCmpMode
+                                        (0493) 
+043A: 41 28 EF AND   REG[0x28],0xEF     (0494)    and  reg[UART_1_TX_FUNC_REG],0xEF             ; Set Interrupt on Tx_Reg_Empty
+043D: 80 04    JMP   0x0442             (0495)    jmp  .TxIntMode_End
+                                        (0496) 
+                                        (0497) .SetTxCmpMode:                                       ; Set Interrupt on TX Complete
+043F: 43 28 10 OR    REG[0x28],0x10     (0498)    or   reg[UART_1_TX_FUNC_REG],0x10
+                                        (0499) 
+                                        (0500) .TxIntMode_End:
+0442: 70 EF    AND   F,0xEF             (0501)    M8C_SetBank0
+                                        (0502)    RAM_EPILOGUE RAM_USE_CLASS_1
+0444: 7F       RET                      (0503)    ret
+                                        (0504) .ENDSECTION
+                                        (0505) 
+                                        (0506)     
+                                        (0507) .SECTION
+                                        (0508) ;-----------------------------------------------------------------------------
+                                        (0509) ;  FUNCTION NAME: UART_1_IntCntl
+                                        (0510) ;
+                                        (0511) ;  DESCRIPTION:
+                                        (0512) ;     This function is used to enable/disable the Rx and Tx interrupt.
+                                        (0513) ;-----------------------------------------------------------------------------
+                                        (0514) ;
+                                        (0515) ;  ARGUMENTS:
+                                        (0516) ;     A => Interrupt mask
+                                        (0517) ;
+                                        (0518) ;  RETURNS:
+                                        (0519) ;     none.
+                                        (0520) ;
+                                        (0521) ;  SIDE EFFECTS:
+                                        (0522) ;    The A and X registers may be modified by this or future implementations
+                                        (0523) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0524) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0525) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0526) ;    functions.
+                                        (0527) ;
+                                        (0528) ;  THEORY of OPERATION or PROCEDURE:
+                                        (0529) ;     Set or Clears the Tx/Rx user module interrupt enable mask bit in the TX
+                                        (0530) ;     and RX block.
+                                        (0531) ;
+                                        (0532)  UART_1_IntCntl:
+                                        (0533) _UART_1_IntCntl:
+                                        (0534)    RAM_PROLOGUE RAM_USE_CLASS_1
+                                        (0535) 
+0445: 08       PUSH  A                  (0536)    push A
+0446: 21 01    AND   A,0x1              (0537)    and  A,UART_1_ENABLE_RX_INT
+0448: A0 06    JZ    0x044F             (0538)    jz   .DisRxInt
+                                        (0539)      ; Enable Rx Interrupt
+044A: 43 E1 08 OR    REG[0xE1],0x8      (0540)    M8C_EnableIntMask UART_1_RX_INT_REG, UART_1_RX_INT_MASK
+044D: 80 04    JMP   0x0452             (0541)    jmp  .CheckTxInt
+                                        (0542) .DisRxInt:
+                                        (0543)      ; Disable Rx Interrupt
+044F: 41 E1 F7 AND   REG[0xE1],0xF7     (0544)    M8C_DisableIntMask UART_1_RX_INT_REG, UART_1_RX_INT_MASK
+                                        (0545) 
+                                        (0546) .CheckTxInt:
+0452: 18       POP   A                  (0547)    pop  A
+0453: 21 02    AND   A,0x2              (0548)    and  A,UART_1_ENABLE_TX_INT
+0455: A0 06    JZ    0x045C             (0549)    jz   .DisTxInt
+                                        (0550)      ; Enable Tx Interrupt
+0457: 43 E1 04 OR    REG[0xE1],0x4      (0551)    M8C_EnableIntMask UART_1_TX_INT_REG, UART_1_TX_INT_MASK
+045A: 80 04    JMP   0x045F             (0552)    jmp  .End_IntCntl
+                                        (0553) .DisTxInt:
+                                        (0554)      ; Disable Tx Interrupt
+045C: 41 E1 FB AND   REG[0xE1],0xFB     (0555)    M8C_DisableIntMask UART_1_TX_INT_REG, UART_1_TX_INT_MASK
+                                        (0556) 
+                                        (0557) .End_IntCntl:
+                                        (0558)    RAM_EPILOGUE RAM_USE_CLASS_1
+045F: 7F       RET                      (0559)    ret
+                                        (0560) .ENDSECTION
+                                        (0561) 
+                                        (0562) 
+                                        (0563) ;=============================================================================
+                                        (0564) ;=============================================================================
+                                        (0565) ;
+                                        (0566) ;     High-Level Commands
+                                        (0567) ;
+                                        (0568) ;=============================================================================
+                                        (0569) ;=============================================================================
+                                        (0570) 
+                                        (0571) 
+                                        (0572) ;-----------------------------------------------------------------------------
+                                        (0573) ;  FUNCTION NAME: UART_1_PutSHexByte
+                                        (0574) ;
+                                        (0575) ;  DESCRIPTION:
+                                        (0576) ;     Print a byte in Hex (two characters) to the UART Tx
+                                        (0577) ;-----------------------------------------------------------------------------
+                                        (0578) ;
+                                        (0579) ;  ARGUMENTS:
+                                        (0580) ;     A  => (BYTE) Data/char to be printed
+                                        (0581) ;
+                                        (0582) ;  RETURNS:
+                                        (0583) ;     none.
+                                        (0584) ;
+                                        (0585) ;  SIDE EFFECTS:
+                                        (0586) ;    The A and X registers may be modified by this or future implementations
+                                        (0587) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0588) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0589) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0590) ;    functions.
+                                        (0591) ;
+                                        (0592) .LITERAL
+                                        (0593) UART_1_HEX_STR:
+                                        (0594)      DS    "0123456789ABCDEF"
+                                        (0595) .ENDLITERAL
+                                        (0596) 
+                                        (0597) .SECTION
+                                        (0598)  UART_1_PutSHexByte:
+                                        (0599) _UART_1_PutSHexByte:
+                                        (0600)    RAM_PROLOGUE RAM_USE_CLASS_1
+0460: 30       HALT                     
+0461: 31 32    XOR   A,0x32             
+0463: 33 34    XOR   A,[X+52]           
+0465: 35 36    XOR   [X+54],A           
+0467: 37 38 39 XOR   [X+56],0x39        
+046A: 41 42 43 AND   REG[0x42],0x43     
+046D: 44 45 46 OR    REG[X+0x45],0x46   
+0470: 08       PUSH  A                  (0601)    push  A                             ; Save lower nibble
+0471: 67       ASR   A                  (0602)    asr   A                             ; Shift high nibble to right
+0472: 67       ASR   A                  (0603)    asr   A
+0473: 67       ASR   A                  (0604)    asr   A
+0474: 67       ASR   A                  (0605)    asr   A
+0475: 21 0F    AND   A,0xF              (0606)    and   A,0Fh                         ; Mask off nibble
+0477: FF E7    INDEX 0x0460             (0607)    index UART_1_HEX_STR                ; Get Hex value
+0479: 90 0F    CALL  0x048A             (0608)    call  UART_1_PutChar                ; Write data to screen
+047B: 18       POP   A                  (0609)    pop   A                             ; Restore value
+047C: 21 0F    AND   A,0xF              (0610)    and   A,0Fh                         ; Mask off lower nibble
+047E: FF E0    INDEX 0x0460             (0611)    index UART_1_HEX_STR                ; Get Hex value
+0480: 90 08    CALL  0x048A             (0612)    call  UART_1_PutChar                ; Write data to screen
+                                        (0613)    RAM_EPILOGUE RAM_USE_CLASS_1
+0482: 7F       RET                      (0614)    ret
+                                        (0615) .ENDSECTION
+                                        (0616) 
+                                        (0617) 
+                                        (0618) .SECTION
+                                        (0619) ;-----------------------------------------------------------------------------
+                                        (0620) ;  FUNCTION NAME: UART_1_PutSHexInt
+                                        (0621) ;
+                                        (0622) ;  DESCRIPTION:
+                                        (0623) ;     Print an Int in Hex (four characters) to UART Tx
+                                        (0624) ;-----------------------------------------------------------------------------
+                                        (0625) ;
+                                        (0626) ;  ARGUMENTS:
+                                        (0627) ;     Pointer to string
+                                        (0628) ;     A  => ASB of Int
+                                        (0629) ;     X  => MSB of Int
+                                        (0630) ;
+                                        (0631) ;  RETURNS:
+                                        (0632) ;     none.
+                                        (0633) ;
+                                        (0634) ;  SIDE EFFECTS:
+                                        (0635) ;    The A and X registers may be modified by this or future implementations
+                                        (0636) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0637) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0638) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0639) ;    functions.
+                                        (0640) ;
+                                        (0641) 
+                                        (0642)  UART_1_PutSHexInt:
+                                        (0643) _UART_1_PutSHexInt:
+                                        (0644)    RAM_PROLOGUE RAM_USE_CLASS_1
+0483: 4B       SWAP  A,X                (0645)    swap  A,X
+0484: 9F EA    CALL  0x0470             (0646)    call  UART_1_PutSHexByte            ; Print MSB
+0486: 5B       MOV   A,X                (0647)    mov   A,X                           ; Move LSB into position
+0487: 9F E7    CALL  0x0470             (0648)    call  UART_1_PutSHexByte            ; Print LSB
+                                        (0649)    RAM_EPILOGUE RAM_USE_CLASS_1
+0489: 7F       RET                      (0650)    ret
+                                        (0651) .ENDSECTION
+                                        (0652) 
+                                        (0653) 
+                                        (0654) .SECTION
+                                        (0655) ;-----------------------------------------------------------------------------
+                                        (0656) ;  FUNCTION NAME: UART_1_PutChar
+                                        (0657) ;
+                                        (0658) ;  DESCRIPTION:
+                                        (0659) ;     Send character out through UART TX port.
+                                        (0660) ;-----------------------------------------------------------------------------
+                                        (0661) ;
+                                        (0662) ;  ARGUMENTS:
+                                        (0663) ;     A has Character to send to UART Tx Port
+                                        (0664) ;
+                                        (0665) ;  RETURNS:
+                                        (0666) ;     none
+                                        (0667) ;
+                                        (0668) ;  SIDE EFFECTS:
+                                        (0669) ;    The A and X registers may be modified by this or future implementations
+                                        (0670) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0671) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0672) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0673) ;    functions.
+                                        (0674) ;
+                                        (0675) 
+                                        (0676)    macro InLinePutChar( Source )
+                                        (0677) .BufEmptyWaitLoop:
+                                        (0678)    tst REG[UART_1_TX_CONTROL_REG], UART_1_TX_BUFFER_EMPTY     ; Check Tx Status
+                                        (0679)    jz  .BufEmptyWaitLoop
+                                        (0680)    mov REG[UART_1_TX_BUFFER_REG], @Source        ; Write data to Tx Port
+                                        (0681)    endm
+                                        (0682) 
+                                        (0683)  UART_1_PutChar:
+                                        (0684) _UART_1_PutChar:
+                                        (0685)    RAM_PROLOGUE RAM_USE_CLASS_1
+048A: 49 2B 10 TST   REG[0x2B],0x10     
+048D: AF FC    JZ    0x048A             
+048F: 60 29    MOV   REG[0x29],A        (0686)    InLinePutChar A
+                                        (0687)    RAM_EPILOGUE RAM_USE_CLASS_1
+0491: 7F       RET                      (0688)    ret
+                                        (0689) .ENDSECTION
+                                        (0690) 
+                                        (0691) 
+                                        (0692) .SECTION
+                                        (0693) ;-----------------------------------------------------------------------------
+                                        (0694) ;  FUNCTION NAME: UART_1_cGetChar
+                                        (0695) ;
+                                        (0696) ;  DESCRIPTION:
+                                        (0697) ;     Read character from UART RX port.
+                                        (0698) ;-----------------------------------------------------------------------------
+                                        (0699) ;
+                                        (0700) ;  ARGUMENTS:
+                                        (0701) ;      none
+                                        (0702) ;
+                                        (0703) ;  RETURNS:
+                                        (0704) ;     char that is returned from UART
+                                        (0705) ;
+                                        (0706) ;  SIDE EFFECTS:
+                                        (0707) ;    The A and X registers may be modified by this or future implementations
+                                        (0708) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0709) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0710) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0711) ;    functions.
+                                        (0712) ;
+                                        (0713) ;    Program flow will stay in this function until a character is received.
+                                        (0714) ;    If the watchdog timer is used, care must be taken to make sure that
+                                        (0715) ;    the delay between characters is less than the watchdog timeout.
+                                        (0716) ;
+                                        (0717)  UART_1_cGetChar:
+                                        (0718) _UART_1_cGetChar:
+                                        (0719)    RAM_PROLOGUE RAM_USE_CLASS_1
+0492: 49 2F 08 TST   REG[0x2F],0x8      (0720)    tst REG[UART_1_RX_CONTROL_REG],UART_1_RX_REG_FULL    ; Check if a character is ready
+0495: AF FC    JZ    0x0492             (0721)    jz  UART_1_cGetChar                              ; If not loop
+0497: 5D 2E    MOV   A,REG[0x2E]        (0722)    mov A, REG[UART_1_RX_BUFFER_REG]                 ; Get character
+                                        (0723)    RAM_EPILOGUE RAM_USE_CLASS_1
+0499: 7F       RET                      (0724)    ret
+                                        (0725) .ENDSECTION
+                                        (0726) 
+                                        (0727) 
+                                        (0728) .SECTION
+                                        (0729) ;-----------------------------------------------------------------------------
+                                        (0730) ;  FUNCTION NAME: UART_1_cReadChar
+                                        (0731) ;
+                                        (0732) ;  DESCRIPTION:
+                                        (0733) ;     Read character from UART RX port.
+                                        (0734) ;-----------------------------------------------------------------------------
+                                        (0735) ;
+                                        (0736) ;  ARGUMENTS:
+                                        (0737) ;      none
+                                        (0738) ;
+                                        (0739) ;  RETURNS:
+                                        (0740) ;     char that is returned from UART
+                                        (0741) ;
+                                        (0742) ;  SIDE EFFECTS:
+                                        (0743) ;    The A and X registers may be modified by this or future implementations
+                                        (0744) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0745) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0746) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0747) ;    functions.
+                                        (0748) ;
+                                        (0749) ;    A valid 0x00 character will be ignored, since a 0x00 return value
+                                        (0750) ;    implies a valid character or an error condition occured.
+                                        (0751) ;
+                                        (0752)  UART_1_cReadChar:
+                                        (0753) _UART_1_cReadChar:
+                                        (0754)    RAM_PROLOGUE RAM_USE_CLASS_1
+049A: 5D 2F    MOV   A,REG[0x2F]        (0755)    mov  A,REG[UART_1_RX_CONTROL_REG]                       ; Get Status of RX
+049C: 08       PUSH  A                  (0756)    push A
+049D: 21 08    AND   A,0x8              (0757)    and  A,UART_1_RX_COMPLETE                               ; Check if a character is ready
+049F: B0 04    JNZ   0x04A4             (0758)    jnz  .RX_DATA_RDY                                       ; Data Ready go read it.
+04A1: 18       POP   A                  (0759)    pop  A
+04A2: 80 0B    JMP   0x04AE             (0760)    jmp  .RX_NO_VALID_CHAR
+                                        (0761) 
+                                        (0762) .RX_DATA_RDY:
+04A4: 5D 2E    MOV   A,REG[0x2E]        (0763)    mov  A,REG[UART_1_RX_BUFFER_REG ]          
+04A6: 4B       SWAP  A,X                (0764)    swap A,X                                                ; determine if data is valid
+                                        (0765) 
+04A7: 18       POP   A                  (0766)    pop  A                                                  ; Check for errors
+04A8: 21 A0    AND   A,0xA0             (0767)    and  A,(UART_1_RX_PARITY_ERROR | UART_1_RX_FRAMING_ERROR)
+04AA: B0 03    JNZ   0x04AE             (0768)    jnz  .RX_NO_VALID_CHAR                                  ; No character, exit
+04AC: 4B       SWAP  A,X                (0769)    swap A,X                                                ; Put data in A and exit
+                                        (0770)    RAM_EPILOGUE RAM_USE_CLASS_1
+04AD: 7F       RET                      (0771)    ret
+                                        (0772) 
+                                        (0773) .RX_NO_VALID_CHAR:
+04AE: 50 00    MOV   A,0x0              (0774)    mov A,0x00                                              ; Zero out character
+                                        (0775) 
+                                        (0776)  End_UART_1_cReadChar:
+                                        (0777)    RAM_EPILOGUE RAM_USE_CLASS_1
+04B0: 7F       RET                      (0778)    ret
+                                        (0779) .ENDSECTION
+                                        (0780) 
+                                        (0781) 
+                                        (0782) .SECTION
+                                        (0783) ;-----------------------------------------------------------------------------
+                                        (0784) ;  FUNCTION NAME: UART_1_iReadChar
+                                        (0785) ;
+                                        (0786) ;  WARNING WARNING WARNING  Negative return value not correct!!!!  We may want
+                                        (0787) ;  to just set a value in the upper byte if error conditions exists.
+                                        (0788) ;
+                                        (0789) ;  DESCRIPTION:
+                                        (0790) ;     Read character from UART RX port.
+                                        (0791) ;-----------------------------------------------------------------------------
+                                        (0792) ;
+                                        (0793) ;  ARGUMENTS:
+                                        (0794) ;      none
+                                        (0795) ;
+                                        (0796) ;  RETURNS:
+                                        (0797) ;     An integer value is returned.  A negative value inplies and error
+                                        (0798) ;     condition, a positive value between 0 and 255 is the return character.
+                                        (0799) ;
+                                        (0800) ;     Error Codes:
+                                        (0801) ;        0x80CC    Parity Error
+                                        (0802) ;        0x40CC    Overrun Error
+                                        (0803) ;        0x20CC    Framing Error
+                                        (0804) ;        0x01CC    No Data available
+                                        (0805) ;
+                                        (0806) ;  SIDE EFFECTS:
+                                        (0807) ;    The A and X registers may be modified by this or future implementations
+                                        (0808) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0809) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0810) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0811) ;    functions.
+                                        (0812) ;
+                                        (0813)  UART_1_iReadChar:
+                                        (0814) _UART_1_iReadChar:
+                                        (0815)    RAM_PROLOGUE RAM_USE_CLASS_1
+04B1: 5D 2F    MOV   A,REG[0x2F]        (0816)    mov  A,REG[UART_1_RX_CONTROL_REG]                       ; Get Status of RX
+                                        (0817)                                                            ; Mask only errors and data ready
+04B3: 21 E8    AND   A,0xE8             (0818)    and  A,(UART_1_RX_ERROR|UART_1_RX_REG_FULL)
+04B5: 08       PUSH  A                  (0819)    push A
+04B6: 21 08    AND   A,0x8              (0820)    and  A,UART_1_RX_COMPLETE                               ; Check if a character is ready
+04B8: B0 07    JNZ   0x04C0             (0821)    jnz  .RX_GET_DATA                                       ; Data Ready go read it.
+04BA: 18       POP   A                  (0822)    pop  A
+04BB: 29 01    OR    A,0x1              (0823)    or   A,UART_1_RX_NO_DATA                                ; Add no data flag
+04BD: 4B       SWAP  A,X                (0824)    swap A,X
+04BE: 80 07    JMP   0x04C6             (0825)    jmp  End_UART_1_iReadChar
+                                        (0826) 
+                                        (0827) .RX_GET_DATA:
+04C0: 18       POP   A                  (0828)    pop  A
+04C1: 21 E0    AND   A,0xE0             (0829)    and  A,UART_1_RX_ERROR
+04C3: 4B       SWAP  A,X                (0830)    swap A,X
+04C4: 5D 2E    MOV   A,REG[0x2E]        (0831)    mov  A,REG[UART_1_RX_BUFFER_REG ]                       ; Read data first, then
+                                        (0832)                                                            ; determine if data is valid
+                                        (0833) 
+                                        (0834)  End_UART_1_iReadChar:
+                                        (0835)    RAM_EPILOGUE RAM_USE_CLASS_1
+04C6: 7F       RET                      (0836)    ret
+                                        (0837) .ENDSECTION
+                                        (0838) 
+                                        (0839) 
+                                        (0840) .SECTION
+                                        (0841) ;-----------------------------------------------------------------------------
+                                        (0842) ;  FUNCTION NAME: UART_1_PutString
+                                        (0843) ;
+                                        (0844) ;  DESCRIPTION:
+                                        (0845) ;     Send String out through UART TX port.
+                                        (0846) ;-----------------------------------------------------------------------------
+                                        (0847) ;
+                                        (0848) ;  ARGUMENTS:
+                                        (0849) ;     Pointer to String
+                                        (0850) ;     A has MSB of string address
+                                        (0851) ;     X has LSB of string address
+                                        (0852) ;
+                                        (0853) ;  RETURNS:
+                                        (0854) ;     none
+                                        (0855) ;
+                                        (0856) ;  SIDE EFFECTS:
+                                        (0857) ;    The A and X registers may be modified by this or future implementations
+                                        (0858) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0859) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0860) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0861) ;    functions.
+                                        (0862) ;          
+                                        (0863) ;    Currently only the page pointer registers listed below are modified: 
+                                        (0864) ;          IDX_PP
+                                        (0865) ;
+                                        (0866)  UART_1_PutString:
+                                        (0867) _UART_1_PutString:
+04C7: 70 BF    AND   F,0xBF             (0868)    RAM_PROLOGUE RAM_USE_CLASS_3
+04C9: 60 D3    MOV   REG[0xD3],A        (0869)    RAM_SETPAGE_IDX A
+                                        (0870) .PutStringLoop:
+04CB: 52 00    MOV   A,[X+0]            (0871)    mov   A,[X]                                   ; Get value pointed to by X
+04CD: A0 06    JZ    0x04D4             (0872)    jz    End_PutString                           ; Check for end of string
+04CF: 9F B9    CALL  0x048A             (0873)    call  UART_1_PutChar                          ; Send character to Tx port
+04D1: 75       INC   X                  (0874)    inc   X                                       ; Advance pointer to next character
+04D2: 8F F8    JMP   0x04CB             (0875)    jmp   .PutStringLoop                          ; Get next character
+                                        (0876) 
+                                        (0877) End_PutString:
+04D4: 70 3F    AND   F,0x3F             
+04D6: 71 C0    OR    F,0xC0             (0878)    RAM_EPILOGUE RAM_USE_CLASS_3
+04D8: 7F       RET                      (0879)    ret
+                                        (0880) .ENDSECTION
+                                        (0881)     
+                                        (0882) .SECTION
+                                        (0883) ;-----------------------------------------------------------------------------
+                                        (0884) ;  FUNCTION NAME: UART_1_Write
+                                        (0885) ;
+                                        (0886) ;  DESCRIPTION:
+                                        (0887) ;     Send String of length X to serial port
+                                        (0888) ;-----------------------------------------------------------------------------
+                                        (0889) ;
+                                        (0890) ;  ARGUMENTS:
+                                        (0891) ;     Pointer to String
+                                        (0892) ;     [SP-5] Count of characters to send
+                                        (0893) ;     [SP-4] has MSB of string address
+                                        (0894) ;     [SP-3] has LSB of string address
+                                        (0895) ;
+                                        (0896) ;  RETURNS:
+                                        (0897) ;     none
+                                        (0898) ;
+                                        (0899) ;  SIDE EFFECTS:
+                                        (0900) ;    The A and X registers may be modified by this or future implementations
+                                        (0901) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0902) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0903) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0904) ;    functions.
+                                        (0905) ;          
+                                        (0906) ;    Currently only the page pointer registers listed below are modified: 
+                                        (0907) ;          IDX_PP
+                                        (0908) ;
+                                        (0909) CNT_LEN:    equ -5                               ; Length of data to send
+                                        (0910) STR_MSB:    equ -4                               ; MSB pointer of string 
+                                        (0911) STR_LSB:    equ -3                               ; LSB pointer of string 
+                                        (0912) 
+                                        (0913)  UART_1_Write:
+                                        (0914) _UART_1_Write:
+04D9: 70 BF    AND   F,0xBF             (0915)    RAM_PROLOGUE RAM_USE_CLASS_3
+04DB: 62 D3 07 MOV   REG[0xD3],0x7      (0916)    RAM_SETPAGE_IDX2STK                           ; Refer indexed addrs to the stack
+04DE: 4F       MOV   X,SP               (0917)    mov   X, SP                                   ; Establish the frame pointer 
+                                        (0918) 
+                                        (0919) .NextByteLoop:
+04DF: 52 FB    MOV   A,[X-5]            (0920)    mov   A, [X+CNT_LEN]                          ; End of the string?
+04E1: A0 1A    JZ    0x04FC             (0921)    jz    .End_Write                              ;   Yes, prepare to exit
+04E3: 7B FB    DEC   [X-5]              (0922)    dec   [X+CNT_LEN]                             ; Decrement counter
+                                        (0923) 
+                                        (0924)    IF SYSTEM_LARGE_MEMORY_MODEL
+04E5: 52 FC    MOV   A,[X-4]            (0925)    mov   A, [X+STR_MSB]                          ; Load pointer to char to send
+                                        (0926)    ENDIF
+                                        (0927) 
+04E7: 59 FD    MOV   X,[X-3]            (0928)    mov   X, [X+STR_LSB]                          ; Load pointer to char to send
+04E9: 60 D3    MOV   REG[0xD3],A        (0929)    RAM_SETPAGE_IDX A                             ; switch index pages
+04EB: 52 00    MOV   A,[X+0]            (0930)    mov   A, [X]                                  ; Grab the data
+04ED: 49 2B 10 TST   REG[0x2B],0x10     
+04F0: AF FC    JZ    0x04ED             
+04F2: 60 29    MOV   REG[0x29],A        (0931)    InLinePutChar A                               ; Put data in empty TX buf reg
+04F4: 4F       MOV   X,SP               (0932)    mov   X, SP                                   ; Recover frame pointer
+04F5: 62 D3 07 MOV   REG[0xD3],0x7      (0933)    RAM_SETPAGE_IDX2STK                           ; Prepare for stack access
+04F8: 77 FD    INC   [X-3]              (0934)    inc   [X+STR_LSB]                             ; Point to next byte, but do not
+04FA: 8F E4    JMP   0x04DF             (0935)    jmp   .NextByteLoop                           ;    cross RAM page boundary!
+                                        (0936) 
+                                        (0937) .End_Write:
+04FC: 70 3F    AND   F,0x3F             
+04FE: 71 C0    OR    F,0xC0             (0938)    RAM_EPILOGUE RAM_USE_CLASS_3
+0500: 7F       RET                      (0939)    ret
+                                        (0940) .ENDSECTION
+                                        (0941)     
+                                        (0942) 
+                                        (0943) .SECTION
+                                        (0944) ;-----------------------------------------------------------------------------
+                                        (0945) ;  FUNCTION NAME: UART_1_CWrite
+                                        (0946) ;
+                                        (0947) ;             WARNING WARNING NOT COMPLETE
+                                        (0948) ;
+                                        (0949) ;  DESCRIPTION:
+                                        (0950) ;     Send String of length X to serial port
+                                        (0951) ;-----------------------------------------------------------------------------
+                                        (0952) ;
+                                        (0953) ;  ARGUMENTS:
+                                        (0954) ;     [SP-4] MSB of Count of character to send
+                                        (0955) ;     [SP-3] LSB of Count of character to send
+                                        (0956) ;     [SP-2] has MSB of string address
+                                        (0957) ;     [SP-1] has LSB of string address
+                                        (0958) ;
+                                        (0959) ;  RETURNS:
+                                        (0960) ;     none
+                                        (0961) ;
+                                        (0962) ;  SIDE EFFECTS:
+                                        (0963) ;    The A and X registers may be modified by this or future implementations
+                                        (0964) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (0965) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (0966) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (0967) ;    functions.
+                                        (0968) ;
+                                        (0969) CLEN_MSB:   equ -6           ; MSB Length of data to send
+                                        (0970) CLEN_LSB:   equ -5           ; LSB Length of data to send
+                                        (0971) CSTR_MSB:   equ -4           ; MSB pointer of string
+                                        (0972) CSTR_LSB:   equ -3           ; LSB pointer of string
+                                        (0973) 
+                                        (0974)  UART_1_CWrite:
+                                        (0975) _UART_1_CWrite:
+                                        (0976)    RAM_PROLOGUE RAM_USE_CLASS_2
+0501: 4F       MOV   X,SP               (0977)    mov   X,SP
+                                        (0978) .CW_Loop:
+0502: 3D FA 00 CMP   [X-6],0x0          (0979)    cmp   [X+CLEN_MSB],0x00                  ; Check for zero counter
+0505: B0 06    JNZ   0x050C             (0980)    jnz   .CW_WRITEIT
+0507: 3D FB 00 CMP   [X-5],0x0          (0981)    cmp   [X+CLEN_LSB],0x00
+050A: A0 1D    JZ    0x0528             (0982)    jz    .End_CWrite                        ; Leave if done
+                                        (0983) 
+                                        (0984) .CW_WRITEIT:                                
+050C: 10       PUSH  X                  (0985)    push  X                                  ; Save frame pointer
+050D: 52 FC    MOV   A,[X-4]            (0986)    mov   A,[X+CSTR_MSB]
+050F: 59 FD    MOV   X,[X-3]            (0987)    mov   X,[X+CSTR_LSB]
+0511: 28       ROMX                     (0988)    romx                                     ; Get character from ROM
+0512: 49 2B 10 TST   REG[0x2B],0x10     
+0515: AF FC    JZ    0x0512             
+0517: 60 29    MOV   REG[0x29],A        (0989)    InLinePutChar A                          ; Put data in empty TX buf reg
+0519: 20       POP   X                  (0990)    pop   X                                  ; Restore frame pointer
+051A: 07 FD 01 ADD   [X-3],0x1          (0991)    add   [X+CSTR_LSB],1                     ; Increment the string pointer
+051D: 0F FC 00 ADC   [X-4],0x0          (0992)    adc   [X+CSTR_MSB],0
+0520: 17 FB 01 SUB   [X-5],0x1          (0993)    sub   [X+CLEN_LSB],0x01                  ; Dec the counter
+0523: 1F FA 00 SBB   [X-6],0x0          (0994)    sbb   [X+CLEN_MSB],0x00
+0526: 8F DB    JMP   0x0502             (0995)    jmp   .CW_Loop
+                                        (0996) 
+                                        (0997) .End_CWrite:
+0528: 70 3F    AND   F,0x3F             
+052A: 71 C0    OR    F,0xC0             (0998)    RAM_EPILOGUE RAM_USE_CLASS_2
+052C: 7F       RET                      (0999)    ret
+                                        (1000) .ENDSECTION
+                                        (1001) 
+                                        (1002) 
+                                        (1003) .SECTION
+                                        (1004) ;-----------------------------------------------------------------------------
+                                        (1005) ;  FUNCTION NAME: UART_1_CPutString
+                                        (1006) ;
+                                        (1007) ;  DESCRIPTION:
+                                        (1008) ;     Send String out through UART TX port.
+                                        (1009) ;-----------------------------------------------------------------------------
+                                        (1010) ;
+                                        (1011) ;  ARGUMENTS:
+                                        (1012) ;     Pointer to String
+                                        (1013) ;     A has MSB of string address
+                                        (1014) ;     X has LSB of string address
+                                        (1015) ;
+                                        (1016) ;  RETURNS:
+                                        (1017) ;     none
+                                        (1018) ;
+                                        (1019) ;  SIDE EFFECTS:
+                                        (1020) ;    The A and X registers may be modified by this or future implementations
+                                        (1021) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (1022) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (1023) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (1024) ;    functions.
+                                        (1025) ;
+                                        (1026)  UART_1_CPutString:
+                                        (1027) _UART_1_CPutString:
+                                        (1028)    RAM_PROLOGUE RAM_USE_CLASS_1
+052D: 08       PUSH  A                  (1029)    push  A                                       ; Store ROM pointer
+052E: 10       PUSH  X                  (1030)    push  X
+052F: 28       ROMX                     (1031)    romx                                          ; Get character from ROM
+0530: A0 0B    JZ    0x053C             (1032)    jz    .End_CPutString
+0532: 9F 56    CALL  0x048A             (1033)    call  UART_1_PutChar                          ; Print character
+0534: 20       POP   X                  (1034)    pop   X
+0535: 18       POP   A                  (1035)    pop   A
+0536: 75       INC   X                  (1036)    inc   X                                       ; Inc LSB of pointer
+0537: DF F5    JNC   0x052D             (1037)    jnc   UART_1_CPutString                       ; Check for carry
+0539: 74       INC   A                  (1038)    inc   A                                       ; Inc MSB of pointer
+053A: 8F F2    JMP   0x052D             (1039)    jmp   UART_1_CPutString
+                                        (1040) 
+                                        (1041) 
+                                        (1042) .End_CPutString:
+053C: 38 FE    ADD   SP,0xFE            (1043)    add   SP, -2
+                                        (1044)    RAM_EPILOGUE RAM_USE_CLASS_1
+053E: 7F       RET                      (1045)    ret
+                                        (1046) .ENDSECTION
+                                        (1047) 
+                                        (1048) 
+                                        (1049) .SECTION
+                                        (1050) ;-----------------------------------------------------------------------------
+                                        (1051) ;  FUNCTION NAME: UART_1_PutCRLF
+                                        (1052) ;
+                                        (1053) ;  DESCRIPTION:
+                                        (1054) ;     Send a CR and LF
+                                        (1055) ;-----------------------------------------------------------------------------
+                                        (1056) ;
+                                        (1057) ;  ARGUMENTS:
+                                        (1058) ;     none.
+                                        (1059) ;
+                                        (1060) ;  RETURNS:
+                                        (1061) ;     none.
+                                        (1062) ;
+                                        (1063) ;  SIDE EFFECTS:
+                                        (1064) ;    The A and X registers may be modified by this or future implementations
+                                        (1065) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (1066) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (1067) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (1068) ;    functions.
+                                        (1069) ;
+                                        (1070)  UART_1_PutCRLF:
+                                        (1071) _UART_1_PutCRLF:
+                                        (1072)    RAM_PROLOGUE RAM_USE_CLASS_1
+053F: 50 0D    MOV   A,0xD              (1073)    mov  A,0x0D                        ; Send CR
+0541: 9F 47    CALL  0x048A             (1074)    call UART_1_PutChar
+0543: 50 0A    MOV   A,0xA              (1075)    mov  A,0x0A                        ; Send LF
+0545: 9F 43    CALL  0x048A             (1076)    call UART_1_PutChar
+                                        (1077)    RAM_EPILOGUE RAM_USE_CLASS_1
+0547: 7F       RET                      (1078)    ret
+                                        (1079) .ENDSECTION
+                                        (1080) 
+                                        (1081) 
+                                        (1082) IF (UART_1_RXBUF_ENABLE)
+                                        (1083) ;=============================================================================
+                                        (1084) ;=============================================================================
+                                        (1085) ;
+                                        (1086) ;     Command Buffer commands
+                                        (1087) ;
+                                        (1088) ;=============================================================================
+                                        (1089) ;=============================================================================
+                                        (1090) 
+                                        (1091) .SECTION
+                                        (1092) ;-----------------------------------------------------------------------------
+                                        (1093) ;  FUNCTION NAME: UART_1_CmdReset
+                                        (1094) ;
+                                        (1095) ;  DESCRIPTION:
+                                        (1096) ;     Reset command string and status flags
+                                        (1097) ;-----------------------------------------------------------------------------
+                                        (1098) ;
+                                        (1099) ;  ARGUMENTS:
+                                        (1100) ;     none.
+                                        (1101) ;
+                                        (1102) ;  RETURNS:
+                                        (1103) ;     none.
+                                        (1104) ;
+                                        (1105) ;  SIDE EFFECTS:
+                                        (1106) ;    The A and X registers may be modified by this or future implementations
+                                        (1107) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (1108) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (1109) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (1110) ;    functions.
+                                        (1111) ;          
+                                        (1112) ;    Currently only the page pointer registers listed below are modified: 
+                                        (1113) ;          CUR_PP
+                                        (1114) ;
+                                        (1115) ;  THEORY of OPERATION or PROCEDURE:
+                                        (1116) ;     Clear the command buffer, command counter, and flag.
+                                        (1117) ;
+                                        (1118)  UART_1_CmdReset:
+                                        (1119) _UART_1_CmdReset:
+                                        (1120)    RAM_PROLOGUE RAM_USE_CLASS_4
+0548: 62 D0 00 MOV   REG[0xD0],0x0      (1121)    RAM_SETPAGE_CUR >UART_1_aRxBuffer
+054B: 55 02 00 MOV   [0x2],0x0          (1122)    mov [UART_1_aRxBuffer], 0x00
+054E: 62 D0 00 MOV   REG[0xD0],0x0      (1123)    RAM_SETPAGE_CUR >UART_1_bRxCnt
+0551: 55 01 00 MOV   [0x1],0x0          (1124)    mov [UART_1_bRxCnt], 0x00
+0554: 26 00 00 AND   [0x0],0x0          (1125)    and [UART_1_fStatus], 0x00
+0557: 62 D0 00 MOV   REG[0xD0],0x0      (1126)    RAM_SETPAGE_CUR >ptrParam
+055A: 55 14 00 MOV   [0x14],0x0         (1127)    mov [ptrParam],0x00
+                                        (1128)    RAM_EPILOGUE RAM_USE_CLASS_4
+055D: 7F       RET                      (1129)    ret
+                                        (1130) .ENDSECTION
+                                        (1131) 
+                                        (1132) 
+                                        (1133) .SECTION
+                                        (1134) ;-----------------------------------------------------------------------------
+                                        (1135) ;  FUNCTION NAME: UART_1_bCmdCheck
+                                        (1136) ;
+                                        (1137) ;  DESCRIPTION:
+                                        (1138) ;     Check to see if valid command in buffer.
+                                        (1139) ;-----------------------------------------------------------------------------
+                                        (1140) ;
+                                        (1141) ;  ARGUMENTS:
+                                        (1142) ;     none.
+                                        (1143) ;
+                                        (1144) ;  RETURNS:
+                                        (1145) ;     BYTE  fStatus - Status of command receive buffer.
+                                        (1146) ;                     Returns non-zero value in A if command is valid.
+                                        (1147) ;
+                                        (1148) ;  SIDE EFFECTS:
+                                        (1149) ;    The A and X registers may be modified by this or future implementations
+                                        (1150) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (1151) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (1152) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (1153) ;    functions.
+                                        (1154) ;          
+                                        (1155) ;    Currently only the page pointer registers listed below are modified: 
+                                        (1156) ;          CUR_PP
+                                        (1157) ;
+                                        (1158) ;  THEORY of OPERATION or PROCEDURE:
+                                        (1159) ;     Read the status and control register.
+                                        (1160) ;
+                                        (1161)  UART_1_bCmdCheck:
+                                        (1162) _UART_1_bCmdCheck:
+                                        (1163)    RAM_PROLOGUE RAM_USE_CLASS_4
+055E: 62 D0 00 MOV   REG[0xD0],0x0      (1164)    RAM_SETPAGE_CUR >UART_1_fStatus
+0561: 51 00    MOV   A,[0x0]            (1165)    mov A,  [UART_1_fStatus]
+0563: 21 01    AND   A,0x1              (1166)    and A, UART_1_RX_BUF_CMDTERM                  ; Mask off Command status
+                                        (1167)    RAM_EPILOGUE RAM_USE_CLASS_4
+0565: 7F       RET                      (1168)    ret
+                                        (1169) .ENDSECTION
+                                        (1170)     
+                                        (1171) 
+                                        (1172) .SECTION
+                                        (1173) ;-----------------------------------------------------------------------------
+                                        (1174) ;  FUNCTION NAME: UART_1_bErrCheck
+                                        (1175) ;
+                                        (1176) ;  DESCRIPTION:
+                                        (1177) ;     Check to see if an error has occured since last CmdReset
+                                        (1178) ;-----------------------------------------------------------------------------
+                                        (1179) ;
+                                        (1180) ;  ARGUMENTS:
+                                        (1181) ;     none.
+                                        (1182) ;
+                                        (1183) ;  RETURNS:
+                                        (1184) ;     BYTE  fStatus - Status of command receive buffer.
+                                        (1185) ;                     Returns non-zero value in A if command is valid.
+                                        (1186) ;           0x80 => Parity Error
+                                        (1187) ;           0x40 => OverRun Error
+                                        (1188) ;           0x20 => Framing Error
+                                        (1189) ;           0x10 => Software Buffer OverRun
+                                        (1190) ;
+                                        (1191) ;  SIDE EFFECTS:
+                                        (1192) ;    The A and X registers may be modified by this or future implementations
+                                        (1193) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (1194) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (1195) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (1196) ;    functions.
+                                        (1197) ;          
+                                        (1198) ;    Currently only the page pointer registers listed below are modified: 
+                                        (1199) ;          CUR_PP
+                                        (1200) ;     Error Status is clear when read.
+                                        (1201) ;
+                                        (1202) ;  THEORY of OPERATION or PROCEDURE:
+                                        (1203) ;     Read RX buffer error status and clear status
+                                        (1204) ;
+                                        (1205)  UART_1_bErrCheck:
+                                        (1206) _UART_1_bErrCheck:
+                                        (1207)    RAM_PROLOGUE RAM_USE_CLASS_4
+0566: 62 D0 00 MOV   REG[0xD0],0x0      (1208)    RAM_SETPAGE_CUR >UART_1_fStatus
+0569: 51 00    MOV   A,[0x0]            (1209)    mov A,  [UART_1_fStatus]
+056B: 21 F0    AND   A,0xF0             (1210)    and A, UART_1_RX_BUF_ERROR                    ; Mask off Error status
+056D: 26 00 0F AND   [0x0],0xF          (1211)    and [UART_1_fStatus], ~UART_1_RX_BUF_ERROR
+                                        (1212)    RAM_EPILOGUE RAM_USE_CLASS_4
+0570: 7F       RET                      (1213)    ret
+                                        (1214) .ENDSECTION
+                                        (1215) 
+                                        (1216) .SECTION
+                                        (1217) ;-----------------------------------------------------------------------------
+                                        (1218) ;  FUNCTION NAME: UART_1_bCmdLength
+                                        (1219) ;
+                                        (1220) ;  DESCRIPTION:
+                                        (1221) ;     Get length of command string
+                                        (1222) ;-----------------------------------------------------------------------------
+                                        (1223) ;
+                                        (1224) ;  ARGUMENTS:
+                                        (1225) ;     none.
+                                        (1226) ;
+                                        (1227) ;  RETURNS:
+                                        (1228) ;     BYTE  bRxCnt    Returns the command length in A.
+                                        (1229) ;
+                                        (1230) ;  SIDE EFFECTS:
+                                        (1231) ;    The A and X registers may be modified by this or future implementations
+                                        (1232) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (1233) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (1234) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (1235) ;    functions.
+                                        (1236) ;          
+                                        (1237) ;    Currently only the page pointer registers listed below are modified: 
+                                        (1238) ;          CUR_PP
+                                        (1239) ;
+                                        (1240)  UART_1_bCmdLength:
+                                        (1241) _UART_1_bCmdLength:
+                                        (1242)    RAM_PROLOGUE RAM_USE_CLASS_4
+0571: 62 D0 00 MOV   REG[0xD0],0x0      (1243)    RAM_SETPAGE_CUR >UART_1_bRxCnt
+0574: 51 01    MOV   A,[0x1]            (1244)    mov A,  [UART_1_bRxCnt]
+                                        (1245)    RAM_EPILOGUE RAM_USE_CLASS_4
+0576: 7F       RET                      (1246)    ret
+                                        (1247) .ENDSECTION
+                                        (1248) 
+                                        (1249) 
+                                        (1250) .SECTION
+                                        (1251) ;-----------------------------------------------------------------------------
+                                        (1252) ;  FUNCTION NAME: UART_1_szGetParam
+                                        (1253) ;
+                                        (1254) ;  DESCRIPTION:
+                                        (1255) ;      Return next parameter from UART_1 Rx buffer
+                                        (1256) ;-----------------------------------------------------------------------------
+                                        (1257) ;
+                                        (1258) ;  ARGUMENTS:  none
+                                        (1259) ;
+                                        (1260) ;  RETURNS:
+                                        (1261) ;     A => MSB of parameter address
+                                        (1262) ;     X => LSB of parameter address
+                                        (1263) ;
+                                        (1264) ;  SIDE EFFECTS:
+                                        (1265) ;    The A and X registers may be modified by this or future implementations
+                                        (1266) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (1267) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (1268) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (1269) ;    functions.
+                                        (1270) ;          
+                                        (1271) ;    Currently only the page pointer registers listed below are modified: 
+                                        (1272) ;          CUR_PP
+                                        (1273) ;          IDX_PP
+                                        (1274) ;
+                                        (1275) ;     The receive string is modified by placing Null characters at the end
+                                        (1276) ;     of each parameter as they are recovered.
+                                        (1277) ;
+                                        (1278) ;  THEORY OF OPERATION:
+                                        (1279) ;     This function is a stateful generator of addresses to the "parameters"
+                                        (1280) ;     of an input "Command". It scans the (optional) input buffer and breaks
+                                        (1281) ;     each lexically distinct element into a null-terminated string by replacing
+                                        (1282) ;     delimiters with nulls, as appropriate. The state of the generator is 
+                                        (1283) ;     maintained by the private variable ptrParam, which is a buffer-relative
+                                        (1284) ;     offset. The generator is initialized by a call to the function
+                                        (1285) ;     UART_1_CmdReset which resets the entire buffer to the 'empty'
+                                        (1286) ;     state. Typically this function, UART_1_szGetParam, is
+                                        (1287) ;     not called until the buffer has been loaded with an entire command
+                                        (1288) ;     (See UART_1_bCmdCheck).
+                                        (1289) ;
+                                        (1290) ;     Note, there is no special distinction between the "command" and the 
+                                        (1291) ;     "parameters". The first non-delimiter character of the buffer---the first
+                                        (1292) ;     character of the "command"---is also, for the purposes of this function,
+                                        (1293) ;     the first "parameter" to which it returns an address.
+                                        (1294) ;
+                                        (1295) ;     The value of a delimiter (commonly an ascii space, 0x20 and decimal 32)
+                                        (1296) ;     is determined at configuration time by a user module parameter.
+                                        (1297) ;
+                                        (1298)  UART_1_szGetParam:
+                                        (1299) _UART_1_szGetParam:
+                                        (1300)    RAM_PROLOGUE RAM_USE_CLASS_4
+0577: 70 BF    AND   F,0xBF             (1301)    RAM_PROLOGUE RAM_USE_CLASS_3
+                                        (1302)     
+0579: 62 D0 00 MOV   REG[0xD0],0x0      (1303)    RAM_SETPAGE_CUR >ptrParam
+057C: 50 02    MOV   A,0x2              (1304)    mov   A, <UART_1_aRxBuffer               ; Get address to receive buffer
+057E: 02 14    ADD   A,[0x14]           (1305)    add   A, [ptrParam]                      ; Add string offset
+0580: 5C       MOV   X,A                (1306)    mov   X, A
+0581: 62 D3 00 MOV   REG[0xD3],0x0      (1307)    RAM_SETPAGE_IDX >UART_1_aRxBuffer
+0584: 52 00    MOV   A,[X+0]            (1308)    mov   A, [X]                             ; Get character pointed by X
+0586: B0 04    JNZ   0x058B             (1309)    jnz   .SkipOverDelimitersLoop            ; Null? No,  continue...
+0588: 10       PUSH  X                  (1310)    push  X                                  ;       Yes, Save LSB of current pointer
+0589: 80 33    JMP   0x05BD             (1311)    jmp   .End_GetNextParam
+                                        (1312)                                             ; Check for delimiter and keep looping until
+                                        (1313)                                             ; all leading delimiters have been found.
+                                        (1314) .SkipOverDelimitersLoop:
+058B: 39 20    CMP   A,0x20             (1315)    cmp   A, UART_1_DELIMITER                ; Do we have a delimiter?
+058D: B0 11    JNZ   0x059F             (1316)    jnz   .ParamStartFound                   ;   No,  Bingo! found a parameter
+058F: 75       INC   X                  (1317)    inc   X                                  ;   Yes, Increment both index and...
+0590: 76 14    INC   [0x14]             (1318)    inc   [ptrParam]                         ;          the stored pointer.
+0592: 52 00    MOV   A,[X+0]            (1319)    mov   A, [X]                             ; Get character pointed by X
+0594: 3C 14 0F CMP   [0x14],0xF         (1320)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; End of buffer?
+0597: BF F3    JNZ   0x058B             (1321)    jnz   .SkipOverDelimitersLoop            ;   No,  continue the scan
+                                        (1322) 
+                                        (1323) .EndOfString:                               ;   Yes, end of string found...
+0599: 10       PUSH  X                  (1324)    push  X                                  ;        Save ptr
+                                        (1325) .TerminateString:
+059A: 56 00 00 MOV   [X+0],0x0          (1326)    mov   [X], 0x00                          ; Make sure string is zero
+059D: 80 1F    JMP   0x05BD             (1327)    jmp   .End_GetNextParam
+                                        (1328) 
+                                        (1329) .ParamStartFound:
+059F: 10       PUSH  X                  (1330)    push  X                                  ; Beginning of parameter found, save pointer
+                                        (1331) 
+                                        (1332) .ParamLoop:                                 ; Now loop until end of parameter found.
+05A0: 75       INC   X                  (1333)    inc   X                                  ; Advance pointers.
+05A1: 76 14    INC   [0x14]             (1334)    inc   [ptrParam]
+05A3: 3C 14 0F CMP   [0x14],0xF         (1335)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Check if we are at the end of buffer
+05A6: AF F3    JZ    0x059A             (1336)    jz    .TerminateString
+05A8: 52 00    MOV   A,[X+0]            (1337)    mov   A, [X]                             ; Get next character
+05AA: A0 12    JZ    0x05BD             (1338)    jz    .End_GetNextParam
+05AC: 39 20    CMP   A,0x20             (1339)    cmp   A, UART_1_DELIMITER                ; Check if we have a delimiter
+05AE: BF F1    JNZ   0x05A0             (1340)    jnz   .ParamLoop                         ; Still no delimiter, loop again
+05B0: 56 00 00 MOV   [X+0],0x0          (1341)    mov   [X], 0x00                          ; Replace delimiter with null for end of substring
+05B3: 76 14    INC   [0x14]             (1342)    inc   [ptrParam]
+05B5: 3C 14 0F CMP   [0x14],0xF         (1343)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Check if we are at the end of buffer
+05B8: B0 04    JNZ   0x05BD             (1344)    jnz   .End_GetNextParam                  ; If not end of string leave
+05BA: 55 14 0F MOV   [0x14],0xF         (1345)    mov   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Reset pointer to end of string.
+                                        (1346) 
+                                        (1347) .End_GetNextParam:
+05BD: 20       POP   X                  (1348)    pop   X
+05BE: 10       PUSH  X                  (1349)    push  X
+05BF: 3D 00 00 CMP   [X+0],0x0          (1350)    cmp   [X], 0x00
+05C2: B0 0B    JNZ   0x05CE             (1351)    jnz   .NotNullString
+05C4: 20       POP   X                  (1352)    pop   X
+05C5: 57 00    MOV   X,0x0              (1353)    mov   X, 0x00
+05C7: 50 00    MOV   A,0x0              (1354)    mov   A, >UART_1_aRxBuffer
+05C9: 70 3F    AND   F,0x3F             
+05CB: 71 C0    OR    F,0xC0             (1355)    RAM_EPILOGUE RAM_USE_CLASS_3
+                                        (1356)    RAM_EPILOGUE RAM_USE_CLASS_4
+05CD: 7F       RET                      (1357)    ret
+                                        (1358) 
+                                        (1359) .NotNullString:
+05CE: 20       POP   X                  (1360)    pop  X
+05CF: 50 00    MOV   A,0x0              (1361)    mov  A, >UART_1_aRxBuffer                ; Return pointer
+05D1: 70 3F    AND   F,0x3F             
+05D3: 71 C0    OR    F,0xC0             (1362)    RAM_EPILOGUE RAM_USE_CLASS_3
+                                        (1363)    RAM_EPILOGUE RAM_USE_CLASS_4
+05D5: 7F       RET                      (1364)    ret
+                                        (1365) .ENDSECTION
+                                        (1366) 
+                                        (1367) 
+                                        (1368) .SECTION
+                                        (1369) ;-----------------------------------------------------------------------------
+                                        (1370) ;  FUNCTION NAME: UART_1_szGetRestOfParams
+                                        (1371) ;
+                                        (1372) ;  DESCRIPTION:
+                                        (1373) ;      Returns a pointer to the rest of the UART RX buffer
+                                        (1374) ;-----------------------------------------------------------------------------
+                                        (1375) ;
+                                        (1376) ;  ARGUMENTS:  none
+                                        (1377) ;
+                                        (1378) ;  RETURNS:
+                                        (1379) ;     A => MSB of parameter
+                                        (1380) ;     X => LSB of parameter
+                                        (1381) ;
+                                        (1382) ;  SIDE EFFECTS:
+                                        (1383) ;    The A and X registers may be modified by this or future implementations
+                                        (1384) ;    of this function.  The same is true for all RAM page pointer registers in
+                                        (1385) ;    the Large Memory Model.  When necessary, it is the calling function's
+                                        (1386) ;    responsibility to perserve their values across calls to fastcall16 
+                                        (1387) ;    functions.
+                                        (1388) ;          
+                                        (1389) ;    Currently only the page pointer registers listed below are modified: 
+                                        (1390) ;          CUR_PP
+                                        (1391) ;
+                                        (1392)  UART_1_szGetRestOfParams:
+                                        (1393) _UART_1_szGetRestOfParams:
+                                        (1394)    RAM_PROLOGUE RAM_USE_CLASS_4
+05D6: 62 D0 00 MOV   REG[0xD0],0x0      (1395)    RAM_SETPAGE_CUR >ptrParam
+05D9: 50 02    MOV   A,0x2              (1396)    mov  A, <UART_1_aRxBuffer                ; Get address to receive buffer
+05DB: 02 14    ADD   A,[0x14]           (1397)    add  A, [ptrParam]                       ; Add string offset
+05DD: 5C       MOV   X,A                (1398)    mov  X,A
+05DE: 50 00    MOV   A,0x0              (1399)    mov  A,>UART_1_aRxBuffer                 ; Return pointer
+                                        (1400)    RAM_EPILOGUE RAM_USE_CLASS_4
+05E0: 7F       RET                      (1401)    ret
+(1402) .ENDSECTION
+(1403) 
+(1404) ENDIF
+(1405) 
+(1406) 
+(1407) ; End of File UART_1.asm
 FILE: C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\main.c
 (0001) // I2C-UART master
 (0002) // CY8C29466-24PXI(DIP Package)
@@ -1427,10 +2854,42 @@ FILE: C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\main.c
 (0014) 
 (0015) void main(void)
 _main|__text_start|_main:
-    03F0: 43 08 01 OR    REG[0x8],0x1
+    05E1: 71 01    OR    F,0x1
 (0016) {
-(0017)     LED_ON();
-(0018) }
+(0017)     M8C_EnableGInt; // enable global interrupt
+(0018)     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
+    05E3: 43 E0 20 OR    REG[0xE0],0x20
+(0019)     UART_1_CmdReset(); // uart init
+    05E6: 10       PUSH  X
+    05E7: 7C 05 48 LCALL 0x0548
+    05EA: 20       POP   X
+(0020)     UART_1_IntCntl(UART_1_ENABLE_RX_INT); // enable receive interrupt
+    05EB: 10       PUSH  X
+    05EC: 50 01    MOV   A,0x1
+    05EE: 7C 04 45 LCALL 0x0445
+    05F1: 20       POP   X
+(0021)     UART_1_Start(UART_1_PARITY_NONE);
+    05F2: 10       PUSH  X
+    05F3: 50 00    MOV   A,0x0
+    05F5: 7C 04 16 LCALL 0x0416
+    05F8: 20       POP   X
+(0022)     LED_ON();
+    05F9: 43 08 01 OR    REG[0x8],0x1
+    05FC: 80 0D    JMP   0x060A
+(0023) 
+(0024)     while(1){
+(0025)         UART_1_CPutString("run\r\n");
+    05FE: 10       PUSH  X
+    05FF: 50 01    MOV   A,0x1
+    0601: 08       PUSH  A
+    0602: 50 A0    MOV   A,0xA0
+    0604: 5C       MOV   X,A
+    0605: 18       POP   A
+    0606: 7C 05 2D LCALL 0x052D
+    0609: 20       POP   X
+(0026)     }
+    060A: 8F F3    JMP   0x05FE
+(0027) }
 FILE: <library>
 --------------------------------------------------------------------------------
 
