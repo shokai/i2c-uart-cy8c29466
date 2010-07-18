@@ -3,9 +3,9 @@
   <APP_EDITOR_SETTINGS>
     <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_master\i2c_master\i2c_master\i2c_master.soc" />
     <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_master\i2c_master\i2c_master.cmx" />
-    <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_master\i2c_master\i2c_master\i2c_master_pinout.soc" />
-    <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_master\i2c_master\i2c_master\lib\PSoCGPIOINT.asm" />
+    <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_master\i2c_master\i2c_master\lib\PSoCGPIOINT.asm" ACTIVE="true" />
     <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_master\i2c_master\i2c_master\lib\UART_1INT.asm" />
+    <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_master\i2c_master\i2c_master\i2c_master_pinout.soc" />
   </APP_EDITOR_SETTINGS>
   <DEBUGGER_SETTINGS>
     <TRACE_MODE VALUE="PCOnly" />
