@@ -15,8 +15,8 @@ LMM info: area 'InterruptRAM' uses 2 bytes in SRAM bank 0
 LMM info: area 'UART_1_RAM' item of 16 bytes allocated in SRAM page 0
 LMM info: area 'virtual_registers' uses 15 bytes in SRAM page 0
 LMM info: area 'UART_1_RAM' item of 1 bytes allocated in SRAM page 0
-  ROM 5% full. 1319 out of 32768 bytes used (does not include absolute areas).
+  ROM 5% full. 1555 out of 32768 bytes used (does not include absolute areas).
   RAM 2% full. 34 bytes used (does not include stack usage).
 idata dump at output/i2c_master.idata
  
-i2c_master - 0 error(s) 0 warning(s) 23:00:41
+i2c_master - 0 error(s) 0 warning(s) 02:10:20

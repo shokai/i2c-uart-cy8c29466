@@ -1190,125 +1190,127 @@
  0000              ;   NOTE: interrupt service routines must preserve
  0000              ;   the values of the A and X CPU registers.
  0000              
- 0000              ;---------------------------------------------------
- 0000              ; Insert your custom code above this banner
- 0000              ;---------------------------------------------------
- 0000              ;@PSoC_UserCode_END@ (Do not change this line.)
- 0000 7E           reti
- 0001           
- 0001           
- 0001           ;-----------------------------------------------------------------------------
- 0001           ;  FUNCTION NAME: _UART_1_RX_ISR
- 0001           ;
- 0001           ;  DESCRIPTION:
- 0001           ;     UART RX interrupt handler for instance UART_1.
- 0001           ;     This ISR handles the background processing of received characters if
- 0001           ;     the buffer is enabled.
- 0001           ;
- 0001           ;
- 0001           ;  The following assumes that the RX buffer feature has been enabled.
- 0001           ;
- 0001           ;  SIDE EFFECTS:
- 0001           ;     There are 3 posible errors that may occur with the serial port.
- 0001           ;      1) Parity Error
- 0001           ;      2) Framing Error
- 0001           ;      3) OverRun Error
- 0001           ;
- 0001           ;  This user module check for parity and framing error.  If either of these
- 0001           ;  two errors are detected, the data is read and ignored.  When an overRun
- 0001           ;  error occurs, the last byte was lost, but the current byte is valid.  For
- 0001           ;  this reason this error is ignored at this time.  Code could be added to
- 0001           ;  this ISR to set a flag if an error condition occurs.
- 0001           ;
- 0001           ;  THEORY of OPERATION:
- 0001           ;     When using the RX buffer feature, the ISR collects received characters
- 0001           ;     in a buffer until the user defined command terminator is detected.  After
- 0001           ;     the command terminator is detected, the command bit is set and all other
- 0001           ;     characters will be ignored until the command bit is reset.  Up to
- 0001           ;     buffer_size - 1 characters will be collected waiting for a command
- 0001           ;     terminator.  After that, the characters will be discarded, although
- 0001           ;     a command determinator will still cause the command bit to be set.
- 0001           ;
- 0001           ;-----------------------------------------------------------------------------
- 0001           _UART_1_RX_ISR:
- 0001           
- 0001              ;@PSoC_UserCode_BODY_2@ (Do not change this line.)
- 0001              ;---------------------------------------------------
- 0001              ; Insert your custom code below this banner
- 0001              ;---------------------------------------------------
- 0001              ;   NOTE: interrupt service routines must preserve
- 0001              ;   the values of the A and X CPU registers.
- 0001           
- 0001              ;---------------------------------------------------
- 0001              ; Insert your custom code above this banner
- 0001              ;---------------------------------------------------
- 0001              ;@PSoC_UserCode_END@ (Do not change this line.)
- 0001           
+ 0000 7D0000       ljmp _INT_UART_RX
+ 0003                   
+ 0003              ;---------------------------------------------------
+ 0003              ; Insert your custom code above this banner
+ 0003              ;---------------------------------------------------
+ 0003              ;@PSoC_UserCode_END@ (Do not change this line.)
+ 0003 7E           reti
+ 0004           
+ 0004           
+ 0004           ;-----------------------------------------------------------------------------
+ 0004           ;  FUNCTION NAME: _UART_1_RX_ISR
+ 0004           ;
+ 0004           ;  DESCRIPTION:
+ 0004           ;     UART RX interrupt handler for instance UART_1.
+ 0004           ;     This ISR handles the background processing of received characters if
+ 0004           ;     the buffer is enabled.
+ 0004           ;
+ 0004           ;
+ 0004           ;  The following assumes that the RX buffer feature has been enabled.
+ 0004           ;
+ 0004           ;  SIDE EFFECTS:
+ 0004           ;     There are 3 posible errors that may occur with the serial port.
+ 0004           ;      1) Parity Error
+ 0004           ;      2) Framing Error
+ 0004           ;      3) OverRun Error
+ 0004           ;
+ 0004           ;  This user module check for parity and framing error.  If either of these
+ 0004           ;  two errors are detected, the data is read and ignored.  When an overRun
+ 0004           ;  error occurs, the last byte was lost, but the current byte is valid.  For
+ 0004           ;  this reason this error is ignored at this time.  Code could be added to
+ 0004           ;  this ISR to set a flag if an error condition occurs.
+ 0004           ;
+ 0004           ;  THEORY of OPERATION:
+ 0004           ;     When using the RX buffer feature, the ISR collects received characters
+ 0004           ;     in a buffer until the user defined command terminator is detected.  After
+ 0004           ;     the command terminator is detected, the command bit is set and all other
+ 0004           ;     characters will be ignored until the command bit is reset.  Up to
+ 0004           ;     buffer_size - 1 characters will be collected waiting for a command
+ 0004           ;     terminator.  After that, the characters will be discarded, although
+ 0004           ;     a command determinator will still cause the command bit to be set.
+ 0004           ;
+ 0004           ;-----------------------------------------------------------------------------
+ 0004           _UART_1_RX_ISR:
+ 0004           
+ 0004              ;@PSoC_UserCode_BODY_2@ (Do not change this line.)
+ 0004              ;---------------------------------------------------
+ 0004              ; Insert your custom code below this banner
+ 0004              ;---------------------------------------------------
+ 0004              ;   NOTE: interrupt service routines must preserve
+ 0004              ;   the values of the A and X CPU registers.
+ 0004           
+ 0004              ;---------------------------------------------------
+ 0004              ; Insert your custom code above this banner
+ 0004              ;---------------------------------------------------
+ 0004              ;@PSoC_UserCode_END@ (Do not change this line.)
+ 0004           
                 IF (UART_1_RXBUF_ENABLE)
- 0001 08           push A
- 0002 10           push X
- 0003              
+ 0004 08           push A
+ 0005 10           push X
+ 0006              
                    IF SYSTEM_LARGE_MEMORY_MODEL
- 0003 5DD3         mov   A, reg[ IDX_PP ]
- 0005 08           push  A
+ 0006 5DD3         mov   A, reg[ IDX_PP ]
+ 0008 08           push  A
                    ENDIF
                    
- 0006 5801         mov  X,[UART_1_bRxCnt]                                  ; Load X with byte counter
- 0008 5D2F         mov  A,REG[UART_1_RX_CONTROL_REG]                       ; Read the control register
- 000A 08           push A                                                  ; Store copy for later test
- 000B                                                                      ; IF real RX interrupt
- 000B 2108         and  A,UART_1_RX_REG_FULL                               ; Did really really get an IRQ
- 000D B004         jnz  .UARTRX_ReadRx                                     ; Data ready, go get it
- 000F 18           pop  A                                                  ; Restore stack
- 0010 805E         jmp  .RESTORE_IDX_PP
- 0012           
- 0012           .UARTRX_ReadRx:
- 0012 18           pop  A                                                  ; Restore status flags
- 0013                                                                      ; IF there is no error, get data
- 0013                                                                      ; Check for parity or framing error
- 0013 21E0         and  A,UART_1_RX_ERROR
- 0015 A012         jz   .UARTRX_NO_ERROR                                   ; If there is not an Error go read data
- 0017           
- 0017 2C00         or   [UART_1_fStatus],A                                 ; Set error flags (parity,framing,overrun) bits
- 0019 492E00       tst  REG[UART_1_RX_BUFFER_REG], 0x00                    ; Read the data buffer to clear it.
- 001C 2120         and  A,UART_1_RX_FRAMING_ERROR                          ; Check for framing error special case
- 001E A050         jz   .RESTORE_IDX_PP                                    ; Not framing error, all done
- 0020           
- 0020                                                                      ; Disable and re-enable RX to reset after
- 0020                                                                      ; framing error.
- 0020 412FFE       and   REG[UART_1_RX_CONTROL_REG], ~UART_1_RX_ENABLE     ; Disable RX
- 0023 432F01       or    REG[UART_1_RX_CONTROL_REG],  UART_1_RX_ENABLE     ; Enable RX
- 0026 8048         jmp  .RESTORE_IDX_PP                                    ; Done with framing error, leave.
- 0028           
- 0028           
- 0028           .UARTRX_NO_ERROR:
- 0028 5D2E         mov  A,REG[UART_1_RX_BUFFER_REG ]                       ; Read the data buffer
- 002A           
- 002A                                                                      ; IF buffer not full
- 002A 470001       tst  [UART_1_fStatus],UART_1_RX_BUF_CMDTERM             ; Check for buffer full
- 002D B041         jnz  .RESTORE_IDX_PP                                    ; All done
- 002F           
- 002F 390D         cmp  A,UART_1_CMD_TERM                                  ; Check for End of command
- 0031 B014         jnz  .UARTRX_CHK_BACKSPACE
- 0033 2E0001       or   [UART_1_fStatus],UART_1_RX_BUF_CMDTERM             ; Set command ready bit
- 0036           
- 0036           
- 0036           
+ 0009 5801         mov  X,[UART_1_bRxCnt]                                  ; Load X with byte counter
+ 000B 5D2F         mov  A,REG[UART_1_RX_CONTROL_REG]                       ; Read the control register
+ 000D 08           push A                                                  ; Store copy for later test
+ 000E                                                                      ; IF real RX interrupt
+ 000E 2108         and  A,UART_1_RX_REG_FULL                               ; Did really really get an IRQ
+ 0010 B004         jnz  .UARTRX_ReadRx                                     ; Data ready, go get it
+ 0012 18           pop  A                                                  ; Restore stack
+ 0013 805E         jmp  .RESTORE_IDX_PP
+ 0015           
+ 0015           .UARTRX_ReadRx:
+ 0015 18           pop  A                                                  ; Restore status flags
+ 0016                                                                      ; IF there is no error, get data
+ 0016                                                                      ; Check for parity or framing error
+ 0016 21E0         and  A,UART_1_RX_ERROR
+ 0018 A012         jz   .UARTRX_NO_ERROR                                   ; If there is not an Error go read data
+ 001A           
+ 001A 2C00         or   [UART_1_fStatus],A                                 ; Set error flags (parity,framing,overrun) bits
+ 001C 492E00       tst  REG[UART_1_RX_BUFFER_REG], 0x00                    ; Read the data buffer to clear it.
+ 001F 2120         and  A,UART_1_RX_FRAMING_ERROR                          ; Check for framing error special case
+ 0021 A050         jz   .RESTORE_IDX_PP                                    ; Not framing error, all done
+ 0023           
+ 0023                                                                      ; Disable and re-enable RX to reset after
+ 0023                                                                      ; framing error.
+ 0023 412FFE       and   REG[UART_1_RX_CONTROL_REG], ~UART_1_RX_ENABLE     ; Disable RX
+ 0026 432F01       or    REG[UART_1_RX_CONTROL_REG],  UART_1_RX_ENABLE     ; Enable RX
+ 0029 8048         jmp  .RESTORE_IDX_PP                                    ; Done with framing error, leave.
+ 002B           
+ 002B           
+ 002B           .UARTRX_NO_ERROR:
+ 002B 5D2E         mov  A,REG[UART_1_RX_BUFFER_REG ]                       ; Read the data buffer
+ 002D           
+ 002D                                                                      ; IF buffer not full
+ 002D 470001       tst  [UART_1_fStatus],UART_1_RX_BUF_CMDTERM             ; Check for buffer full
+ 0030 B041         jnz  .RESTORE_IDX_PP                                    ; All done
+ 0032           
+ 0032 390D         cmp  A,UART_1_CMD_TERM                                  ; Check for End of command
+ 0034 B014         jnz  .UARTRX_CHK_BACKSPACE
+ 0036 2E0001       or   [UART_1_fStatus],UART_1_RX_BUF_CMDTERM             ; Set command ready bit
+ 0039           
+ 0039           
+ 0039           
                    IF ( SYSTEM_LARGE_MEMORY_MODEL )
- 0036 62D300          mov reg[IDX_PP], >UART_1_aRxBuffer
+ 0039 62D300          mov reg[IDX_PP], >UART_1_aRxBuffer
                    ENDIF
                    IF ( SYSTEM_LARGE_MEMORY_MODEL )
- 0039 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
- 003B 7180            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_10b
+ 003C 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
+ 003E 7180            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_10b
                    ENDIF
- 003D 560000       mov  [X + UART_1_aRxBuffer],00h                         ; Zero out last data
+ 0040 560000       mov  [X + UART_1_aRxBuffer],00h                         ; Zero out last data
                    IF ( SYSTEM_LARGE_MEMORY_MODEL )
- 0040 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
- 0042 7100            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_00b
+ 0043 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
+ 0045 7100            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_00b
                    ENDIF
- 0044 802A         jmp  .RESTORE_IDX_PP
- 0046           
- 0046           .UARTRX_CHK_BACKSPACE:                                     ; 
+ 0047 802A         jmp  .RESTORE_IDX_PP
+ 0049           
+ 0049           .UARTRX_CHK_BACKSPACE:                                     ; 
                 IF(UART_1_BACKSPACE_ENABLE)                                ; Enable if backspace/delete mode
                    cmp  A,UART_1_BACKSPACE_ENABLE                          ; Check for backspace character
                    jnz  .UARTRX_IGNORE                                     ; If not, skip the backspace stuff
@@ -1318,59 +1320,59 @@
                    jmp  .RESTORE_IDX_PP
                 ENDIF                                                      ; 
                 
- 0046           .UARTRX_IGNORE:
+ 0049           .UARTRX_IGNORE:
                 IF(UART_1_RX_IGNORE_BELOW)                                 ; Ignore charaters below this value
- 0046 3920         cmp  A,UART_1_RX_IGNORE_BELOW                           ; If ignore char is set to 0x00, do not
- 0048 C026         jc   .RESTORE_IDX_PP                                    ; ignore any characters.
+ 0049 3920         cmp  A,UART_1_RX_IGNORE_BELOW                           ; If ignore char is set to 0x00, do not
+ 004B C026         jc   .RESTORE_IDX_PP                                    ; ignore any characters.
                 ENDIF
                 
- 004A           .UARTRX_CHK_OVFL:                                          ; Check for MAX String here
- 004A           	
+ 004D           .UARTRX_CHK_OVFL:                                          ; Check for MAX String here
+ 004D           	
                    IF ( SYSTEM_LARGE_MEMORY_MODEL )
- 004A 62D300          mov reg[IDX_PP], >UART_1_aRxBuffer
+ 004D 62D300          mov reg[IDX_PP], >UART_1_aRxBuffer
                    ENDIF
- 004D 3C010F       cmp  [UART_1_bRxCnt],(UART_1_RX_BUFFER_SIZE - 1)
- 0050 C011         jc   .UARTRX_ISR_GETDATA
+ 0050 3C010F       cmp  [UART_1_bRxCnt],(UART_1_RX_BUFFER_SIZE - 1)
+ 0053 C011         jc   .UARTRX_ISR_GETDATA
                    IF ( SYSTEM_LARGE_MEMORY_MODEL )
- 0052 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
- 0054 7180            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_10b
+ 0055 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
+ 0057 7180            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_10b
                    ENDIF
- 0056 560000       mov  [X + UART_1_aRxBuffer],00h                         ; Zero out last data in the buffer
+ 0059 560000       mov  [X + UART_1_aRxBuffer],00h                         ; Zero out last data in the buffer
                    IF ( SYSTEM_LARGE_MEMORY_MODEL )
- 0059 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
- 005B 7100            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_00b
+ 005C 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
+ 005E 7100            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_00b
                    ENDIF
- 005D 2E0010       or   [UART_1_fStatus],UART_1_RX_BUF_OVERRUN             ; Set error flags (parity,framing,overrun) bits
- 0060 800E         jmp  .RESTORE_IDX_PP
- 0062           
- 0062           .UARTRX_ISR_GETDATA:                                       ; IF input data == "CR", then end of command
- 0062                                                                      ; X is already loaded with pointer
+ 0060 2E0010       or   [UART_1_fStatus],UART_1_RX_BUF_OVERRUN             ; Set error flags (parity,framing,overrun) bits
+ 0063 800E         jmp  .RESTORE_IDX_PP
+ 0065           
+ 0065           .UARTRX_ISR_GETDATA:                                       ; IF input data == "CR", then end of command
+ 0065                                                                      ; X is already loaded with pointer
                    IF ( SYSTEM_LARGE_MEMORY_MODEL )
- 0062 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
- 0064 7180            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_10b
+ 0065 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
+ 0067 7180            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_10b
                    ENDIF
- 0066 5400         mov  [X+UART_1_aRxBuffer],A                             ; store data in array
+ 0069 5400         mov  [X+UART_1_aRxBuffer],A                             ; store data in array
                    IF ( SYSTEM_LARGE_MEMORY_MODEL )
- 0068 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
- 006A 7100            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_00b
+ 006B 703F            and   F, ~FLAG_PGMODE_MASK        ; NOTE: transition thru 00b state
+ 006D 7100            or    F,  FLAG_PGMODE_MASK & FLAG_PGMODE_00b
                    ENDIF
- 006C 75           inc  X                                                  ; Inc the pointer
- 006D 5A01         mov  [UART_1_bRxCnt],X                                  ; Restore the pointer
- 006F                                                                      ; ENDIF max string size
- 006F           .RESTORE_IDX_PP:
+ 006F 75           inc  X                                                  ; Inc the pointer
+ 0070 5A01         mov  [UART_1_bRxCnt],X                                  ; Restore the pointer
+ 0072                                                                      ; ENDIF max string size
+ 0072           .RESTORE_IDX_PP:
                    IF SYSTEM_LARGE_MEMORY_MODEL
- 006F 18           pop   A
- 0070 60D3         mov   reg[ IDX_PP ], A
+ 0072 18           pop   A
+ 0073 60D3         mov   reg[ IDX_PP ], A
                    ENDIF
                 
- 0072           .END_UARTRX_ISR:
- 0072 20           pop  X
- 0073 18           pop  A
- 0074           
+ 0075           .END_UARTRX_ISR:
+ 0075 20           pop  X
+ 0076 18           pop  A
+ 0077           
                 ENDIF
                 
- 0074           UART_1_RX_ISR_END:
- 0074 7E           reti
- 0075           
- 0075           ; end of file UART_1INT.asm
- 0075           
+ 0077           UART_1_RX_ISR_END:
+ 0077 7E           reti
+ 0078           
+ 0078           ; end of file UART_1INT.asm
+ 0078           

@@ -27,8 +27,24 @@ void main(void)
 }
 
 
-#pragma interrupt_handler INT_GPIO
+#pragma interrupt_handler INT_UART_RX
+void INT_UART_RX(void){
+    char recv_data;
+    recv_data = UART_1_cGetChar(); // read UART
+    UART_1_PutChar(recv_data); // echo
+    switch(recv_data){
+    case 'U':
+        LED_ON();
+        UART_1_CPutString("!Up!");
+        break;
+    case 'D':
+        LED_OFF();
+        UART_1_CPutString("!Down!");
+        break;
+    }
+}
 
+#pragma interrupt_handler INT_GPIO
 void INT_GPIO(void){
   if(PRT2DR & _BV(2)){
     LED_ON();

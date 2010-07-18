@@ -94,6 +94,8 @@ _UART_1_TX_ISR:
    ;   NOTE: interrupt service routines must preserve
    ;   the values of the A and X CPU registers.
    
+   ljmp _INT_UART_RX
+	
    ;---------------------------------------------------
    ; Insert your custom code above this banner
    ;---------------------------------------------------
