@@ -1,0 +1,97 @@
+XH
+H 2 areas 26 global symbols
+M i2chw_1rsrcinits.asm
+S I2CHW_1_bStatus Ref0000
+S I2CHW_1_RsrcStatus Ref0000
+A text size 0 flags 0
+dbfile lib/i2chw_1rsrcinits.asm
+dbfunc 0 ? 0 I
+dbfile ./lib/I2CHW_1Common.inc
+dbfunc 0 ? 0 I
+dbfile lib/i2chw_1rsrcinits.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/i2chw_1rsrcinits.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~1/Cypress/Common/CYPRES~3/tools/include/CY8C29~1/m8c.inc
+dbfunc 0 ? 0 I
+A UserModules size 39 flags 0
+dbfile lib/i2chw_1rsrcinits.asm
+dbfunc 0 ? 0 I
+dbline 5B 0
+dbline 76 1
+dbline 77 2
+dbline 91 4
+dbline 92 5
+dbline 93 7
+dbline 94 9
+dbline 96 B
+dbline 97 E
+dbline 99 F
+dbline B4 10
+dbline B5 11
+dbline B6 13
+dbline B7 15
+dbline B8 17
+dbline BA 18
+dbline D7 19
+dbline D8 1C
+dbline D9 1F
+dbline DA 22
+dbline DB 25
+dbline DD 28
+dbline F9 29
+dbline FB 2C
+dbline 119 2D
+dbline 11B 30
+dbline 136 31
+dbline 138 34
+dbline 153 35
+dbline 155 38
+S $sb$I2CHW_1_ResumeInt Def0001
+S _I2CHW_1_DisableMstr Def0035
+S $se$I2CHW_1_ResumeInt Def0010
+S $sb$I2CHW_1_DisableSlave Def0031
+S $se$I2CHW_1_DisableSlave Def0035
+S _I2CHW_1_EnableInt Def0004
+S I2CHW_1_DisableInt Def002D
+S I2CHW_1_EnableMstr Def0019
+S _I2CHW_1_ResumeInt Def0001
+S $sb$I2CHW_1_DisableInt Def002D
+S $se$I2CHW_1_DisableInt Def0031
+S _I2CHW_1_Stop Def002D
+S $sb$I2CHW_1_EnableMstr Def0019
+S $se$I2CHW_1_EnableMstr Def0029
+S _I2CHW_1_DisableSlave Def0031
+S I2CHW_1_Start Def0000
+S I2CHW_1_ClearInt Def0010
+S $sb$I2CHW_1_Start Def0000
+S $se$I2CHW_1_Start Def0001
+S $sb$I2CHW_1_ClearInt Def0010
+S $se$I2CHW_1_ClearInt Def0019
+S _I2CHW_1_DisableInt Def002D
+S I2CHW_1_EnableSlave Def0029
+S _I2CHW_1_EnableMstr Def0019
+S I2CHW_1_DisableMstr Def0035
+S $sb$I2CHW_1_EnableSlave Def0029
+S $se$I2CHW_1_EnableSlave Def002D
+S _I2CHW_1_Start Def0000
+S _I2CHW_1_ClearInt Def0010
+S I2CHW_1_EnableInt Def0004
+S $sb$I2CHW_1_DisableMstr Def0035
+S $se$I2CHW_1_DisableMstr Def0039
+S I2CHW_1_ResumeInt Def0001
+S _I2CHW_1_EnableSlave Def0029
+S I2CHW_1_Stop Def002D
+S I2CHW_1_DisableSlave Def0031
+T 00 00 7F 08 80 08 08 5D DD 21 FE 60 DD 43 DE 01
+R 00 00 00 01
+T 00 0E 18 7F 08 5D DD 21 FE 60 DD 18 7F 62 D0
+R 00 00 00 01
+T 00 1B 00 00 26 00 00 7F 62 D0 00 00 26
+R 00 00 00 01 43 02 00 00 03 05 00 00 43 0A 00 01
+T 00 23 00 00 7F 43 D6 02 7F 43 D6 01 7F 41 DE FE
+R 00 00 00 01 03 02 00 01
+T 00 30 7F 41 D6 FE 7F 41 D6 FD 7F
+R 00 00 00 01

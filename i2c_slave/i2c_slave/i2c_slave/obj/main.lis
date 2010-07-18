@@ -1,0 +1,47 @@
+ 0000                   cpu LMM
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000                   .dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           _main::
+ 0000                   .dbline -1
+ 0000                   .dbline 15
+ 0000           ; // I2C-UART slave
+ 0000           ; // CY8C29466-24PXI(DIP Package)
+ 0000           ; // PSoC Designer 5.0 + SP6
+ 0000           ; // IMAGECRAFT C Compiler
+ 0000           ; 
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #define _BV(BIT) (1<<BIT)
+ 0000           ; #define sbi(BYTE,BIT) (BYTE |= _BV(BIT))
+ 0000           ; #define cbi(BYTE,BIT) (BYTE &= ~_BV(BIT))
+ 0000           ; #define LED_ON() sbi(PRT2DR, 0)
+ 0000           ; #define LED_OFF() cbi(PRT2DR, 0)
+ 0000           ; 
+ 0000           ; void main(void)
+ 0000           ; {
+ 0000                   .dbline 16
+ 0000           ;     M8C_EnableGInt;
+ 0000 7101                      or  F, 01h
+ 0002           
+ 0002                   .dbline 17
+ 0002           ;     LED_ON();
+ 0002 430801            or REG[0x8],1
+ 0005           L2:
+ 0005                   .dbline 19
+ 0005           ; 
+ 0005           ;     while(1){
+ 0005                   .dbline 21
+ 0005           ;         
+ 0005           ;     }
+ 0005           L3:
+ 0005                   .dbline 19
+ 0005 8FFF              xjmp L2
+ 0007           X0:
+ 0007                   .dbline -2
+ 0007           L1:
+ 0007                   .dbline 0 ; func end
+ 0007 8FFF              jmp .
+ 0009                   .dbend

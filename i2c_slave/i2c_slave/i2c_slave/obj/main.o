@@ -1,0 +1,19 @@
+XH
+H 1 areas 1 global symbols
+M main.c
+A text size 9 flags 0
+dbfile ./main.c
+dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
+dbfunc e main 0 fV
+dbline FFFFFFFF 0
+dbline F 0
+dbline 10 0
+dbline 11 2
+dbline 13 5
+dbline 15 5
+dbline 13 5
+dbline FFFFFFFE 7
+dbline 0 7
+S _main Def0000
+T 00 00 71 01 43 08 01 8F FF 8F FF
+R 00 00 00 00

@@ -1,0 +1,17 @@
+Starting MAKE...
+creating project.mk 
+lib/i2chw_1common.asm
+lib/i2chw_1int.asm
+lib/i2chw_1rsrcinits.asm
+lib/psocconfig.asm
+lib/psocconfigtbl.asm
+./boot.asm
+./main.c
+Linking..
+LMM info: area 'InterruptRAM' uses 8 bytes in SRAM bank 0
+LMM info: area 'virtual_registers' uses 2 bytes in SRAM page 0
+  ROM 3% full. 739 out of 32768 bytes used (does not include absolute areas).
+  RAM 1% full. 10 bytes used (does not include stack usage).
+idata dump at output/i2c_slave.idata
+ 
+i2c_slave - 0 error(s) 0 warning(s) 02:49:59
