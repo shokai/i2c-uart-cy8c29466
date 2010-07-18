@@ -1,5 +1,7 @@
 Starting MAKE...
 creating project.mk 
+CAUTION lib/psocconfig.asm is older than PSoCConfig.xml or missing
+CAUTION you may need to generate source in PSoC Designer
 lib/psocconfig.asm
 lib/psocconfigtbl.asm
 lib/psocgpioint.asm
@@ -17,4 +19,4 @@ LMM info: area 'UART_1_RAM' item of 1 bytes allocated in SRAM page 0
   RAM 2% full. 34 bytes used (does not include stack usage).
 idata dump at output/i2c_master.idata
  
-i2c_master - 0 error(s) 0 warning(s) 22:47:08
+i2c_master - 0 error(s) 0 warning(s) 23:00:41
