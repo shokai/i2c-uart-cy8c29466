@@ -1,8 +1,9 @@
-*/obj/*
-*/backup/*
+*/*/*/obj/*
+*/*/*/backup/*
 *~
 DS_Store
 .fuse*
 config.yaml
 .\#*
 *\#*
+*.bak
