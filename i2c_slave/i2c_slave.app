@@ -1,0 +1,5 @@
+<PSOC_DB>
+  <PSOC_PROJECT_LIST>
+    <PSOC_PROJECT PATH="\i2c_slave\i2c_slave.cmx" IS_ACTIVE="TRUE" />
+  </PSOC_PROJECT_LIST>
+</PSOC_DB>
