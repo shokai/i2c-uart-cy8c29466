@@ -1,0 +1,224 @@
+ 0000                   cpu LMM
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000                   .dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           _main::
+ 0000                   .dbline -1
+ 0000                   .dbline 16
+ 0000           ; // I2C-UART master
+ 0000           ; // CY8C29466-24PXI(DIP Package)
+ 0000           ; // PSoC Designer 5.0 + SP6
+ 0000           ; // IMAGECRAFT C Compiler
+ 0000           ; 
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #define _BV(BIT) (1<<BIT)
+ 0000           ; #define sbi(BYTE,BIT) (BYTE |= _BV(BIT))
+ 0000           ; #define cbi(BYTE,BIT) (BYTE &= ~_BV(BIT))
+ 0000           ; #define LED_ON() sbi(PRT2DR, 0)
+ 0000           ; #define LED_OFF() cbi(PRT2DR, 0)
+ 0000           ; 
+ 0000           ; 
+ 0000           ; void main(void)
+ 0000           ; {
+ 0000                   .dbline 17
+ 0000           ;     M8C_EnableGInt; // enable global interrupt
+ 0000 7101                      or  F, 01h
+ 0002           
+ 0002                   .dbline 18
+ 0002           ;     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
+ 0002 43E020            or REG[0xe0],32
+ 0005                   .dbline 19
+ 0005           ;     UART_1_CmdReset(); // uart init
+ 0005 10                push X
+ 0006 7C0000            xcall _UART_1_CmdReset
+ 0009 20                pop X
+ 000A                   .dbline 20
+ 000A           ;     UART_1_IntCntl(UART_1_ENABLE_RX_INT); // enable receive interrupt
+ 000A 10                push X
+ 000B 5001              mov A,1
+ 000D 7C0000            xcall _UART_1_IntCntl
+ 0010 20                pop X
+ 0011                   .dbline 21
+ 0011           ;     UART_1_Start(UART_1_PARITY_NONE);
+ 0011 10                push X
+ 0012 5000              mov A,0
+ 0014 7C0000            xcall _UART_1_Start
+ 0017 20                pop X
+ 0018                   .dbline 22
+ 0018           ;     LED_ON();
+ 0018 430801            or REG[0x8],1
+ 001B 800D              xjmp L3
+ 001D           L2:
+ 001D                   .dbline 24
+ 001D           ; 
+ 001D           ;     while(1){
+ 001D                   .dbline 25
+ 001D           ;         UART_1_CPutString("loop\r\n");
+ 001D 10                push X
+ 001E 500B              mov A,>L5
+ 0020 08                push A
+ 0021 500B              mov A,<L5
+ 0023 5C                mov X,A
+ 0024 18                pop A
+ 0025 7C0000            xcall _UART_1_CPutString
+ 0028 20                pop X
+ 0029                   .dbline 26
+ 0029           ;     }
+ 0029           L3:
+ 0029                   .dbline 24
+ 0029 8FF3              xjmp L2
+ 002B           X0:
+ 002B                   .dbline -2
+ 002B           L1:
+ 002B                   .dbline 0 ; func end
+ 002B 8FFF              jmp .
+ 002D                   .dbend
+ 002D                   .dbfunc e INT_GPIO _INT_GPIO fV
+ 002D           _INT_GPIO::
+ 002D                   .dbline -1
+ 002D 71C0              or F,-64
+ 002F 08                push A
+ 0030 5DD0              mov A,REG[0xd0]
+ 0032 08                push A
+ 0033 5DD3              mov A,REG[0xd3]
+ 0035 08                push A
+ 0036 5DD4              mov A,REG[0xd4]
+ 0038 08                push A
+ 0039 5DD5              mov A,REG[0xd5]
+ 003B 08                push A
+ 003C 62D000            mov REG[0xd0],>__r0
+ 003F 5100              mov A,[__r0]
+ 0041 08                push A
+ 0042 5100              mov A,[__r1]
+ 0044 08                push A
+ 0045 5100              mov A,[__r2]
+ 0047 08                push A
+ 0048 5100              mov A,[__r3]
+ 004A 08                push A
+ 004B 5100              mov A,[__r4]
+ 004D 08                push A
+ 004E 5100              mov A,[__r5]
+ 0050 08                push A
+ 0051 5100              mov A,[__r6]
+ 0053 08                push A
+ 0054 5100              mov A,[__r7]
+ 0056 08                push A
+ 0057 5100              mov A,[__r8]
+ 0059 08                push A
+ 005A 5100              mov A,[__r9]
+ 005C 08                push A
+ 005D 5100              mov A,[__r10]
+ 005F 08                push A
+ 0060 5100              mov A,[__r11]
+ 0062 08                push A
+ 0063 5100              mov A,[__rX]
+ 0065 08                push A
+ 0066 5100              mov A,[__rY]
+ 0068 08                push A
+ 0069 5100              mov A,[__rZ]
+ 006B 08                push A
+ 006C                   .dbline 32
+ 006C           ; }
+ 006C           ; 
+ 006C           ; 
+ 006C           ; #pragma interrupt_handler INT_GPIO
+ 006C           ; 
+ 006C           ; void INT_GPIO(void){
+ 006C                   .dbline 33
+ 006C           ;   if(PRT2DR & _BV(2)){
+ 006C 5D08              mov A,REG[0x8]
+ 006E 62D000            mov REG[0xd0],>__r0
+ 0071 5300              mov [__r0],A
+ 0073 470004            tst [__r0],4
+ 0076 A012              jz L7
+ 0078                   .dbline 33
+ 0078                   .dbline 34
+ 0078           ;     LED_ON();
+ 0078 430801            or REG[0x8],1
+ 007B                   .dbline 35
+ 007B           ;     UART_1_CPutString("ON\r\n");
+ 007B 10                push X
+ 007C 5006              mov A,>L9
+ 007E 08                push A
+ 007F 5006              mov A,<L9
+ 0081 5C                mov X,A
+ 0082 18                pop A
+ 0083 7C0000            xcall _UART_1_CPutString
+ 0086 20                pop X
+ 0087                   .dbline 36
+ 0087           ;   }
+ 0087 8010              xjmp L8
+ 0089           L7:
+ 0089                   .dbline 37
+ 0089           ;   else{
+ 0089                   .dbline 38
+ 0089           ;     LED_OFF();
+ 0089 4108FE            and REG[0x8],-2
+ 008C                   .dbline 39
+ 008C           ;     UART_1_CPutString("OFF\r\n");
+ 008C 10                push X
+ 008D 5000              mov A,>L10
+ 008F 08                push A
+ 0090 5000              mov A,<L10
+ 0092 5C                mov X,A
+ 0093 18                pop A
+ 0094 7C0000            xcall _UART_1_CPutString
+ 0097 20                pop X
+ 0098                   .dbline 40
+ 0098           ;   }
+ 0098           L8:
+ 0098                   .dbline -2
+ 0098           L6:
+ 0098 62D000            mov REG[0xD0],>__r0
+ 009B 18                pop A
+ 009C 5300              mov [__rZ],A
+ 009E 18                pop A
+ 009F 5300              mov [__rY],A
+ 00A1 18                pop A
+ 00A2 5300              mov [__rX],A
+ 00A4 18                pop A
+ 00A5 5300              mov [__r11],A
+ 00A7 18                pop A
+ 00A8 5300              mov [__r10],A
+ 00AA 18                pop A
+ 00AB 5300              mov [__r9],A
+ 00AD 18                pop A
+ 00AE 5300              mov [__r8],A
+ 00B0 18                pop A
+ 00B1 5300              mov [__r7],A
+ 00B3 18                pop A
+ 00B4 5300              mov [__r6],A
+ 00B6 18                pop A
+ 00B7 5300              mov [__r5],A
+ 00B9 18                pop A
+ 00BA 5300              mov [__r4],A
+ 00BC 18                pop A
+ 00BD 5300              mov [__r3],A
+ 00BF 18                pop A
+ 00C0 5300              mov [__r2],A
+ 00C2 18                pop A
+ 00C3 5300              mov [__r1],A
+ 00C5 18                pop A
+ 00C6 5300              mov [__r0],A
+ 00C8 18                pop A
+ 00C9 60D5              mov REG[213],A
+ 00CB 18                pop A
+ 00CC 60D4              mov REG[212],A
+ 00CE 18                pop A
+ 00CF 60D3              mov REG[211],A
+ 00D1 18                pop A
+ 00D2 60D0              mov REG[208],A
+ 00D4 18                pop A
+ 00D5                   .dbline 0 ; func end
+ 00D5 7E                reti
+ 00D6                   .dbend
+                        .area lit(rom, con, rel)
+ 0000           L10:
+ 0000 4F46460D0A00      .byte 'O,'F,'F,13,10,0
+ 0006           L9:
+ 0006 4F4E0D0A00        .byte 'O,'N,13,10,0
+ 000B           L5:
+ 000B 6C6F6F700D0A00    .byte 'l,'o,'o,'p,13,10,0

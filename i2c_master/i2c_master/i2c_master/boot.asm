@@ -138,7 +138,7 @@ ENDIF
     reti
 
     org   1Ch                      ;GPIO Interrupt Vector
-    // call	void_handler
+    ljmp	PSoC_GPIO_ISR
     reti
 
     org   20h                      ;PSoC Block DBB00 Interrupt Vector

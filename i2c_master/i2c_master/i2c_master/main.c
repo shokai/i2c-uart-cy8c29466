@@ -22,6 +22,20 @@ void main(void)
     LED_ON();
 
     while(1){
-        UART_1_CPutString("run\r\n");
+        UART_1_CPutString("loop\r\n");
     }
+}
+
+
+#pragma interrupt_handler INT_GPIO
+
+void INT_GPIO(void){
+  if(PRT2DR & _BV(2)){
+    LED_ON();
+    UART_1_CPutString("ON\r\n");
+  }
+  else{
+    LED_OFF();
+    UART_1_CPutString("OFF\r\n");
+  }
 }
