@@ -96,16 +96,16 @@ LoadConfigTBL_i2c_slave_Ordered:
 	M8C_SetBank0
 	mov	reg[05h], 00h		; Port_1_IntEn register (PRT1IE)
 	M8C_SetBank1
-	mov	reg[08h], 01h		; Port_2_DriveMode_0 register (PRT2DM0)
+	mov	reg[08h], 05h		; Port_2_DriveMode_0 register (PRT2DM0)
 	mov	reg[09h], feh		; Port_2_DriveMode_1 register (PRT2DM1)
 	M8C_SetBank0
-	mov	reg[0bh], feh		; Port_2_DriveMode_2 register (PRT2DM2)
+	mov	reg[0bh], fah		; Port_2_DriveMode_2 register (PRT2DM2)
 	mov	reg[0ah], 00h		; Port_2_GlobalSelect register (PRT2GS)
 	M8C_SetBank1
-	mov	reg[0ah], 00h		; Port_2_IntCtrl_0 register (PRT2IC0)
-	mov	reg[0bh], 00h		; Port_2_IntCtrl_1 register (PRT2IC1)
+	mov	reg[0ah], 04h		; Port_2_IntCtrl_0 register (PRT2IC0)
+	mov	reg[0bh], 04h		; Port_2_IntCtrl_1 register (PRT2IC1)
 	M8C_SetBank0
-	mov	reg[09h], 00h		; Port_2_IntEn register (PRT2IE)
+	mov	reg[09h], 04h		; Port_2_IntEn register (PRT2IE)
 	M8C_SetBank1
 	mov	reg[0ch], 00h		; Port_3_DriveMode_0 register (PRT3DM0)
 	mov	reg[0dh], 00h		; Port_3_DriveMode_1 register (PRT3DM1)

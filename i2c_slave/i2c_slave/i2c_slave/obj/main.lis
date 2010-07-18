@@ -27,21 +27,73 @@
  0000 7101                      or  F, 01h
  0002           
  0002                   .dbline 17
- 0002           ;     LED_ON();
- 0002 430801            or REG[0x8],1
- 0005           L2:
- 0005                   .dbline 19
- 0005           ; 
- 0005           ;     while(1){
- 0005                   .dbline 21
- 0005           ;         
- 0005           ;     }
- 0005           L3:
- 0005                   .dbline 19
- 0005 8FFF              xjmp L2
- 0007           X0:
- 0007                   .dbline -2
- 0007           L1:
- 0007                   .dbline 0 ; func end
- 0007 8FFF              jmp .
- 0009                   .dbend
+ 0002           ;     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
+ 0002 43E020            or REG[0xe0],32
+ 0005                   .dbline 18
+ 0005           ;     LED_ON();
+ 0005 430801            or REG[0x8],1
+ 0008           L2:
+ 0008                   .dbline 20
+ 0008           ; 
+ 0008           ;     while(1){
+ 0008                   .dbline 22
+ 0008           ;         
+ 0008           ;     }
+ 0008           L3:
+ 0008                   .dbline 20
+ 0008 8FFF              xjmp L2
+ 000A           X0:
+ 000A                   .dbline -2
+ 000A           L1:
+ 000A                   .dbline 0 ; func end
+ 000A 8FFF              jmp .
+ 000C                   .dbend
+ 000C                   .dbfunc e INT_GPIO _INT_GPIO fV
+ 000C           _INT_GPIO::
+ 000C                   .dbline -1
+ 000C 71C0              or F,-64
+ 000E 08                push A
+ 000F 5DD0              mov A,REG[0xd0]
+ 0011 08                push A
+ 0012 62D000            mov REG[0xd0],>__r0
+ 0015 5100              mov A,[__r0]
+ 0017 08                push A
+ 0018                   .dbline 26
+ 0018           ; }
+ 0018           ; 
+ 0018           ; #pragma interrupt_handler INT_GPIO
+ 0018           ; void INT_GPIO(void){
+ 0018                   .dbline 27
+ 0018           ;     if(PRT2DR & _BV(2)){
+ 0018 5D08              mov A,REG[0x8]
+ 001A 62D000            mov REG[0xd0],>__r0
+ 001D 5300              mov [__r0],A
+ 001F 470004            tst [__r0],4
+ 0022 A006              jz L6
+ 0024                   .dbline 27
+ 0024                   .dbline 28
+ 0024           ;         LED_ON();
+ 0024 430801            or REG[0x8],1
+ 0027                   .dbline 29
+ 0027           ;     }
+ 0027 8004              xjmp L7
+ 0029           L6:
+ 0029                   .dbline 30
+ 0029           ;     else{
+ 0029                   .dbline 31
+ 0029           ;         LED_OFF();
+ 0029 4108FE            and REG[0x8],-2
+ 002C                   .dbline 32
+ 002C           ;     }
+ 002C           L7:
+ 002C                   .dbline -2
+ 002C           L5:
+ 002C 62D000            mov REG[0xD0],>__r0
+ 002F 18                pop A
+ 0030 5300              mov [__r0],A
+ 0032 18                pop A
+ 0033 60D0              mov REG[208],A
+ 0035 18                pop A
+ 0036                   .dbline 0 ; func end
+ 0036 7E                reti
+ 0037                   .dbend

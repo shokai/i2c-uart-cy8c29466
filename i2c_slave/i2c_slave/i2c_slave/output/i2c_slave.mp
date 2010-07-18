@@ -1,10 +1,10 @@
 Project:      output/i2c_slave
 Build Number: 0
-Date:         Mon Jul 19 02:49:59 2010
+Date:         Mon Jul 19 02:56:34 2010
 Compiler:     ICCM8C
 Version:      7.02.004
 
-  ROM 3% full. 739 out of 32768 bytes used (does not include absolute areas).
+  ROM 3% full. 789 out of 32768 bytes used (does not include absolute areas).
   RAM 1% full. 10 bytes used (does not include stack usage).
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
@@ -52,14 +52,16 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   047A   0009 =      9. bytes (rel,con,rom)
+                            text   047A   003B =     59. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
        047A  _main
        047A  __text_start
-       0483  __text_end
-       0485  __xidata_end
+       0486  _INT_GPIO
+       04B1  PSoC_GPIO_ISR
+       04B5  __text_end
+       04B7  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -113,7 +115,7 @@ Files Linked      [ module(s) ]
 
 ./obj/boot.o	[ boot.asm ]
 ./obj/main.o	[ main.c ]
-<library>	[ psocconfigtbl.asm, psocconfig.asm, i2chw_1int.asm, r1.asm, r0.asm ]
+<library>	[ psocgpioint.asm, psocconfigtbl.asm, psocconfig.asm, i2chw_1int.asm, r1.asm, r0.asm ]
 
 Area Definitions
 

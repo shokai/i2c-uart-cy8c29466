@@ -1,7 +1,8 @@
 XH
-H 1 areas 1 global symbols
+H 1 areas 3 global symbols
 M main.c
-A text size 9 flags 0
+S __r0 Ref0000
+A text size 37 flags 0
 dbfile ./main.c
 dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
 dbfunc e main 0 fV
@@ -9,11 +10,33 @@ dbline FFFFFFFF 0
 dbline F 0
 dbline 10 0
 dbline 11 2
-dbline 13 5
-dbline 15 5
-dbline 13 5
-dbline FFFFFFFE 7
-dbline 0 7
+dbline 12 5
+dbline 14 8
+dbline 16 8
+dbline 14 8
+dbline FFFFFFFE A
+dbline 0 A
+dbfunc e INT_GPIO C fV
+dbline FFFFFFFF C
+dbline 1A 18
+dbline 1B 18
+dbline 1B 24
+dbline 1C 24
+dbline 1D 27
+dbline 1E 29
+dbline 1F 29
+dbline 20 2C
+dbline FFFFFFFE 2C
+dbline 0 36
 S _main Def0000
-T 00 00 71 01 43 08 01 8F FF 8F FF
+S _INT_GPIO Def000C
+T 00 00 71 01 43 E0 20 43 08 01 8F FF 8F FF 71 C0
 R 00 00 00 00
+T 00 0E 08 5D D0 08 62 D0 00 00 51 00 00 08 5D 08
+R 00 00 00 00 43 08 00 00 03 0B 00 00
+T 00 1A 62 D0 00 00 53 00 00 47 00 00 04 A0 06 43
+R 00 00 00 00 43 04 00 00 03 07 00 00 03 0A 00 00
+T 00 25 08 01 80 04 41 08 FE 62 D0 00 00 18 53
+R 00 00 00 00 43 0B 00 00
+T 00 31 00 00 18 60 D0 18 7E
+R 00 00 00 00 03 02 00 00

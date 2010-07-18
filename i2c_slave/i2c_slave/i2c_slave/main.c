@@ -14,9 +14,20 @@
 void main(void)
 {
     M8C_EnableGInt;
+    M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
     LED_ON();
 
     while(1){
         
+    }
+}
+
+#pragma interrupt_handler INT_GPIO
+void INT_GPIO(void){
+    if(PRT2DR & _BV(2)){
+        LED_ON();
+    }
+    else{
+        LED_OFF();
     }
 }

@@ -3,4 +3,5 @@ lib/i2chw_1common.asm
 lib/i2chw_1int.asm   
 lib/i2chw_1rsrcinits.asm   
 lib/psocconfig.asm   
-lib/psocconfigtbl.asm 
+lib/psocconfigtbl.asm   
+lib/psocgpioint.asm 
