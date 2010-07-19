@@ -15,4 +15,4 @@ LMM info: area 'virtual_registers' uses 2 bytes in SRAM page 0
   RAM 1% full. 10 bytes used (does not include stack usage).
 idata dump at output/i2c_slave.idata
  
-i2c_slave - 0 error(s) 0 warning(s) 02:56:33
+i2c_slave - 0 error(s) 0 warning(s) 01:11:36

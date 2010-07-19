@@ -6,7 +6,7 @@
  0000                   .dbfunc e main _main fV
  0000           _main::
  0000                   .dbline -1
- 0000                   .dbline 15
+ 0000                   .dbline 18
  0000           ; // I2C-UART slave
  0000           ; // CY8C29466-24PXI(DIP Package)
  0000           ; // PSoC Designer 5.0 + SP6
@@ -19,28 +19,30 @@
  0000           ; #define cbi(BYTE,BIT) (BYTE &= ~_BV(BIT))
  0000           ; #define LED_ON() sbi(PRT2DR, 0)
  0000           ; #define LED_OFF() cbi(PRT2DR, 0)
+ 0000           ; #define bit_is_set(BYTE, BIT) BYTE & BIT
+ 0000           ; #define SW_PORT PRT2DR
+ 0000           ; #define SW_BIT _BV(2) // switch
  0000           ; 
  0000           ; void main(void)
  0000           ; {
- 0000                   .dbline 16
+ 0000                   .dbline 19
  0000           ;     M8C_EnableGInt;
  0000 7101                      or  F, 01h
  0002           
- 0002                   .dbline 17
+ 0002                   .dbline 20
  0002           ;     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
  0002 43E020            or REG[0xe0],32
- 0005                   .dbline 18
+ 0005                   .dbline 21
  0005           ;     LED_ON();
  0005 430801            or REG[0x8],1
  0008           L2:
- 0008                   .dbline 20
+ 0008                   .dbline 23
  0008           ; 
  0008           ;     while(1){
- 0008                   .dbline 22
- 0008           ;         
+ 0008                   .dbline 24
  0008           ;     }
  0008           L3:
- 0008                   .dbline 20
+ 0008                   .dbline 23
  0008 8FFF              xjmp L2
  000A           X0:
  000A                   .dbline -2
@@ -58,32 +60,32 @@
  0012 62D000            mov REG[0xd0],>__r0
  0015 5100              mov A,[__r0]
  0017 08                push A
- 0018                   .dbline 26
+ 0018                   .dbline 28
  0018           ; }
  0018           ; 
  0018           ; #pragma interrupt_handler INT_GPIO
  0018           ; void INT_GPIO(void){
- 0018                   .dbline 27
- 0018           ;     if(PRT2DR & _BV(2)){
+ 0018                   .dbline 29
+ 0018           ;     if(bit_is_set(SW_PORT, SW_BIT)){
  0018 5D08              mov A,REG[0x8]
  001A 62D000            mov REG[0xd0],>__r0
  001D 5300              mov [__r0],A
  001F 470004            tst [__r0],4
  0022 A006              jz L6
- 0024                   .dbline 27
- 0024                   .dbline 28
+ 0024                   .dbline 29
+ 0024                   .dbline 30
  0024           ;         LED_ON();
  0024 430801            or REG[0x8],1
- 0027                   .dbline 29
+ 0027                   .dbline 31
  0027           ;     }
  0027 8004              xjmp L7
  0029           L6:
- 0029                   .dbline 30
+ 0029                   .dbline 32
  0029           ;     else{
- 0029                   .dbline 31
+ 0029                   .dbline 33
  0029           ;         LED_OFF();
  0029 4108FE            and REG[0x8],-2
- 002C                   .dbline 32
+ 002C                   .dbline 34
  002C           ;     }
  002C           L7:
  002C                   .dbline -2

@@ -10,6 +10,9 @@
 #define cbi(BYTE,BIT) (BYTE &= ~_BV(BIT))
 #define LED_ON() sbi(PRT2DR, 0)
 #define LED_OFF() cbi(PRT2DR, 0)
+#define bit_is_set(BYTE, BIT) BYTE & BIT
+#define SW_PORT PRT2DR
+#define SW_BIT _BV(2) // switch
 
 void main(void)
 {
@@ -18,13 +21,12 @@ void main(void)
     LED_ON();
 
     while(1){
-        
     }
 }
 
 #pragma interrupt_handler INT_GPIO
 void INT_GPIO(void){
-    if(PRT2DR & _BV(2)){
+    if(bit_is_set(SW_PORT, SW_BIT)){
         LED_ON();
     }
     else{

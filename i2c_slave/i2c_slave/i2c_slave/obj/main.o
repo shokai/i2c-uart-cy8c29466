@@ -7,25 +7,25 @@ dbfile ./main.c
 dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
 dbfunc e main 0 fV
 dbline FFFFFFFF 0
-dbline F 0
-dbline 10 0
-dbline 11 2
-dbline 12 5
-dbline 14 8
-dbline 16 8
-dbline 14 8
+dbline 12 0
+dbline 13 0
+dbline 14 2
+dbline 15 5
+dbline 17 8
+dbline 18 8
+dbline 17 8
 dbline FFFFFFFE A
 dbline 0 A
 dbfunc e INT_GPIO C fV
 dbline FFFFFFFF C
-dbline 1A 18
-dbline 1B 18
-dbline 1B 24
-dbline 1C 24
-dbline 1D 27
-dbline 1E 29
-dbline 1F 29
-dbline 20 2C
+dbline 1C 18
+dbline 1D 18
+dbline 1D 24
+dbline 1E 24
+dbline 1F 27
+dbline 20 29
+dbline 21 29
+dbline 22 2C
 dbline FFFFFFFE 2C
 dbline 0 36
 S _main Def0000
