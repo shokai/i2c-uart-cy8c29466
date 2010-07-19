@@ -4,8 +4,21 @@
    C:/PROGRA~1/Cypress/Common/CYPRES~3/tools/include/CY8C29~1/m8ssc.inc\
    C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\lib\GLOBAL~1.INC\
    C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\memory.inc
-./obj/main.o :  ./lib/PSoCAPI.h ./lib/UART_1.h\
+./obj/main.o :  ./lib/I2CHW_~2.H ./lib/I2CHW_~1.H ./lib/PSoCAPI.h\
+   ./lib/UART_1.h\
    C:/PROGRA~1/Cypress/Common/CYPRES~3/tools/include/CY8C29~1/m8c.h
+./lib/obj/i2chw_1common.o :  ./lib/I2CHW_~1.INC\
+   C:/PROGRA~1/Cypress/Common/CYPRES~3/tools/include/CY8C29~1/m8c.inc\
+   C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\memory.inc
+./lib/obj/i2chw_1int.o :  ./lib/I2CHW_~1.INC ./lib/I2CHW_~2.INC\
+   C:/PROGRA~1/Cypress/Common/CYPRES~3/tools/include/CY8C29~1/m8c.inc\
+   C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\memory.inc
+./lib/obj/i2chw_1mstr.o :  ./lib/I2CHW_~1.INC ./lib/I2CHW_~2.INC\
+   C:/PROGRA~1/Cypress/Common/CYPRES~3/tools/include/CY8C29~1/m8c.inc\
+   C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\memory.inc
+./lib/obj/i2chw_1rsrcinits.o :  ./lib/I2CHW_~1.INC\
+   C:/PROGRA~1/Cypress/Common/CYPRES~3/tools/include/CY8C29~1/m8c.inc\
+   C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\memory.inc
 ./lib/obj/psocconfig.o :  ./lib/GLOBAL~1.INC\
    C:/PROGRA~1/Cypress/Common/CYPRES~3/tools/include/CY8C29~1/m8c.inc\
    C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\memory.inc

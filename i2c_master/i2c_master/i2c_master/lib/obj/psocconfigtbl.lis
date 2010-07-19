@@ -826,6 +826,7 @@
                 export LoadConfigTBL_i2c_master_Ordered
                 AREA lit(rom, rel)
  0000           LoadConfigTBL_i2c_master_Bank0:
+ 0000           ;  Instance name I2CHW_1, User Module I2CHW
  0000           ;  Instance name UART_1, User Module UART
  0000           ;       Instance name UART_1, Block Name RX(DCB03)
  0000 2F00              db              2fh, 00h                ;UART_1_RX_CONTROL_REG(DCB03CR0)
@@ -877,6 +878,7 @@
  0058 6F00              db              6fh, 00h                ; TMP_DR3 register (TMP_DR3)
  005A FF                db              ffh
  005B           LoadConfigTBL_i2c_master_Bank1:
+ 005B           ;  Instance name I2CHW_1, User Module I2CHW
  005B           ;  Instance name UART_1, User Module UART
  005B           ;       Instance name UART_1, Block Name RX(DCB03)
  005B 2C05              db              2ch, 05h                ;UART_1_RX_FUNC_REG   (DCB03FN)
@@ -920,7 +922,7 @@
  00A4 70EF          and   F, ~FLAG_XIO_MASK
  00A6 620100            mov     reg[01h], 00h           ; Port_0_IntEn register (PRT0IE)
  00A9 7110          or    F, FLAG_XIO_MASK
- 00AB 620400            mov     reg[04h], 00h           ; Port_1_DriveMode_0 register (PRT1DM0)
+ 00AB 6204A0            mov     reg[04h], a0h           ; Port_1_DriveMode_0 register (PRT1DM0)
  00AE 6205FF            mov     reg[05h], ffh           ; Port_1_DriveMode_1 register (PRT1DM1)
  00B1 70EF          and   F, ~FLAG_XIO_MASK
  00B3 6207FF            mov     reg[07h], ffh           ; Port_1_DriveMode_2 register (PRT1DM2)

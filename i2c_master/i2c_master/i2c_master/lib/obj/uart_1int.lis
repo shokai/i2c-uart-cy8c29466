@@ -1189,57 +1189,57 @@
  0000              ;---------------------------------------------------
  0000              ;   NOTE: interrupt service routines must preserve
  0000              ;   the values of the A and X CPU registers.
- 0000              
- 0000 7D0000       ljmp _INT_UART_RX
- 0003                   
- 0003              ;---------------------------------------------------
- 0003              ; Insert your custom code above this banner
- 0003              ;---------------------------------------------------
- 0003              ;@PSoC_UserCode_END@ (Do not change this line.)
- 0003 7E           reti
- 0004           
- 0004           
- 0004           ;-----------------------------------------------------------------------------
- 0004           ;  FUNCTION NAME: _UART_1_RX_ISR
- 0004           ;
- 0004           ;  DESCRIPTION:
- 0004           ;     UART RX interrupt handler for instance UART_1.
- 0004           ;     This ISR handles the background processing of received characters if
- 0004           ;     the buffer is enabled.
- 0004           ;
- 0004           ;
- 0004           ;  The following assumes that the RX buffer feature has been enabled.
- 0004           ;
- 0004           ;  SIDE EFFECTS:
- 0004           ;     There are 3 posible errors that may occur with the serial port.
- 0004           ;      1) Parity Error
- 0004           ;      2) Framing Error
- 0004           ;      3) OverRun Error
- 0004           ;
- 0004           ;  This user module check for parity and framing error.  If either of these
- 0004           ;  two errors are detected, the data is read and ignored.  When an overRun
- 0004           ;  error occurs, the last byte was lost, but the current byte is valid.  For
- 0004           ;  this reason this error is ignored at this time.  Code could be added to
- 0004           ;  this ISR to set a flag if an error condition occurs.
- 0004           ;
- 0004           ;  THEORY of OPERATION:
- 0004           ;     When using the RX buffer feature, the ISR collects received characters
- 0004           ;     in a buffer until the user defined command terminator is detected.  After
- 0004           ;     the command terminator is detected, the command bit is set and all other
- 0004           ;     characters will be ignored until the command bit is reset.  Up to
- 0004           ;     buffer_size - 1 characters will be collected waiting for a command
- 0004           ;     terminator.  After that, the characters will be discarded, although
- 0004           ;     a command determinator will still cause the command bit to be set.
- 0004           ;
- 0004           ;-----------------------------------------------------------------------------
- 0004           _UART_1_RX_ISR:
- 0004           
- 0004              ;@PSoC_UserCode_BODY_2@ (Do not change this line.)
- 0004              ;---------------------------------------------------
- 0004              ; Insert your custom code below this banner
- 0004              ;---------------------------------------------------
- 0004              ;   NOTE: interrupt service routines must preserve
- 0004              ;   the values of the A and X CPU registers.
+ 0000           	
+ 0000              ;---------------------------------------------------
+ 0000              ; Insert your custom code above this banner
+ 0000              ;---------------------------------------------------
+ 0000              ;@PSoC_UserCode_END@ (Do not change this line.)
+ 0000 7E           reti
+ 0001           
+ 0001           
+ 0001           ;-----------------------------------------------------------------------------
+ 0001           ;  FUNCTION NAME: _UART_1_RX_ISR
+ 0001           ;
+ 0001           ;  DESCRIPTION:
+ 0001           ;     UART RX interrupt handler for instance UART_1.
+ 0001           ;     This ISR handles the background processing of received characters if
+ 0001           ;     the buffer is enabled.
+ 0001           ;
+ 0001           ;
+ 0001           ;  The following assumes that the RX buffer feature has been enabled.
+ 0001           ;
+ 0001           ;  SIDE EFFECTS:
+ 0001           ;     There are 3 posible errors that may occur with the serial port.
+ 0001           ;      1) Parity Error
+ 0001           ;      2) Framing Error
+ 0001           ;      3) OverRun Error
+ 0001           ;
+ 0001           ;  This user module check for parity and framing error.  If either of these
+ 0001           ;  two errors are detected, the data is read and ignored.  When an overRun
+ 0001           ;  error occurs, the last byte was lost, but the current byte is valid.  For
+ 0001           ;  this reason this error is ignored at this time.  Code could be added to
+ 0001           ;  this ISR to set a flag if an error condition occurs.
+ 0001           ;
+ 0001           ;  THEORY of OPERATION:
+ 0001           ;     When using the RX buffer feature, the ISR collects received characters
+ 0001           ;     in a buffer until the user defined command terminator is detected.  After
+ 0001           ;     the command terminator is detected, the command bit is set and all other
+ 0001           ;     characters will be ignored until the command bit is reset.  Up to
+ 0001           ;     buffer_size - 1 characters will be collected waiting for a command
+ 0001           ;     terminator.  After that, the characters will be discarded, although
+ 0001           ;     a command determinator will still cause the command bit to be set.
+ 0001           ;
+ 0001           ;-----------------------------------------------------------------------------
+ 0001           _UART_1_RX_ISR:
+ 0001           
+ 0001              ;@PSoC_UserCode_BODY_2@ (Do not change this line.)
+ 0001              ;---------------------------------------------------
+ 0001              ; Insert your custom code below this banner
+ 0001              ;---------------------------------------------------
+ 0001              ;   NOTE: interrupt service routines must preserve
+ 0001              ;   the values of the A and X CPU registers.
+ 0001              
+ 0001 7D0000       ljmp _INT_UART_RX
  0004           
  0004              ;---------------------------------------------------
  0004              ; Insert your custom code above this banner

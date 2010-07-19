@@ -7,6 +7,7 @@ export LoadConfigTBL_i2c_master_Bank0
 export LoadConfigTBL_i2c_master_Ordered
 AREA lit(rom, rel)
 LoadConfigTBL_i2c_master_Bank0:
+;  Instance name I2CHW_1, User Module I2CHW
 ;  Instance name UART_1, User Module UART
 ;       Instance name UART_1, Block Name RX(DCB03)
 	db		2fh, 00h		;UART_1_RX_CONTROL_REG(DCB03CR0)
@@ -58,6 +59,7 @@ LoadConfigTBL_i2c_master_Bank0:
 	db		6fh, 00h		; TMP_DR3 register (TMP_DR3)
 	db		ffh
 LoadConfigTBL_i2c_master_Bank1:
+;  Instance name I2CHW_1, User Module I2CHW
 ;  Instance name UART_1, User Module UART
 ;       Instance name UART_1, Block Name RX(DCB03)
 	db		2ch, 05h		;UART_1_RX_FUNC_REG   (DCB03FN)
@@ -101,7 +103,7 @@ LoadConfigTBL_i2c_master_Ordered:
 	M8C_SetBank0
 	mov	reg[01h], 00h		; Port_0_IntEn register (PRT0IE)
 	M8C_SetBank1
-	mov	reg[04h], 00h		; Port_1_DriveMode_0 register (PRT1DM0)
+	mov	reg[04h], a0h		; Port_1_DriveMode_0 register (PRT1DM0)
 	mov	reg[05h], ffh		; Port_1_DriveMode_1 register (PRT1DM1)
 	M8C_SetBank0
 	mov	reg[07h], ffh		; Port_1_DriveMode_2 register (PRT1DM2)

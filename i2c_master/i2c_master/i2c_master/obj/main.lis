@@ -6,7 +6,7 @@
  0000                   .dbfunc e main _main fV
  0000           _main::
  0000                   .dbline -1
- 0000                   .dbline 16
+ 0000                   .dbline 19
  0000           ; // I2C-UART master
  0000           ; // CY8C29466-24PXI(DIP Package)
  0000           ; // PSoC Designer 5.0 + SP6
@@ -19,377 +19,380 @@
  0000           ; #define cbi(BYTE,BIT) (BYTE &= ~_BV(BIT))
  0000           ; #define LED_ON() sbi(PRT2DR, 0)
  0000           ; #define LED_OFF() cbi(PRT2DR, 0)
+ 0000           ; #define bit_is_set(BYTE, BIT) BYTE & BIT
+ 0000           ; #define SW_PORT PRT2DR
+ 0000           ; #define SW_BIT _BV(2) // switch
  0000           ; 
  0000           ; 
  0000           ; void main(void)
  0000           ; {
- 0000                   .dbline 17
+ 0000                   .dbline 20
  0000           ;     M8C_EnableGInt; // enable global interrupt
  0000 7101                      or  F, 01h
  0002           
- 0002                   .dbline 18
+ 0002                   .dbline 21
  0002           ;     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
  0002 43E020            or REG[0xe0],32
- 0005                   .dbline 19
+ 0005                   .dbline 22
  0005           ;     UART_1_CmdReset(); // uart init
  0005 10                push X
  0006 7C0000            xcall _UART_1_CmdReset
  0009 20                pop X
- 000A                   .dbline 20
+ 000A                   .dbline 23
  000A           ;     UART_1_IntCntl(UART_1_ENABLE_RX_INT); // enable receive interrupt
  000A 10                push X
  000B 5001              mov A,1
  000D 7C0000            xcall _UART_1_IntCntl
  0010 20                pop X
- 0011                   .dbline 21
+ 0011                   .dbline 24
  0011           ;     UART_1_Start(UART_1_PARITY_NONE);
  0011 10                push X
  0012 5000              mov A,0
  0014 7C0000            xcall _UART_1_Start
  0017 20                pop X
- 0018                   .dbline 22
+ 0018                   .dbline 25
  0018           ;     LED_ON();
  0018 430801            or REG[0x8],1
- 001B 800D              xjmp L3
- 001D           L2:
- 001D                   .dbline 24
- 001D           ; 
- 001D           ;     while(1){
- 001D                   .dbline 25
- 001D           ;         UART_1_CPutString("loop\r\n");
- 001D 10                push X
- 001E 5017              mov A,>L5
- 0020 08                push A
- 0021 5017              mov A,<L5
- 0023 5C                mov X,A
- 0024 18                pop A
- 0025 7C0000            xcall _UART_1_CPutString
- 0028 20                pop X
- 0029                   .dbline 26
- 0029           ;     }
- 0029           L3:
- 0029                   .dbline 24
- 0029 8FF3              xjmp L2
- 002B           X0:
- 002B                   .dbline -2
- 002B           L1:
- 002B                   .dbline 0 ; func end
- 002B 8FFF              jmp .
- 002D                   .dbend
- 002D                   .dbfunc e INT_UART_RX _INT_UART_RX fV
- 002D           ;      recv_data -> X+0
- 002D           _INT_UART_RX::
- 002D                   .dbline -1
- 002D 71C0              or F,-64
- 002F 08                push A
- 0030 5DD0              mov A,REG[0xd0]
- 0032 08                push A
- 0033 5DD3              mov A,REG[0xd3]
- 0035 08                push A
- 0036 5DD4              mov A,REG[0xd4]
- 0038 08                push A
- 0039 5DD5              mov A,REG[0xd5]
- 003B 08                push A
- 003C 62D000            mov REG[0xd0],>__r0
- 003F 5100              mov A,[__r0]
- 0041 08                push A
- 0042 5100              mov A,[__r1]
- 0044 08                push A
- 0045 5100              mov A,[__r2]
- 0047 08                push A
- 0048 5100              mov A,[__r3]
- 004A 08                push A
- 004B 5100              mov A,[__r4]
- 004D 08                push A
- 004E 5100              mov A,[__r5]
- 0050 08                push A
- 0051 5100              mov A,[__r6]
- 0053 08                push A
- 0054 5100              mov A,[__r7]
- 0056 08                push A
- 0057 5100              mov A,[__r8]
- 0059 08                push A
- 005A 5100              mov A,[__r9]
- 005C 08                push A
- 005D 5100              mov A,[__r10]
- 005F 08                push A
- 0060 5100              mov A,[__r11]
- 0062 08                push A
- 0063 5100              mov A,[__rX]
- 0065 08                push A
- 0066 5100              mov A,[__rY]
- 0068 08                push A
- 0069 5100              mov A,[__rZ]
- 006B 08                push A
- 006C 10                push X
- 006D 4F                mov X,SP
- 006E 3803              add SP,3
- 0070                   .dbline 31
- 0070           ; }
- 0070           ; 
- 0070           ; 
- 0070           ; #pragma interrupt_handler INT_UART_RX
- 0070           ; void INT_UART_RX(void){
- 0070                   .dbline 33
- 0070           ;     char recv_data;
- 0070           ;     recv_data = UART_1_cGetChar(); // read UART
- 0070 10                push X
- 0071 7C0000            xcall _UART_1_cGetChar
- 0074 62D000            mov REG[0xd0],>__r0
- 0077 20                pop X
- 0078 5400              mov [X+0],A
- 007A                   .dbline 34
- 007A           ;     UART_1_PutChar(recv_data); // echo
- 007A 10                push X
- 007B 5200              mov A,[X+0]
- 007D 7C0000            xcall _UART_1_PutChar
- 0080 20                pop X
- 0081                   .dbline 35
- 0081           ;     switch(recv_data){
- 0081 5200              mov A,[X+0]
- 0083 5402              mov [X+2],A
- 0085 560100            mov [X+1],0
- 0088 5202              mov A,[X+2]
- 008A 1144              sub A,68
- 008C 62D000            mov REG[0xd0],>__r0
- 008F 5300              mov [__rY],A
- 0091 5201              mov A,[X+1]
- 0093 3180              xor A,-128
- 0095 1980              sbb A,(0 ^ 0x80)
- 0097 C031              jc L7
- 0099 2A00              or A,[__rY]
- 009B A01E              jz L12
- 009D           X1:
- 009D           L14:
- 009D 3D0100            cmp [X+1],0
- 00A0 B006              jnz X2
- 00A2 3D0255            cmp [X+2],85
- 00A5 A003              jz L10
- 00A7           X2:
- 00A7 8021              xjmp L7
- 00A9           L10:
- 00A9                   .dbline 37
- 00A9           ;     case 'U':
- 00A9           ;         LED_ON();
- 00A9 430801            or REG[0x8],1
- 00AC                   .dbline 38
- 00AC           ;         UART_1_CPutString("!Up!");
- 00AC 10                push X
- 00AD 5012              mov A,>L11
- 00AF 08                push A
- 00B0 5012              mov A,<L11
- 00B2 5C                mov X,A
- 00B3 18                pop A
- 00B4 7C0000            xcall _UART_1_CPutString
- 00B7 20                pop X
- 00B8                   .dbline 39
- 00B8           ;         break;
- 00B8 8010              xjmp L8
- 00BA           L12:
- 00BA                   .dbline 41
- 00BA           ;     case 'D':
- 00BA           ;         LED_OFF();
- 00BA 4108FE            and REG[0x8],-2
- 00BD                   .dbline 42
- 00BD           ;         UART_1_CPutString("!Down!");
- 00BD 10                push X
- 00BE 500B              mov A,>L13
- 00C0 08                push A
- 00C1 500B              mov A,<L13
- 00C3 5C                mov X,A
- 00C4 18                pop A
- 00C5 7C0000            xcall _UART_1_CPutString
- 00C8 20                pop X
- 00C9                   .dbline 43
- 00C9           ;         break;
- 00C9           L7:
- 00C9           L8:
- 00C9                   .dbline -2
- 00C9           L6:
- 00C9 38FD              add SP,-3
- 00CB 20                pop X
- 00CC 62D000            mov REG[0xD0],>__r0
- 00CF 18                pop A
- 00D0 5300              mov [__rZ],A
- 00D2 18                pop A
- 00D3 5300              mov [__rY],A
- 00D5 18                pop A
- 00D6 5300              mov [__rX],A
- 00D8 18                pop A
- 00D9 5300              mov [__r11],A
- 00DB 18                pop A
- 00DC 5300              mov [__r10],A
- 00DE 18                pop A
- 00DF 5300              mov [__r9],A
- 00E1 18                pop A
- 00E2 5300              mov [__r8],A
- 00E4 18                pop A
- 00E5 5300              mov [__r7],A
- 00E7 18                pop A
- 00E8 5300              mov [__r6],A
- 00EA 18                pop A
- 00EB 5300              mov [__r5],A
- 00ED 18                pop A
- 00EE 5300              mov [__r4],A
- 00F0 18                pop A
- 00F1 5300              mov [__r3],A
- 00F3 18                pop A
- 00F4 5300              mov [__r2],A
- 00F6 18                pop A
- 00F7 5300              mov [__r1],A
- 00F9 18                pop A
- 00FA 5300              mov [__r0],A
- 00FC 18                pop A
- 00FD 60D5              mov REG[213],A
- 00FF 18                pop A
- 0100 60D4              mov REG[212],A
- 0102 18                pop A
- 0103 60D3              mov REG[211],A
- 0105 18                pop A
- 0106 60D0              mov REG[208],A
- 0108 18                pop A
- 0109                   .dbline 0 ; func end
- 0109 7E                reti
- 010A                   .dbsym l recv_data 0 c
- 010A                   .dbend
- 010A                   .dbfunc e INT_GPIO _INT_GPIO fV
- 010A           _INT_GPIO::
- 010A                   .dbline -1
- 010A 71C0              or F,-64
- 010C 08                push A
- 010D 5DD0              mov A,REG[0xd0]
- 010F 08                push A
- 0110 5DD3              mov A,REG[0xd3]
- 0112 08                push A
- 0113 5DD4              mov A,REG[0xd4]
- 0115 08                push A
- 0116 5DD5              mov A,REG[0xd5]
- 0118 08                push A
- 0119 62D000            mov REG[0xd0],>__r0
- 011C 5100              mov A,[__r0]
- 011E 08                push A
- 011F 5100              mov A,[__r1]
- 0121 08                push A
- 0122 5100              mov A,[__r2]
- 0124 08                push A
- 0125 5100              mov A,[__r3]
- 0127 08                push A
- 0128 5100              mov A,[__r4]
- 012A 08                push A
- 012B 5100              mov A,[__r5]
- 012D 08                push A
- 012E 5100              mov A,[__r6]
- 0130 08                push A
- 0131 5100              mov A,[__r7]
- 0133 08                push A
- 0134 5100              mov A,[__r8]
- 0136 08                push A
- 0137 5100              mov A,[__r9]
- 0139 08                push A
- 013A 5100              mov A,[__r10]
- 013C 08                push A
- 013D 5100              mov A,[__r11]
- 013F 08                push A
- 0140 5100              mov A,[__rX]
- 0142 08                push A
- 0143 5100              mov A,[__rY]
- 0145 08                push A
- 0146 5100              mov A,[__rZ]
- 0148 08                push A
- 0149                   .dbline 48
- 0149           ;     }
- 0149           ; }
- 0149           ; 
- 0149           ; #pragma interrupt_handler INT_GPIO
- 0149           ; void INT_GPIO(void){
- 0149                   .dbline 49
- 0149           ;   if(PRT2DR & _BV(2)){
- 0149 5D08              mov A,REG[0x8]
- 014B 62D000            mov REG[0xd0],>__r0
- 014E 5300              mov [__r0],A
- 0150 470004            tst [__r0],4
- 0153 A012              jz L16
- 0155                   .dbline 49
- 0155                   .dbline 50
- 0155           ;     LED_ON();
- 0155 430801            or REG[0x8],1
- 0158                   .dbline 51
- 0158           ;     UART_1_CPutString("ON\r\n");
- 0158 10                push X
- 0159 5006              mov A,>L18
- 015B 08                push A
- 015C 5006              mov A,<L18
- 015E 5C                mov X,A
- 015F 18                pop A
- 0160 7C0000            xcall _UART_1_CPutString
- 0163 20                pop X
- 0164                   .dbline 52
- 0164           ;   }
- 0164 8010              xjmp L17
- 0166           L16:
- 0166                   .dbline 53
- 0166           ;   else{
- 0166                   .dbline 54
- 0166           ;     LED_OFF();
- 0166 4108FE            and REG[0x8],-2
- 0169                   .dbline 55
- 0169           ;     UART_1_CPutString("OFF\r\n");
- 0169 10                push X
- 016A 5000              mov A,>L19
- 016C 08                push A
- 016D 5000              mov A,<L19
- 016F 5C                mov X,A
- 0170 18                pop A
- 0171 7C0000            xcall _UART_1_CPutString
- 0174 20                pop X
- 0175                   .dbline 56
- 0175           ;   }
- 0175           L17:
- 0175                   .dbline -2
- 0175           L15:
- 0175 62D000            mov REG[0xD0],>__r0
- 0178 18                pop A
- 0179 5300              mov [__rZ],A
- 017B 18                pop A
- 017C 5300              mov [__rY],A
- 017E 18                pop A
- 017F 5300              mov [__rX],A
- 0181 18                pop A
- 0182 5300              mov [__r11],A
- 0184 18                pop A
- 0185 5300              mov [__r10],A
- 0187 18                pop A
- 0188 5300              mov [__r9],A
- 018A 18                pop A
- 018B 5300              mov [__r8],A
- 018D 18                pop A
- 018E 5300              mov [__r7],A
- 0190 18                pop A
- 0191 5300              mov [__r6],A
- 0193 18                pop A
- 0194 5300              mov [__r5],A
- 0196 18                pop A
- 0197 5300              mov [__r4],A
- 0199 18                pop A
- 019A 5300              mov [__r3],A
- 019C 18                pop A
- 019D 5300              mov [__r2],A
- 019F 18                pop A
- 01A0 5300              mov [__r1],A
- 01A2 18                pop A
- 01A3 5300              mov [__r0],A
- 01A5 18                pop A
- 01A6 60D5              mov REG[213],A
- 01A8 18                pop A
- 01A9 60D4              mov REG[212],A
- 01AB 18                pop A
- 01AC 60D3              mov REG[211],A
- 01AE 18                pop A
- 01AF 60D0              mov REG[208],A
- 01B1 18                pop A
- 01B2                   .dbline 0 ; func end
- 01B2 7E                reti
- 01B3                   .dbend
+ 001B                   .dbline 26
+ 001B           ;     UART_1_CPutString("start");
+ 001B 10                push X
+ 001C 5017              mov A,>L2
+ 001E 08                push A
+ 001F 5017              mov A,<L2
+ 0021 5C                mov X,A
+ 0022 18                pop A
+ 0023 7C0000            xcall _UART_1_CPutString
+ 0026 20                pop X
+ 0027           L3:
+ 0027                   .dbline 28
+ 0027           ; 
+ 0027           ;     while(1){
+ 0027                   .dbline 30
+ 0027           ;         //UART_1_CPutString("loop\r\n");
+ 0027           ;     }
+ 0027           L4:
+ 0027                   .dbline 28
+ 0027 8FFF              xjmp L3
+ 0029           X0:
+ 0029                   .dbline -2
+ 0029           L1:
+ 0029                   .dbline 0 ; func end
+ 0029 8FFF              jmp .
+ 002B                   .dbend
+ 002B                   .dbfunc e INT_UART_RX _INT_UART_RX fV
+ 002B           ;      recv_data -> X+0
+ 002B           _INT_UART_RX::
+ 002B                   .dbline -1
+ 002B 71C0              or F,-64
+ 002D 08                push A
+ 002E 5DD0              mov A,REG[0xd0]
+ 0030 08                push A
+ 0031 5DD3              mov A,REG[0xd3]
+ 0033 08                push A
+ 0034 5DD4              mov A,REG[0xd4]
+ 0036 08                push A
+ 0037 5DD5              mov A,REG[0xd5]
+ 0039 08                push A
+ 003A 62D000            mov REG[0xd0],>__r0
+ 003D 5100              mov A,[__r0]
+ 003F 08                push A
+ 0040 5100              mov A,[__r1]
+ 0042 08                push A
+ 0043 5100              mov A,[__r2]
+ 0045 08                push A
+ 0046 5100              mov A,[__r3]
+ 0048 08                push A
+ 0049 5100              mov A,[__r4]
+ 004B 08                push A
+ 004C 5100              mov A,[__r5]
+ 004E 08                push A
+ 004F 5100              mov A,[__r6]
+ 0051 08                push A
+ 0052 5100              mov A,[__r7]
+ 0054 08                push A
+ 0055 5100              mov A,[__r8]
+ 0057 08                push A
+ 0058 5100              mov A,[__r9]
+ 005A 08                push A
+ 005B 5100              mov A,[__r10]
+ 005D 08                push A
+ 005E 5100              mov A,[__r11]
+ 0060 08                push A
+ 0061 5100              mov A,[__rX]
+ 0063 08                push A
+ 0064 5100              mov A,[__rY]
+ 0066 08                push A
+ 0067 5100              mov A,[__rZ]
+ 0069 08                push A
+ 006A 10                push X
+ 006B 4F                mov X,SP
+ 006C 3803              add SP,3
+ 006E                   .dbline 35
+ 006E           ; }
+ 006E           ; 
+ 006E           ; 
+ 006E           ; #pragma interrupt_handler INT_UART_RX
+ 006E           ; void INT_UART_RX(void){
+ 006E                   .dbline 37
+ 006E           ;     char recv_data;
+ 006E           ;     recv_data = UART_1_cGetChar(); // read UART
+ 006E 10                push X
+ 006F 7C0000            xcall _UART_1_cGetChar
+ 0072 62D000            mov REG[0xd0],>__r0
+ 0075 20                pop X
+ 0076 5400              mov [X+0],A
+ 0078                   .dbline 38
+ 0078           ;     UART_1_PutChar(recv_data); // echo
+ 0078 10                push X
+ 0079 5200              mov A,[X+0]
+ 007B 7C0000            xcall _UART_1_PutChar
+ 007E 20                pop X
+ 007F                   .dbline 39
+ 007F           ;     switch(recv_data){
+ 007F 5200              mov A,[X+0]
+ 0081 5402              mov [X+2],A
+ 0083 560100            mov [X+1],0
+ 0086 5202              mov A,[X+2]
+ 0088 1144              sub A,68
+ 008A 62D000            mov REG[0xd0],>__r0
+ 008D 5300              mov [__rY],A
+ 008F 5201              mov A,[X+1]
+ 0091 3180              xor A,-128
+ 0093 1980              sbb A,(0 ^ 0x80)
+ 0095 C031              jc L7
+ 0097 2A00              or A,[__rY]
+ 0099 A01E              jz L12
+ 009B           X1:
+ 009B           L14:
+ 009B 3D0100            cmp [X+1],0
+ 009E B006              jnz X2
+ 00A0 3D0255            cmp [X+2],85
+ 00A3 A003              jz L10
+ 00A5           X2:
+ 00A5 8021              xjmp L7
+ 00A7           L10:
+ 00A7                   .dbline 41
+ 00A7           ;     case 'U':
+ 00A7           ;         LED_ON();
+ 00A7 430801            or REG[0x8],1
+ 00AA                   .dbline 42
+ 00AA           ;         UART_1_CPutString("!Up!");
+ 00AA 10                push X
+ 00AB 5012              mov A,>L11
+ 00AD 08                push A
+ 00AE 5012              mov A,<L11
+ 00B0 5C                mov X,A
+ 00B1 18                pop A
+ 00B2 7C0000            xcall _UART_1_CPutString
+ 00B5 20                pop X
+ 00B6                   .dbline 43
+ 00B6           ;         break;
+ 00B6 8010              xjmp L8
+ 00B8           L12:
+ 00B8                   .dbline 45
+ 00B8           ;     case 'D':
+ 00B8           ;         LED_OFF();
+ 00B8 4108FE            and REG[0x8],-2
+ 00BB                   .dbline 46
+ 00BB           ;         UART_1_CPutString("!Down!");
+ 00BB 10                push X
+ 00BC 500B              mov A,>L13
+ 00BE 08                push A
+ 00BF 500B              mov A,<L13
+ 00C1 5C                mov X,A
+ 00C2 18                pop A
+ 00C3 7C0000            xcall _UART_1_CPutString
+ 00C6 20                pop X
+ 00C7                   .dbline 47
+ 00C7           ;         break;
+ 00C7           L7:
+ 00C7           L8:
+ 00C7                   .dbline -2
+ 00C7           L6:
+ 00C7 38FD              add SP,-3
+ 00C9 20                pop X
+ 00CA 62D000            mov REG[0xD0],>__r0
+ 00CD 18                pop A
+ 00CE 5300              mov [__rZ],A
+ 00D0 18                pop A
+ 00D1 5300              mov [__rY],A
+ 00D3 18                pop A
+ 00D4 5300              mov [__rX],A
+ 00D6 18                pop A
+ 00D7 5300              mov [__r11],A
+ 00D9 18                pop A
+ 00DA 5300              mov [__r10],A
+ 00DC 18                pop A
+ 00DD 5300              mov [__r9],A
+ 00DF 18                pop A
+ 00E0 5300              mov [__r8],A
+ 00E2 18                pop A
+ 00E3 5300              mov [__r7],A
+ 00E5 18                pop A
+ 00E6 5300              mov [__r6],A
+ 00E8 18                pop A
+ 00E9 5300              mov [__r5],A
+ 00EB 18                pop A
+ 00EC 5300              mov [__r4],A
+ 00EE 18                pop A
+ 00EF 5300              mov [__r3],A
+ 00F1 18                pop A
+ 00F2 5300              mov [__r2],A
+ 00F4 18                pop A
+ 00F5 5300              mov [__r1],A
+ 00F7 18                pop A
+ 00F8 5300              mov [__r0],A
+ 00FA 18                pop A
+ 00FB 60D5              mov REG[213],A
+ 00FD 18                pop A
+ 00FE 60D4              mov REG[212],A
+ 0100 18                pop A
+ 0101 60D3              mov REG[211],A
+ 0103 18                pop A
+ 0104 60D0              mov REG[208],A
+ 0106 18                pop A
+ 0107                   .dbline 0 ; func end
+ 0107 7E                reti
+ 0108                   .dbsym l recv_data 0 c
+ 0108                   .dbend
+ 0108                   .dbfunc e INT_GPIO _INT_GPIO fV
+ 0108           _INT_GPIO::
+ 0108                   .dbline -1
+ 0108 71C0              or F,-64
+ 010A 08                push A
+ 010B 5DD0              mov A,REG[0xd0]
+ 010D 08                push A
+ 010E 5DD3              mov A,REG[0xd3]
+ 0110 08                push A
+ 0111 5DD4              mov A,REG[0xd4]
+ 0113 08                push A
+ 0114 5DD5              mov A,REG[0xd5]
+ 0116 08                push A
+ 0117 62D000            mov REG[0xd0],>__r0
+ 011A 5100              mov A,[__r0]
+ 011C 08                push A
+ 011D 5100              mov A,[__r1]
+ 011F 08                push A
+ 0120 5100              mov A,[__r2]
+ 0122 08                push A
+ 0123 5100              mov A,[__r3]
+ 0125 08                push A
+ 0126 5100              mov A,[__r4]
+ 0128 08                push A
+ 0129 5100              mov A,[__r5]
+ 012B 08                push A
+ 012C 5100              mov A,[__r6]
+ 012E 08                push A
+ 012F 5100              mov A,[__r7]
+ 0131 08                push A
+ 0132 5100              mov A,[__r8]
+ 0134 08                push A
+ 0135 5100              mov A,[__r9]
+ 0137 08                push A
+ 0138 5100              mov A,[__r10]
+ 013A 08                push A
+ 013B 5100              mov A,[__r11]
+ 013D 08                push A
+ 013E 5100              mov A,[__rX]
+ 0140 08                push A
+ 0141 5100              mov A,[__rY]
+ 0143 08                push A
+ 0144 5100              mov A,[__rZ]
+ 0146 08                push A
+ 0147                   .dbline 52
+ 0147           ;     }
+ 0147           ; }
+ 0147           ; 
+ 0147           ; #pragma interrupt_handler INT_GPIO
+ 0147           ; void INT_GPIO(void){
+ 0147                   .dbline 53
+ 0147           ;     if(bit_is_set(SW_PORT, SW_BIT)){
+ 0147 5D08              mov A,REG[0x8]
+ 0149 62D000            mov REG[0xd0],>__r0
+ 014C 5300              mov [__r0],A
+ 014E 470004            tst [__r0],4
+ 0151 A012              jz L16
+ 0153                   .dbline 53
+ 0153                   .dbline 54
+ 0153           ;     LED_ON();
+ 0153 430801            or REG[0x8],1
+ 0156                   .dbline 55
+ 0156           ;     UART_1_CPutString("ON\r\n");
+ 0156 10                push X
+ 0157 5006              mov A,>L18
+ 0159 08                push A
+ 015A 5006              mov A,<L18
+ 015C 5C                mov X,A
+ 015D 18                pop A
+ 015E 7C0000            xcall _UART_1_CPutString
+ 0161 20                pop X
+ 0162                   .dbline 56
+ 0162           ;   }
+ 0162 8010              xjmp L17
+ 0164           L16:
+ 0164                   .dbline 57
+ 0164           ;   else{
+ 0164                   .dbline 58
+ 0164           ;     LED_OFF();
+ 0164 4108FE            and REG[0x8],-2
+ 0167                   .dbline 59
+ 0167           ;     UART_1_CPutString("OFF\r\n");
+ 0167 10                push X
+ 0168 5000              mov A,>L19
+ 016A 08                push A
+ 016B 5000              mov A,<L19
+ 016D 5C                mov X,A
+ 016E 18                pop A
+ 016F 7C0000            xcall _UART_1_CPutString
+ 0172 20                pop X
+ 0173                   .dbline 60
+ 0173           ;   }
+ 0173           L17:
+ 0173                   .dbline -2
+ 0173           L15:
+ 0173 62D000            mov REG[0xD0],>__r0
+ 0176 18                pop A
+ 0177 5300              mov [__rZ],A
+ 0179 18                pop A
+ 017A 5300              mov [__rY],A
+ 017C 18                pop A
+ 017D 5300              mov [__rX],A
+ 017F 18                pop A
+ 0180 5300              mov [__r11],A
+ 0182 18                pop A
+ 0183 5300              mov [__r10],A
+ 0185 18                pop A
+ 0186 5300              mov [__r9],A
+ 0188 18                pop A
+ 0189 5300              mov [__r8],A
+ 018B 18                pop A
+ 018C 5300              mov [__r7],A
+ 018E 18                pop A
+ 018F 5300              mov [__r6],A
+ 0191 18                pop A
+ 0192 5300              mov [__r5],A
+ 0194 18                pop A
+ 0195 5300              mov [__r4],A
+ 0197 18                pop A
+ 0198 5300              mov [__r3],A
+ 019A 18                pop A
+ 019B 5300              mov [__r2],A
+ 019D 18                pop A
+ 019E 5300              mov [__r1],A
+ 01A0 18                pop A
+ 01A1 5300              mov [__r0],A
+ 01A3 18                pop A
+ 01A4 60D5              mov REG[213],A
+ 01A6 18                pop A
+ 01A7 60D4              mov REG[212],A
+ 01A9 18                pop A
+ 01AA 60D3              mov REG[211],A
+ 01AC 18                pop A
+ 01AD 60D0              mov REG[208],A
+ 01AF 18                pop A
+ 01B0                   .dbline 0 ; func end
+ 01B0 7E                reti
+ 01B1                   .dbend
                         .area lit(rom, con, rel)
  0000           L19:
  0000 4F46460D0A00      .byte 'O,'F,'F,13,10,0
@@ -399,5 +402,5 @@
  000B 21446F776E2100    .byte 33,'D,'o,'w,'n,33,0
  0012           L11:
  0012 2155702100        .byte 33,'U,'p,33,0
- 0017           L5:
- 0017 6C6F6F700D0A00    .byte 'l,'o,'o,'p,13,10,0
+ 0017           L2:
+ 0017 737461727400      .byte 's,'t,'a,'r,'t,0

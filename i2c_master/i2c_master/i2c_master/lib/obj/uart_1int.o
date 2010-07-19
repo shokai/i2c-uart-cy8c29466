@@ -26,8 +26,8 @@ S UART_1_aRxBuffer Def0000
 A UserModules size 78 flags 0
 dbfile lib/uart_1int.asm
 dbfunc 0 ? 0 I
-dbline 61 0
-dbline 67 3
+dbline 65 0
+dbline 92 1
 dbline 9A 4
 dbline 9B 5
 dbline 9E 8
@@ -78,10 +78,10 @@ dbline F5 73
 dbline F9 75
 dbline FA 76
 dbline FF 77
-S _UART_1_RX_ISR Def0004
+S _UART_1_RX_ISR Def0001
 S _UART_1_TX_ISR Def0000
-T 00 00 7D 00 00 7E 08 10 5D D3 08 58 00 01 5D 2F
-R 00 00 00 03 02 03 00 00 01 0C 00 01
+T 00 00 7E 7D 00 00 08 10 5D D3 08 58 00 01 5D 2F
+R 00 00 00 03 02 04 00 00 01 0C 00 01
 T 00 0D 08 21 08 B0 04 18 80 5E 18 21 E0 A0 12 2C
 R 00 00 00 03
 T 00 1B 00 00 49 2E 00 21 20 A0 50 41 2F FE 43 2F

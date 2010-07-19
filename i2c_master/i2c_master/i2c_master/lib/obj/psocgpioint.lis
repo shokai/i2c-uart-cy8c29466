@@ -842,6 +842,26 @@
  010B           SW_IntCtrl_1_ADDR:	equ	10bh
  0009           SW_IntEn_ADDR:	equ	9h
  0004           SW_MASK:	equ	4h
+ 0000           ; I2CHW_1SDA address and mask equates
+ 0004           I2CHW_1SDA_Data_ADDR:	equ	4h
+ 0104           I2CHW_1SDA_DriveMode_0_ADDR:	equ	104h
+ 0105           I2CHW_1SDA_DriveMode_1_ADDR:	equ	105h
+ 0007           I2CHW_1SDA_DriveMode_2_ADDR:	equ	7h
+ 0006           I2CHW_1SDA_GlobalSelect_ADDR:	equ	6h
+ 0106           I2CHW_1SDA_IntCtrl_0_ADDR:	equ	106h
+ 0107           I2CHW_1SDA_IntCtrl_1_ADDR:	equ	107h
+ 0005           I2CHW_1SDA_IntEn_ADDR:	equ	5h
+ 0020           I2CHW_1SDA_MASK:	equ	20h
+ 0000           ; I2CHW_1SCL address and mask equates
+ 0004           I2CHW_1SCL_Data_ADDR:	equ	4h
+ 0104           I2CHW_1SCL_DriveMode_0_ADDR:	equ	104h
+ 0105           I2CHW_1SCL_DriveMode_1_ADDR:	equ	105h
+ 0007           I2CHW_1SCL_DriveMode_2_ADDR:	equ	7h
+ 0006           I2CHW_1SCL_GlobalSelect_ADDR:	equ	6h
+ 0106           I2CHW_1SCL_IntCtrl_0_ADDR:	equ	106h
+ 0107           I2CHW_1SCL_IntCtrl_1_ADDR:	equ	107h
+ 0005           I2CHW_1SCL_IntEn_ADDR:	equ	5h
+ 0080           I2CHW_1SCL_MASK:	equ	80h
  0000           ; LED address and mask equates
  0008           LED_Data_ADDR:	equ	8h
  0108           LED_DriveMode_0_ADDR:	equ	108h

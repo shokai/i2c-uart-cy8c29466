@@ -102,7 +102,7 @@
  0000           PORT_0_INTCTRL_0:		equ 0h	;Port 0 interrupt control 0 register (PRT0IC0)
  0000           PORT_0_INTCTRL_1:		equ 0h	;Port 0 interrupt control 1 register (PRT0IC1)
  0000           PORT_1_GLOBAL_SELECT:	equ 0h	;Port 1 global select register (PRT1GS)
- 0000           PORT_1_DRIVE_0:			equ 0h	;Port 1 drive mode 0 register (PRT1DM0)
+ 00A0           PORT_1_DRIVE_0:			equ a0h	;Port 1 drive mode 0 register (PRT1DM0)
  00FF           PORT_1_DRIVE_1:			equ ffh	;Port 1 drive mode 1 register (PRT1DM1)
  00FF           PORT_1_DRIVE_2:			equ ffh	;Port 1 drive mode 2 register (PRT1DM2)
  0000           PORT_1_INTENABLE:		equ 0h	;Port 1 interrupt enable register (PRT1IE)
@@ -1471,9 +1471,9 @@
  005C 7E            reti
  005D           
                     org   60h                      ;PSoC I2C Interrupt Vector
-                    // call     void_handler
- 0060 7E            reti
- 0061           
+ 0060 7D0000        ljmp        _I2CHW_1_ISR
+ 0063 7E            reti
+ 0064           
                     org   64h                      ;Sleep Timer Interrupt Vector
                     // call     void_handler
  0064 7E            reti

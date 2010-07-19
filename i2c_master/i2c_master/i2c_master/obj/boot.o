@@ -1,5 +1,5 @@
 XH
-H B areas 10 global symbols
+H B areas 11 global symbols
 M boot.asm
 S _main Ref0000
 S __text_end Ref0000
@@ -9,6 +9,7 @@ S __r1 Ref0000
 S LoadConfigInit Ref0000
 S _UART_1_RX_ISR Ref0000
 S _UART_1_TX_ISR Ref0000
+S _I2CHW_1_ISR Ref0000
 A TOP size 13D flags C
 dbfile ./boot.asm
 dbfunc 0 ? 0 I
@@ -39,7 +40,8 @@ dbline C2 50
 dbline C6 54
 dbline CA 58
 dbline CE 5C
-dbline D2 60
+dbline D1 60
+dbline D2 63
 dbline D6 64
 dbline EA 68
 dbline EB 6A
@@ -235,8 +237,8 @@ T 00 58 7E
 R 00 00 00 00
 T 00 5C 7E
 R 00 00 00 00
-T 00 60 7E
-R 00 00 00 00
+T 00 60 7D 00 00 7E
+R 00 00 00 00 02 03 00 08
 T 00 64 7E
 R 00 00 00 00
 T 00 68 71 10 62 FA 00 62 E3 87 70 EF 50 20 28 50

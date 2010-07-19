@@ -1,7 +1,9 @@
 Starting MAKE...
 creating project.mk 
-CAUTION lib/psocconfig.asm is older than PSoCConfig.xml or missing
-CAUTION you may need to generate source in PSoC Designer
+lib/i2chw_1common.asm
+lib/i2chw_1int.asm
+lib/i2chw_1mstr.asm
+lib/i2chw_1rsrcinits.asm
 lib/psocconfig.asm
 lib/psocconfigtbl.asm
 lib/psocgpioint.asm
@@ -11,12 +13,12 @@ lib/uart_1plus.asm
 ./boot.asm
 ./main.c
 Linking..
-LMM info: area 'InterruptRAM' uses 2 bytes in SRAM bank 0
+LMM info: area 'InterruptRAM' uses 11 bytes in SRAM bank 0
 LMM info: area 'UART_1_RAM' item of 16 bytes allocated in SRAM page 0
 LMM info: area 'virtual_registers' uses 15 bytes in SRAM page 0
 LMM info: area 'UART_1_RAM' item of 1 bytes allocated in SRAM page 0
-  ROM 5% full. 1555 out of 32768 bytes used (does not include absolute areas).
-  RAM 2% full. 34 bytes used (does not include stack usage).
+  ROM 8% full. 2496 out of 32768 bytes used (does not include absolute areas).
+  RAM 3% full. 43 bytes used (does not include stack usage).
 idata dump at output/i2c_master.idata
  
-i2c_master - 0 error(s) 0 warning(s) 02:10:20
+i2c_master - 0 error(s) 0 warning(s) 00:51:23

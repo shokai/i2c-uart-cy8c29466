@@ -32,6 +32,42 @@ BYTE			SW_IntCtrl_1_ADDR;
 #pragma	ioport	SW_IntEn_ADDR:	0x9
 BYTE			SW_IntEn_ADDR;
 #define SW_MASK 0x4
+// I2CHW_1SDA address and mask defines
+#pragma	ioport	I2CHW_1SDA_Data_ADDR:	0x4
+BYTE			I2CHW_1SDA_Data_ADDR;
+#pragma	ioport	I2CHW_1SDA_DriveMode_0_ADDR:	0x104
+BYTE			I2CHW_1SDA_DriveMode_0_ADDR;
+#pragma	ioport	I2CHW_1SDA_DriveMode_1_ADDR:	0x105
+BYTE			I2CHW_1SDA_DriveMode_1_ADDR;
+#pragma	ioport	I2CHW_1SDA_DriveMode_2_ADDR:	0x7
+BYTE			I2CHW_1SDA_DriveMode_2_ADDR;
+#pragma	ioport	I2CHW_1SDA_GlobalSelect_ADDR:	0x6
+BYTE			I2CHW_1SDA_GlobalSelect_ADDR;
+#pragma	ioport	I2CHW_1SDA_IntCtrl_0_ADDR:	0x106
+BYTE			I2CHW_1SDA_IntCtrl_0_ADDR;
+#pragma	ioport	I2CHW_1SDA_IntCtrl_1_ADDR:	0x107
+BYTE			I2CHW_1SDA_IntCtrl_1_ADDR;
+#pragma	ioport	I2CHW_1SDA_IntEn_ADDR:	0x5
+BYTE			I2CHW_1SDA_IntEn_ADDR;
+#define I2CHW_1SDA_MASK 0x20
+// I2CHW_1SCL address and mask defines
+#pragma	ioport	I2CHW_1SCL_Data_ADDR:	0x4
+BYTE			I2CHW_1SCL_Data_ADDR;
+#pragma	ioport	I2CHW_1SCL_DriveMode_0_ADDR:	0x104
+BYTE			I2CHW_1SCL_DriveMode_0_ADDR;
+#pragma	ioport	I2CHW_1SCL_DriveMode_1_ADDR:	0x105
+BYTE			I2CHW_1SCL_DriveMode_1_ADDR;
+#pragma	ioport	I2CHW_1SCL_DriveMode_2_ADDR:	0x7
+BYTE			I2CHW_1SCL_DriveMode_2_ADDR;
+#pragma	ioport	I2CHW_1SCL_GlobalSelect_ADDR:	0x6
+BYTE			I2CHW_1SCL_GlobalSelect_ADDR;
+#pragma	ioport	I2CHW_1SCL_IntCtrl_0_ADDR:	0x106
+BYTE			I2CHW_1SCL_IntCtrl_0_ADDR;
+#pragma	ioport	I2CHW_1SCL_IntCtrl_1_ADDR:	0x107
+BYTE			I2CHW_1SCL_IntCtrl_1_ADDR;
+#pragma	ioport	I2CHW_1SCL_IntEn_ADDR:	0x5
+BYTE			I2CHW_1SCL_IntEn_ADDR;
+#define I2CHW_1SCL_MASK 0x80
 // LED address and mask defines
 #pragma	ioport	LED_Data_ADDR:	0x8
 BYTE			LED_Data_ADDR;

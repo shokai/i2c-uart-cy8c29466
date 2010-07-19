@@ -10,6 +10,9 @@
 #define cbi(BYTE,BIT) (BYTE &= ~_BV(BIT))
 #define LED_ON() sbi(PRT2DR, 0)
 #define LED_OFF() cbi(PRT2DR, 0)
+#define bit_is_set(BYTE, BIT) BYTE & BIT
+#define SW_PORT PRT2DR
+#define SW_BIT _BV(2) // switch
 
 
 void main(void)
@@ -20,9 +23,10 @@ void main(void)
     UART_1_IntCntl(UART_1_ENABLE_RX_INT); // enable receive interrupt
     UART_1_Start(UART_1_PARITY_NONE);
     LED_ON();
+    UART_1_CPutString("start");
 
     while(1){
-        UART_1_CPutString("loop\r\n");
+        //UART_1_CPutString("loop\r\n");
     }
 }
 
@@ -46,7 +50,7 @@ void INT_UART_RX(void){
 
 #pragma interrupt_handler INT_GPIO
 void INT_GPIO(void){
-  if(PRT2DR & _BV(2)){
+    if(bit_is_set(SW_PORT, SW_BIT)){
     LED_ON();
     UART_1_CPutString("ON\r\n");
   }
