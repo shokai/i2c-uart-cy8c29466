@@ -1,11 +1,11 @@
 Project:      output/i2c_master
 Build Number: 0
-Date:         Tue Jul 20 00:51:23 2010
+Date:         Tue Jul 20 06:50:40 2010
 Compiler:     ICCM8C
 Version:      7.02.004
 
-  ROM 8% full. 2496 out of 32768 bytes used (does not include absolute areas).
-  RAM 3% full. 43 bytes used (does not include stack usage).
+  ROM 9% full. 2658 out of 32768 bytes used (does not include absolute areas).
+  RAM 10% full. 172 bytes used (does not include stack usage).
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -41,7 +41,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                     UserModules   0398   0613 =   1555. bytes (rel,con,rom)
+                     UserModules   0398   064C =   1612. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
@@ -49,24 +49,24 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
        0399  _UART_1_RX_ISR
        0410  UART_1_EnableInt
        0410  _UART_1_EnableInt
-       0417  _UART_1_DisableInt
        0417  UART_1_DisableInt
+       0417  _UART_1_DisableInt
        041E  UART_1_SetTxIntMode
        041E  _UART_1_SetTxIntMode
        0430  UART_1_Start
        0430  _UART_1_Start
-       0439  _UART_1_Stop
        0439  UART_1_Stop
-       0440  UART_1_SendData
+       0439  _UART_1_Stop
        0440  _UART_1_SendData
-       0443  _bUART_1_ReadTxStatus
+       0440  UART_1_SendData
        0443  _UART_1_bReadTxStatus
+       0443  _bUART_1_ReadTxStatus
        0443  bUART_1_ReadTxStatus
        0443  UART_1_bReadTxStatus
        0446  _UART_1_bReadRxData
-       0446  _bUART_1_ReadRxData
        0446  UART_1_bReadRxData
        0446  bUART_1_ReadRxData
+       0446  _bUART_1_ReadRxData
        0449  _UART_1_bReadRxStatus
        0449  _bUART_1_ReadRxStatus
        0449  bUART_1_ReadRxStatus
@@ -77,10 +77,10 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
        045F  UART_1_IntCntl
        048A  _UART_1_PutSHexByte
        048A  UART_1_PutSHexByte
-       049D  UART_1_PutSHexInt
        049D  _UART_1_PutSHexInt
-       04A4  _UART_1_PutChar
+       049D  UART_1_PutSHexInt
        04A4  UART_1_PutChar
+       04A4  _UART_1_PutChar
        04AC  UART_1_cGetChar
        04AC  _UART_1_cGetChar
        04B4  _UART_1_cReadChar
@@ -89,67 +89,87 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
        04CB  UART_1_iReadChar
        04E1  UART_1_PutString
        04E1  _UART_1_PutString
-       04F3  _UART_1_Write
        04F3  UART_1_Write
-       051B  UART_1_CWrite
+       04F3  _UART_1_Write
        051B  _UART_1_CWrite
-       0547  _UART_1_CPutString
+       051B  UART_1_CWrite
        0547  UART_1_CPutString
-       0559  UART_1_PutCRLF
+       0547  _UART_1_CPutString
        0559  _UART_1_PutCRLF
+       0559  UART_1_PutCRLF
        0562  _UART_1_CmdReset
        0562  UART_1_CmdReset
        0578  UART_1_bCmdCheck
        0578  _UART_1_bCmdCheck
        0580  _UART_1_bErrCheck
        0580  UART_1_bErrCheck
-       058B  _UART_1_bCmdLength
        058B  UART_1_bCmdLength
+       058B  _UART_1_bCmdLength
        0591  _UART_1_szGetParam
        0591  UART_1_szGetParam
-       05F0  _UART_1_szGetRestOfParams
        05F0  UART_1_szGetRestOfParams
-       05FB  _I2CHW_1_fReadBytes
-       063F  _I2CHW_1_bWriteBytes
-       0683  _I2CHW_1_bWriteCBytes
-       06EF  _I2CHW_1_fSendRepeatStart
-       06EF  I2CHW_1_fSendRepeatStart
-       072B  I2CHW_1_fSendStart
-       072B  _I2CHW_1_fSendStart
-       076F  _I2CHW_1_fWrite
-       076F  I2CHW_1_fWrite
-       07AF  I2CHW_1_bRead
-       07AF  _I2CHW_1_bRead
-       07E5  _I2CHW_1_SendStop
-       07E5  I2CHW_1_SendStop
-       07EE  _I2CHW_1_ISR
-       092B  _I2CHW_1_InitWrite
-       092B  I2CHW_1_InitWrite
-       0969  I2CHW_1_InitRamRead
-       0969  _I2CHW_1_InitRamRead
-       0996  _I2CHW_1_InitFlashRead
-       0996  I2CHW_1_InitFlashRead
-       0997  I2CHW_1_bReadI2CStatus
-       0997  _I2CHW_1_bReadI2CStatus
-       099D  I2CHW_1_ClrRdStatus
-       099D  _I2CHW_1_ClrRdStatus
-       09A4  I2CHW_1_ClrWrStatus
-       09A4  _I2CHW_1_ClrWrStatus
-       09AB  __UserModules_end
+       05F0  _UART_1_szGetRestOfParams
+       05FB  I2CHW_1_Start
+       05FB  _I2CHW_1_Start
+       05FC  _I2CHW_1_ResumeInt
+       05FC  I2CHW_1_ResumeInt
+       05FF  _I2CHW_1_EnableInt
+       05FF  I2CHW_1_EnableInt
+       060B  I2CHW_1_ClearInt
+       060B  _I2CHW_1_ClearInt
+       0614  _I2CHW_1_EnableMstr
+       0614  I2CHW_1_EnableMstr
+       0624  _I2CHW_1_EnableSlave
+       0624  I2CHW_1_EnableSlave
+       0628  _I2CHW_1_Stop
+       0628  I2CHW_1_Stop
+       0628  I2CHW_1_DisableInt
+       0628  _I2CHW_1_DisableInt
+       062C  _I2CHW_1_DisableSlave
+       062C  I2CHW_1_DisableSlave
+       0630  _I2CHW_1_DisableMstr
+       0630  I2CHW_1_DisableMstr
+       0634  _I2CHW_1_fReadBytes
+       0678  _I2CHW_1_bWriteBytes
+       06BC  _I2CHW_1_bWriteCBytes
+       0728  _I2CHW_1_fSendRepeatStart
+       0728  I2CHW_1_fSendRepeatStart
+       0764  I2CHW_1_fSendStart
+       0764  _I2CHW_1_fSendStart
+       07A8  I2CHW_1_fWrite
+       07A8  _I2CHW_1_fWrite
+       07E8  I2CHW_1_bRead
+       07E8  _I2CHW_1_bRead
+       081E  _I2CHW_1_SendStop
+       081E  I2CHW_1_SendStop
+       0827  _I2CHW_1_ISR
+       0964  _I2CHW_1_InitWrite
+       0964  I2CHW_1_InitWrite
+       09A2  I2CHW_1_InitRamRead
+       09A2  _I2CHW_1_InitRamRead
+       09CF  I2CHW_1_InitFlashRead
+       09CF  _I2CHW_1_InitFlashRead
+       09D0  _I2CHW_1_bReadI2CStatus
+       09D0  I2CHW_1_bReadI2CStatus
+       09D6  _I2CHW_1_ClrRdStatus
+       09D6  I2CHW_1_ClrRdStatus
+       09DD  _I2CHW_1_ClrWrStatus
+       09DD  I2CHW_1_ClrWrStatus
+       09E4  __UserModules_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   09AB   01B5 =    437. bytes (rel,con,rom)
+                            text   09E4   021E =    542. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
-       09AB  _main
-       09AB  __text_start
-       09D6  _INT_UART_RX
-       0AB3  _INT_GPIO
-       0B5C  PSoC_GPIO_ISR
-       0B60  __text_end
-       0B62  __xidata_end
+       09E4  _main
+       09E4  __text_start
+       0A78  _INT_UART_RX
+       0B55  _INT_GPIO
+       0BFE  PSoC_GPIO_ISR
+       0C02  __text_end
+       0C11  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -202,44 +222,55 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
        Addr  Global Symbol
       -----  --------------------------------
-       000B  _UART_1_aRxBuffer
-       000B  UART_1_aRxBuffer
+       008B  _UART_1_aRxBuffer
+       008B  UART_1_aRxBuffer
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-               virtual_registers   001B   000F =     15. bytes (rel,con,ram)
+               virtual_registers   009B   000F =     15. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
-       001B  __rZ
-       001C  __rY
-       001D  __rX
-       001E  __r11
-       001F  __r10
-       0020  __r9
-       0021  __r8
-       0022  __r7
-       0023  __r6
-       0024  __r5
-       0025  __r4
-       0026  __r3
-       0027  __r2
-       0028  __r1
-       0029  __r0
+       009B  __rZ
+       009C  __rY
+       009D  __rX
+       009E  __r11
+       009F  __r10
+       00A0  __r9
+       00A1  __r8
+       00A2  __r7
+       00A3  __r6
+       00A4  __r5
+       00A5  __r4
+       00A6  __r3
+       00A7  __r2
+       00A8  __r1
+       00A9  __r0
+
+Area                               Addr   Size   Decimal Bytes (Attributes)
+--------------------------------   ----   ----   ------- ----- ------------
+                            data   0000   0081 =    129. bytes (rel,con,ram)
+
+       Addr  Global Symbol
+      -----  --------------------------------
+       0000  __data_start
+       000B  _buf_tx
+       004B  _buf_rx
+       00AB  _status
 
 Files Linked      [ module(s) ]
 
 ./obj/boot.o	[ boot.asm ]
 ./obj/main.o	[ main.c ]
-<library>	[ uart_1int.asm, uart_1.asm, psocgpioint.asm, psocconfigtbl.asm, psocconfig.asm, i2chw_1mstr.asm ]
-[ i2chw_1int.asm, i2chw_1common.asm, rZ.asm, rY.asm, rX.asm, r11.asm, r10.asm, r9.asm, r8.asm, r7.asm ]
-[ r6.asm, r5.asm, r4.asm, r3.asm, r2.asm, r1.asm, r0.asm ]
+<library>	[ uart_1int.asm, uart_1.asm, psocgpioint.asm, psocconfigtbl.asm, psocconfig.asm, i2chw_1rsrcinits.asm ]
+[ i2chw_1mstr.asm, i2chw_1int.asm, i2chw_1common.asm, rZ.asm, rY.asm, rX.asm, r11.asm, r10.asm, r9.asm ]
+[ r8.asm, r7.asm, r6.asm, r5.asm, r4.asm, r3.asm, r2.asm, r1.asm, r0.asm ]
 
 Area Definitions
 
 -blit:0x1a0.0x7fff
 -bdata:0.0x6ff
 -BInterruptRAM:0	allocated at: 0
--Bvirtual_registers	allocated at: 0x1b
+-Bvirtual_registers	allocated at: 0x9b
 -Bi2c_master_RAM
 

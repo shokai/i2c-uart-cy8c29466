@@ -1,11 +1,11 @@
 Project:      output/i2c_slave
 Build Number: 0
-Date:         Tue Jul 20 01:11:37 2010
+Date:         Tue Jul 20 06:56:37 2010
 Compiler:     ICCM8C
 Version:      7.02.004
 
-  ROM 3% full. 789 out of 32768 bytes used (does not include absolute areas).
-  RAM 1% full. 10 bytes used (does not include stack usage).
+  ROM 4% full. 1091 out of 32768 bytes used (does not include absolute areas).
+  RAM 2% full. 19 bytes used (does not include stack usage).
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -41,27 +41,59 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                     UserModules   0363   0117 =    279. bytes (rel,con,rom)
+                     UserModules   0363   01D0 =    464. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
-       0363  _I2CHW_1_Poll
-       0363  I2CHW_1_Poll
-       0364  _I2CHW_1_ISR
-       047A  __UserModules_end
+       0363  _I2CHW_1_Start
+       0363  I2CHW_1_Start
+       0364  _I2CHW_1_ResumeInt
+       0364  I2CHW_1_ResumeInt
+       0367  I2CHW_1_EnableInt
+       0367  _I2CHW_1_EnableInt
+       0373  _I2CHW_1_ClearInt
+       0373  I2CHW_1_ClearInt
+       037C  I2CHW_1_EnableMstr
+       037C  _I2CHW_1_EnableMstr
+       038C  I2CHW_1_EnableSlave
+       038C  _I2CHW_1_EnableSlave
+       0390  I2CHW_1_Stop
+       0390  _I2CHW_1_Stop
+       0390  I2CHW_1_DisableInt
+       0390  _I2CHW_1_DisableInt
+       0394  I2CHW_1_DisableSlave
+       0394  _I2CHW_1_DisableSlave
+       0398  _I2CHW_1_DisableMstr
+       0398  I2CHW_1_DisableMstr
+       039C  _I2CHW_1_Poll
+       039C  I2CHW_1_Poll
+       039D  _I2CHW_1_ISR
+       04B3  I2CHW_1_InitWrite
+       04B3  _I2CHW_1_InitWrite
+       04F1  _I2CHW_1_InitRamRead
+       04F1  I2CHW_1_InitRamRead
+       051E  I2CHW_1_InitFlashRead
+       051E  _I2CHW_1_InitFlashRead
+       051F  I2CHW_1_bReadI2CStatus
+       051F  _I2CHW_1_bReadI2CStatus
+       0525  _I2CHW_1_ClrRdStatus
+       0525  I2CHW_1_ClrRdStatus
+       052C  _I2CHW_1_ClrWrStatus
+       052C  I2CHW_1_ClrWrStatus
+       0533  __UserModules_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   047A   003B =     59. bytes (rel,con,rom)
+                            text   0533   00B0 =    176. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
-       047A  _main
-       047A  __text_start
-       0486  _INT_GPIO
-       04B1  PSoC_GPIO_ISR
-       04B5  __text_end
-       04B7  __xidata_end
+       0533  _main
+       0533  __text_start
+       05B4  _INT_GPIO
+       05DF  PSoC_GPIO_ISR
+       05E3  __text_end
+       05ED  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -104,24 +136,35 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-               virtual_registers   0008   0002 =      2. bytes (rel,con,ram)
+               virtual_registers   0010   0002 =      2. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
-       0008  __r1
-       0009  __r0
+       0010  __r1
+       0011  __r0
+
+Area                               Addr   Size   Decimal Bytes (Attributes)
+--------------------------------   ----   ----   ------- ----- ------------
+                            data   0000   0009 =      9. bytes (rel,con,ram)
+
+       Addr  Global Symbol
+      -----  --------------------------------
+       0000  __data_start
+       0008  _buf
+       0012  _status
 
 Files Linked      [ module(s) ]
 
 ./obj/boot.o	[ boot.asm ]
 ./obj/main.o	[ main.c ]
-<library>	[ psocgpioint.asm, psocconfigtbl.asm, psocconfig.asm, i2chw_1int.asm, r1.asm, r0.asm ]
+<library>	[ psocgpioint.asm, psocconfigtbl.asm, psocconfig.asm, i2chw_1rsrcinits.asm, i2chw_1int.asm ]
+[ i2chw_1common.asm, r1.asm, r0.asm ]
 
 Area Definitions
 
 -blit:0x1a0.0x7fff
 -bdata:0.0x6ff
 -BInterruptRAM:0	allocated at: 0
--Bvirtual_registers	allocated at: 0x8
+-Bvirtual_registers	allocated at: 0x10
 -Bi2c_slave_RAM
 

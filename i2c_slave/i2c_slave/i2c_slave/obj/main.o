@@ -1,42 +1,102 @@
 XH
-H 1 areas 3 global symbols
+H 3 areas D global symbols
 M main.c
+S _I2CHW_1_ClrRdStatus Ref0000
+S _I2CHW_1_ClrWrStatus Ref0000
+S _I2CHW_1_EnableInt Ref0000
+S _I2CHW_1_InitWrite Ref0000
 S __r0 Ref0000
-A text size 37 flags 0
+S _I2CHW_1_Start Ref0000
+S _I2CHW_1_bReadI2CStatus Ref0000
+S _I2CHW_1_InitRamRead Ref0000
+S _I2CHW_1_EnableSlave Ref0000
+A text size AC flags 0
 dbfile ./main.c
 dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
 dbfunc e main 0 fV
 dbline FFFFFFFF 0
-dbline 12 0
-dbline 13 0
-dbline 14 2
-dbline 15 5
-dbline 17 8
-dbline 18 8
-dbline 17 8
-dbline FFFFFFFE A
-dbline 0 A
-dbfunc e INT_GPIO C fV
-dbline FFFFFFFF C
-dbline 1C 18
-dbline 1D 18
-dbline 1D 24
-dbline 1E 24
-dbline 1F 27
-dbline 20 29
-dbline 21 29
-dbline 22 2C
-dbline FFFFFFFE 2C
-dbline 0 36
+dbline 19 0
+dbline 1A 0
+dbline 1B 2
+dbline 1C 5
+dbline 1D 9
+dbline 1E C
+dbline 1F 10
+dbline 20 20
+dbline 22 30
+dbline 22 30
+dbline 23 30
+dbline 24 3A
+dbline 24 3F
+dbline 25 3F
+dbline 26 44
+dbline 27 4A
+dbline 28 5A
+dbline 29 5D
+dbline 2A 5D
+dbline 2A 65
+dbline 2B 65
+dbline 2C 6A
+dbline 2D 7A
+dbline 2E 7D
+dbline 2F 7D
+dbline 22 7D
+dbline 22 7D
+dbline FFFFFFFE 7F
+dbline 0 7F
+dbfunc e INT_GPIO 81 fV
+dbline FFFFFFFF 81
+dbline 33 8D
+dbline 34 8D
+dbline 34 99
+dbline 35 99
+dbline 36 9C
+dbline 37 9E
+dbline 38 9E
+dbline 39 A1
+dbline FFFFFFFE A1
+dbline 0 AB
 S _main Def0000
-S _INT_GPIO Def000C
-T 00 00 71 01 43 E0 20 43 08 01 8F FF 8F FF 71 C0
+S _INT_GPIO Def0081
+A data size 1 flags 20
+dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
+dbsym e status 0 c
+S _status Def0000
+A data size 8 flags 20
+dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
+dbsym e buf 0 A[8:8]c
+S _buf Def0000
+T 00 00 71 01 43 E0 20 10 7C 00 00 7C 00 00 7C
+R 00 00 00 00 02 09 00 05 02 0C 00 08
+T 00 0D 00 00 20 10 50 08 08 50 00 00 08 50 00 00
+R 00 00 00 00 02 02 00 02 41 0A 00 02 01 0E 00 02
+T 00 19 08 7C 00 00 38 FD 20 10 50 08 08 50 00 00
+R 00 00 00 00 02 04 00 07 41 0E 00 02
+T 00 26 08 50 00 00 08 7C 00 00 38 FD 20 10 7C
+R 00 00 00 00 01 04 00 02 02 08 00 03
+T 00 32 00 00 20 62 D0 00 00 53 00 00 47
+R 00 00 00 00 02 02 00 06 41 07 00 01 01 0A 00 01
+T 00 3B 00 00 40 A0 1F 10 7C 00 00 20 62 D0 00 00
+R 00 00 00 00 01 02 00 01 02 09 00 01 41 0E 00 02
+T 00 47 55 00 02 43 10 50 08 08 50 00 00 08 50
+R 00 00 00 00 01 03 00 02 41 0B 00 02
+T 00 52 00 00 08 7C 00 00 38 FD 20 43 08 01 62 D0
+R 00 00 00 00 01 02 00 02 02 06 00 03
+T 00 5F 00 00 47 00 00 04 AF CC 10 7C 00 00 20 10
+R 00 00 00 00 41 02 00 01 01 05 00 01 02 0C 00 00
+T 00 6B 50 08 08 50 00 00 08 50 00 00 08 7C 00 00
+R 00 00 00 00 41 06 00 02 01 0A 00 02 02 0E 00 07
+T 00 77 38 FD 20 41 08 FE 8F B2 8F FF 71 C0 08 5D
 R 00 00 00 00
-T 00 0E 08 5D D0 08 62 D0 00 00 51 00 00 08 5D 08
-R 00 00 00 00 43 08 00 00 03 0B 00 00
-T 00 1A 62 D0 00 00 53 00 00 47 00 00 04 A0 06 43
-R 00 00 00 00 43 04 00 00 03 07 00 00 03 0A 00 00
-T 00 25 08 01 80 04 41 08 FE 62 D0 00 00 18 53
-R 00 00 00 00 43 0B 00 00
-T 00 31 00 00 18 60 D0 18 7E
-R 00 00 00 00 03 02 00 00
+T 00 85 D0 08 62 D0 00 00 51 00 00 08 5D 08 62 D0
+R 00 00 00 00 43 06 00 04 03 09 00 04
+T 00 91 00 00 53 00 00 47 00 00 04 A0 06 43 08 01
+R 00 00 00 00 43 02 00 04 03 05 00 04 03 08 00 04
+T 00 9C 80 04 41 08 FE 62 D0 00 00 18 53 00 00 18
+R 00 00 00 00 43 09 00 04 03 0D 00 04
+T 00 A8 60 D0 18 7E
+R 00 00 00 00
+T 00 00 00
+R 00 00 00 01
+T 00 00 00 00 00 00 00 00 00 00
+R 00 00 00 02
