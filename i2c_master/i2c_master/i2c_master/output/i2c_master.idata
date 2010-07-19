@@ -1,8 +1,8 @@
-flash  C02 SRAM    B:
+flash  C11 SRAM    B:
  <size at next line>  41 42
   [size:] 2 bytes
-flash  C07 SRAM    D:
+flash  C16 SRAM    D:
  00 126 bytes
-flash  C0B SRAM   AB:
+flash  C1A SRAM   AB:
  <size at next line>   0
   [size:] 1 bytes

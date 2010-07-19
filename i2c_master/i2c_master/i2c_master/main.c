@@ -25,7 +25,6 @@ BYTE status;
 
 void main(void)
 {
-   
     M8C_EnableGInt; // enable global interrupt
     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
     UART_1_CmdReset(); // uart init
@@ -45,6 +44,8 @@ void main(void)
         I2CHW_1_fReadBytes(SLAVE_ADDR, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
         while(!(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE));
         I2CHW_1_ClrRdStatus();
+
+        while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
         UART_1_PutString(buf_rx);
     }
 }

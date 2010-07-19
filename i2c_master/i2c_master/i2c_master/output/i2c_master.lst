@@ -159,7 +159,7 @@ FILE: .\boot.asm
 0019: 30       HALT                     
 001A: 30       HALT                     
 001B: 30       HALT                     
-001C: 7D 0B FE LJMP  PSoC_GPIO_ISR      (0141)     ljmp	PSoC_GPIO_ISR
+001C: 7D 0C 0D LJMP  PSoC_GPIO_ISR      (0141)     ljmp	PSoC_GPIO_ISR
 001F: 7E       RETI                     (0142)     reti
                                         (0143) 
                                         (0144)     org   20h                      ;PSoC Block DBB00 Interrupt Vector
@@ -1287,7 +1287,7 @@ FILE: lib\uart_1int.asm
                                         (0143)    ;   NOTE: interrupt service routines must preserve
                                         (0144)    ;   the values of the A and X CPU registers.
                                         (0145)    
-0399: 7D 0A 78 LJMP  _INT_UART_RX       (0146)    ljmp _INT_UART_RX
+0399: 7D 0A 87 LJMP  _INT_UART_RX       (0146)    ljmp _INT_UART_RX
                                         (0147) 
                                         (0148)    ;---------------------------------------------------
                                         (0149)    ; Insert your custom code above this banner
@@ -5660,27 +5660,26 @@ FILE: C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\main.c
 _main|__text_start|_main:
     09E4: 71 01    OR    F,0x1
 (0027) {
-(0028)    
-(0029)     M8C_EnableGInt; // enable global interrupt
-(0030)     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
+(0028)     M8C_EnableGInt; // enable global interrupt
+(0029)     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
     09E6: 43 E0 20 OR    REG[0xE0],0x20
-(0031)     UART_1_CmdReset(); // uart init
+(0030)     UART_1_CmdReset(); // uart init
     09E9: 10       PUSH  X
     09EA: 7C 05 62 LCALL 0x0562
     09ED: 20       POP   X
-(0032)     UART_1_IntCntl(UART_1_ENABLE_RX_INT); // enable receive interrupt
+(0031)     UART_1_IntCntl(UART_1_ENABLE_RX_INT); // enable receive interrupt
     09EE: 10       PUSH  X
     09EF: 50 01    MOV   A,0x1
     09F1: 7C 04 5F LCALL 0x045F
     09F4: 20       POP   X
-(0033)     UART_1_Start(UART_1_PARITY_NONE);
+(0032)     UART_1_Start(UART_1_PARITY_NONE);
     09F5: 10       PUSH  X
     09F6: 50 00    MOV   A,0x0
     09F8: 7C 04 30 LCALL 0x0430
     09FB: 20       POP   X
-(0034)     LED_ON();
+(0033)     LED_ON();
     09FC: 43 08 01 OR    REG[0x8],0x1
-(0035)     UART_1_CPutString("start");
+(0034)     UART_1_CPutString("start");
     09FF: 10       PUSH  X
     0A00: 50 01    MOV   A,0x1
     0A02: 08       PUSH  A
@@ -5688,16 +5687,16 @@ _main|__text_start|_main:
     0A05: 5C       MOV   X,A
     0A06: 18       POP   A
     0A07: 7C 05 47 LCALL 0x0547
-(0036)     I2CHW_1_Start();
+(0035)     I2CHW_1_Start();
     0A0A: 7C 05 FB LCALL 0x05FB
-(0037)     I2CHW_1_EnableMstr();
+(0036)     I2CHW_1_EnableMstr();
     0A0D: 7C 06 14 LCALL 0x0614
-(0038)     I2CHW_1_EnableInt();
+(0037)     I2CHW_1_EnableInt();
     0A10: 7C 05 FF LCALL 0x05FF
     0A13: 20       POP   X
-(0039) 
-(0040)     for(;;){
-(0041)         I2CHW_1_bWriteBytes(SLAVE_ADDR, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
+(0038) 
+(0039)     for(;;){
+(0040)         I2CHW_1_bWriteBytes(SLAVE_ADDR, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
     0A14: 10       PUSH  X
     0A15: 50 00    MOV   A,0x0
     0A17: 08       PUSH  A
@@ -5712,7 +5711,7 @@ _main|__text_start|_main:
     0A24: 7C 06 78 LCALL 0x0678
     0A27: 38 FB    ADD   SP,0xFB
     0A29: 20       POP   X
-(0042)         while(!(I2CHW_1_bReadI2CStatus() & I2CHW_WR_COMPLETE));
+(0041)         while(!(I2CHW_1_bReadI2CStatus() & I2CHW_WR_COMPLETE));
     0A2A: 10       PUSH  X
     0A2B: 7C 09 D0 LCALL 0x09D0
     0A2E: 62 D0 00 MOV   REG[0xD0],0x0
@@ -5720,12 +5719,12 @@ _main|__text_start|_main:
     0A32: 53 A9    MOV   [__r0],A
     0A34: 47 A9 40 TST   [__r0],0x40
     0A37: AF F2    JZ    0x0A2A
-(0043)         I2CHW_1_ClrWrStatus();
+(0042)         I2CHW_1_ClrWrStatus();
     0A39: 10       PUSH  X
     0A3A: 7C 09 DD LCALL 0x09DD
     0A3D: 20       POP   X
-(0044) 
-(0045)         I2CHW_1_fReadBytes(SLAVE_ADDR, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
+(0043) 
+(0044)         I2CHW_1_fReadBytes(SLAVE_ADDR, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
     0A3E: 10       PUSH  X
     0A3F: 50 00    MOV   A,0x0
     0A41: 08       PUSH  A
@@ -5740,7 +5739,7 @@ _main|__text_start|_main:
     0A4E: 7C 06 34 LCALL 0x0634
     0A51: 38 FB    ADD   SP,0xFB
     0A53: 20       POP   X
-(0046)         while(!(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE));
+(0045)         while(!(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE));
     0A54: 10       PUSH  X
     0A55: 7C 09 D0 LCALL 0x09D0
     0A58: 62 D0 00 MOV   REG[0xD0],0x0
@@ -5748,294 +5747,303 @@ _main|__text_start|_main:
     0A5C: 53 A9    MOV   [__r0],A
     0A5E: 47 A9 04 TST   [__r0],0x4
     0A61: AF F2    JZ    0x0A54
-(0047)         I2CHW_1_ClrRdStatus();
+(0046)         I2CHW_1_ClrRdStatus();
     0A63: 10       PUSH  X
     0A64: 7C 09 D6 LCALL 0x09D6
     0A67: 20       POP   X
-(0048)         UART_1_PutString(buf_rx);
+(0047) 
+(0048)         while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
     0A68: 10       PUSH  X
-    0A69: 50 00    MOV   A,0x0
-    0A6B: 08       PUSH  A
-    0A6C: 50 4B    MOV   A,0x4B
-    0A6E: 5C       MOV   X,A
-    0A6F: 18       POP   A
-    0A70: 7C 04 E1 LCALL 0x04E1
-    0A73: 20       POP   X
-(0049)     }
-    0A74: 8F 9F    JMP   0x0A14
-    0A76: 8F FF    JMP   0x0A76
-(0050) }
-(0051) 
+    0A69: 7C 04 43 LCALL 0x0443
+    0A6C: 62 D0 00 MOV   REG[0xD0],0x0
+    0A6F: 20       POP   X
+    0A70: 53 A9    MOV   [__r0],A
+    0A72: 47 A9 10 TST   [__r0],0x10
+    0A75: AF F2    JZ    0x0A68
+(0049)         UART_1_PutString(buf_rx);
+    0A77: 10       PUSH  X
+    0A78: 50 00    MOV   A,0x0
+    0A7A: 08       PUSH  A
+    0A7B: 50 4B    MOV   A,0x4B
+    0A7D: 5C       MOV   X,A
+    0A7E: 18       POP   A
+    0A7F: 7C 04 E1 LCALL 0x04E1
+    0A82: 20       POP   X
+(0050)     }
+    0A83: 8F 90    JMP   0x0A14
+    0A85: 8F FF    JMP   0x0A85
+(0051) }
 (0052) 
-(0053) #pragma interrupt_handler INT_UART_RX
-(0054) void INT_UART_RX(void){
+(0053) 
+(0054) #pragma interrupt_handler INT_UART_RX
+(0055) void INT_UART_RX(void){
 _INT_UART_RX:
   recv_data            --> X+0
-    0A78: 71 C0    OR    F,0xC0
-    0A7A: 08       PUSH  A
-    0A7B: 5D D0    MOV   A,REG[0xD0]
-    0A7D: 08       PUSH  A
-    0A7E: 5D D3    MOV   A,REG[0xD3]
-    0A80: 08       PUSH  A
-    0A81: 5D D4    MOV   A,REG[0xD4]
-    0A83: 08       PUSH  A
-    0A84: 5D D5    MOV   A,REG[0xD5]
-    0A86: 08       PUSH  A
-    0A87: 62 D0 00 MOV   REG[0xD0],0x0
-    0A8A: 51 A9    MOV   A,[__r0]
+    0A87: 71 C0    OR    F,0xC0
+    0A89: 08       PUSH  A
+    0A8A: 5D D0    MOV   A,REG[0xD0]
     0A8C: 08       PUSH  A
-    0A8D: 51 A8    MOV   A,[__r1]
+    0A8D: 5D D3    MOV   A,REG[0xD3]
     0A8F: 08       PUSH  A
-    0A90: 51 A7    MOV   A,[__r2]
+    0A90: 5D D4    MOV   A,REG[0xD4]
     0A92: 08       PUSH  A
-    0A93: 51 A6    MOV   A,[__r3]
+    0A93: 5D D5    MOV   A,REG[0xD5]
     0A95: 08       PUSH  A
-    0A96: 51 A5    MOV   A,[__r4]
-    0A98: 08       PUSH  A
-    0A99: 51 A4    MOV   A,[__r5]
+    0A96: 62 D0 00 MOV   REG[0xD0],0x0
+    0A99: 51 A9    MOV   A,[__r0]
     0A9B: 08       PUSH  A
-    0A9C: 51 A3    MOV   A,[__r6]
+    0A9C: 51 A8    MOV   A,[__r1]
     0A9E: 08       PUSH  A
-    0A9F: 51 A2    MOV   A,[__r7]
+    0A9F: 51 A7    MOV   A,[__r2]
     0AA1: 08       PUSH  A
-    0AA2: 51 A1    MOV   A,[__r8]
+    0AA2: 51 A6    MOV   A,[__r3]
     0AA4: 08       PUSH  A
-    0AA5: 51 A0    MOV   A,[__r9]
+    0AA5: 51 A5    MOV   A,[__r4]
     0AA7: 08       PUSH  A
-    0AA8: 51 9F    MOV   A,[__r10]
+    0AA8: 51 A4    MOV   A,[__r5]
     0AAA: 08       PUSH  A
-    0AAB: 51 9E    MOV   A,[__r11]
+    0AAB: 51 A3    MOV   A,[__r6]
     0AAD: 08       PUSH  A
-    0AAE: 51 9D    MOV   A,[__rX]
+    0AAE: 51 A2    MOV   A,[__r7]
     0AB0: 08       PUSH  A
-    0AB1: 51 9C    MOV   A,[__rY]
+    0AB1: 51 A1    MOV   A,[__r8]
     0AB3: 08       PUSH  A
-    0AB4: 51 9B    MOV   A,[__rZ]
+    0AB4: 51 A0    MOV   A,[__r9]
     0AB6: 08       PUSH  A
-    0AB7: 10       PUSH  X
-    0AB8: 4F       MOV   X,SP
-    0AB9: 38 03    ADD   SP,0x3
-(0055)     char recv_data;
-(0056)     recv_data = UART_1_cGetChar(); // read UART
-    0ABB: 10       PUSH  X
-    0ABC: 7C 04 AC LCALL 0x04AC
-    0ABF: 62 D0 00 MOV   REG[0xD0],0x0
-    0AC2: 20       POP   X
-    0AC3: 54 00    MOV   [X+0],A
-(0057)     UART_1_PutChar(recv_data); // echo
-    0AC5: 10       PUSH  X
-    0AC6: 52 00    MOV   A,[X+0]
-    0AC8: 7C 04 A4 LCALL 0x04A4
-    0ACB: 20       POP   X
-(0058)     switch(recv_data){
-    0ACC: 52 00    MOV   A,[X+0]
-    0ACE: 54 02    MOV   [X+2],A
-    0AD0: 56 01 00 MOV   [X+1],0x0
-    0AD3: 52 02    MOV   A,[X+2]
-    0AD5: 11 44    SUB   A,0x44
-    0AD7: 62 D0 00 MOV   REG[0xD0],0x0
-    0ADA: 53 9C    MOV   [__rY],A
-    0ADC: 52 01    MOV   A,[X+1]
-    0ADE: 31 80    XOR   A,0x80
-    0AE0: 19 80    SBB   A,0x80
-    0AE2: C0 31    JC    0x0B14
-    0AE4: 2A 9C    OR    A,[__rY]
-    0AE6: A0 1E    JZ    0x0B05
-    0AE8: 3D 01 00 CMP   [X+1],0x0
-    0AEB: B0 06    JNZ   0x0AF2
-    0AED: 3D 02 55 CMP   [X+2],0x55
-    0AF0: A0 03    JZ    0x0AF4
-    0AF2: 80 21    JMP   0x0B14
-(0059)     case 'U':
-(0060)         LED_ON();
-    0AF4: 43 08 01 OR    REG[0x8],0x1
-(0061)         UART_1_CPutString("!Up!");
-    0AF7: 10       PUSH  X
-    0AF8: 50 01    MOV   A,0x1
-    0AFA: 08       PUSH  A
-    0AFB: 50 B2    MOV   A,0xB2
-    0AFD: 5C       MOV   X,A
-    0AFE: 18       POP   A
-    0AFF: 7C 05 47 LCALL 0x0547
-    0B02: 20       POP   X
-(0062)         break;
-    0B03: 80 10    JMP   0x0B14
-(0063)     case 'D':
-(0064)         LED_OFF();
-    0B05: 41 08 FE AND   REG[0x8],0xFE
-(0065)         UART_1_CPutString("!Down!");
-    0B08: 10       PUSH  X
-    0B09: 50 01    MOV   A,0x1
-    0B0B: 08       PUSH  A
-    0B0C: 50 AB    MOV   A,0xAB
-    0B0E: 5C       MOV   X,A
-    0B0F: 18       POP   A
-    0B10: 7C 05 47 LCALL 0x0547
-    0B13: 20       POP   X
-(0066)         break;
-    0B14: 38 FD    ADD   SP,0xFD
-    0B16: 20       POP   X
-    0B17: 62 D0 00 MOV   REG[0xD0],0x0
-    0B1A: 18       POP   A
-    0B1B: 53 9B    MOV   [__rZ],A
-    0B1D: 18       POP   A
-    0B1E: 53 9C    MOV   [__rY],A
-    0B20: 18       POP   A
-    0B21: 53 9D    MOV   [__rX],A
-    0B23: 18       POP   A
-    0B24: 53 9E    MOV   [__r11],A
-    0B26: 18       POP   A
-    0B27: 53 9F    MOV   [__r10],A
+    0AB7: 51 9F    MOV   A,[__r10]
+    0AB9: 08       PUSH  A
+    0ABA: 51 9E    MOV   A,[__r11]
+    0ABC: 08       PUSH  A
+    0ABD: 51 9D    MOV   A,[__rX]
+    0ABF: 08       PUSH  A
+    0AC0: 51 9C    MOV   A,[__rY]
+    0AC2: 08       PUSH  A
+    0AC3: 51 9B    MOV   A,[__rZ]
+    0AC5: 08       PUSH  A
+    0AC6: 10       PUSH  X
+    0AC7: 4F       MOV   X,SP
+    0AC8: 38 03    ADD   SP,0x3
+(0056)     char recv_data;
+(0057)     recv_data = UART_1_cGetChar(); // read UART
+    0ACA: 10       PUSH  X
+    0ACB: 7C 04 AC LCALL 0x04AC
+    0ACE: 62 D0 00 MOV   REG[0xD0],0x0
+    0AD1: 20       POP   X
+    0AD2: 54 00    MOV   [X+0],A
+(0058)     UART_1_PutChar(recv_data); // echo
+    0AD4: 10       PUSH  X
+    0AD5: 52 00    MOV   A,[X+0]
+    0AD7: 7C 04 A4 LCALL 0x04A4
+    0ADA: 20       POP   X
+(0059)     switch(recv_data){
+    0ADB: 52 00    MOV   A,[X+0]
+    0ADD: 54 02    MOV   [X+2],A
+    0ADF: 56 01 00 MOV   [X+1],0x0
+    0AE2: 52 02    MOV   A,[X+2]
+    0AE4: 11 44    SUB   A,0x44
+    0AE6: 62 D0 00 MOV   REG[0xD0],0x0
+    0AE9: 53 9C    MOV   [__rY],A
+    0AEB: 52 01    MOV   A,[X+1]
+    0AED: 31 80    XOR   A,0x80
+    0AEF: 19 80    SBB   A,0x80
+    0AF1: C0 31    JC    0x0B23
+    0AF3: 2A 9C    OR    A,[__rY]
+    0AF5: A0 1E    JZ    0x0B14
+    0AF7: 3D 01 00 CMP   [X+1],0x0
+    0AFA: B0 06    JNZ   0x0B01
+    0AFC: 3D 02 55 CMP   [X+2],0x55
+    0AFF: A0 03    JZ    0x0B03
+    0B01: 80 21    JMP   0x0B23
+(0060)     case 'U':
+(0061)         LED_ON();
+    0B03: 43 08 01 OR    REG[0x8],0x1
+(0062)         UART_1_CPutString("!Up!");
+    0B06: 10       PUSH  X
+    0B07: 50 01    MOV   A,0x1
+    0B09: 08       PUSH  A
+    0B0A: 50 B2    MOV   A,0xB2
+    0B0C: 5C       MOV   X,A
+    0B0D: 18       POP   A
+    0B0E: 7C 05 47 LCALL 0x0547
+    0B11: 20       POP   X
+(0063)         break;
+    0B12: 80 10    JMP   0x0B23
+(0064)     case 'D':
+(0065)         LED_OFF();
+    0B14: 41 08 FE AND   REG[0x8],0xFE
+(0066)         UART_1_CPutString("!Down!");
+    0B17: 10       PUSH  X
+    0B18: 50 01    MOV   A,0x1
+    0B1A: 08       PUSH  A
+    0B1B: 50 AB    MOV   A,0xAB
+    0B1D: 5C       MOV   X,A
+    0B1E: 18       POP   A
+    0B1F: 7C 05 47 LCALL 0x0547
+    0B22: 20       POP   X
+(0067)         break;
+    0B23: 38 FD    ADD   SP,0xFD
+    0B25: 20       POP   X
+    0B26: 62 D0 00 MOV   REG[0xD0],0x0
     0B29: 18       POP   A
-    0B2A: 53 A0    MOV   [__r9],A
+    0B2A: 53 9B    MOV   [__rZ],A
     0B2C: 18       POP   A
-    0B2D: 53 A1    MOV   [__r8],A
+    0B2D: 53 9C    MOV   [__rY],A
     0B2F: 18       POP   A
-    0B30: 53 A2    MOV   [__r7],A
+    0B30: 53 9D    MOV   [__rX],A
     0B32: 18       POP   A
-    0B33: 53 A3    MOV   [__r6],A
+    0B33: 53 9E    MOV   [__r11],A
     0B35: 18       POP   A
-    0B36: 53 A4    MOV   [__r5],A
+    0B36: 53 9F    MOV   [__r10],A
     0B38: 18       POP   A
-    0B39: 53 A5    MOV   [__r4],A
+    0B39: 53 A0    MOV   [__r9],A
     0B3B: 18       POP   A
-    0B3C: 53 A6    MOV   [__r3],A
+    0B3C: 53 A1    MOV   [__r8],A
     0B3E: 18       POP   A
-    0B3F: 53 A7    MOV   [__r2],A
+    0B3F: 53 A2    MOV   [__r7],A
     0B41: 18       POP   A
-    0B42: 53 A8    MOV   [__r1],A
+    0B42: 53 A3    MOV   [__r6],A
     0B44: 18       POP   A
-    0B45: 53 A9    MOV   [__r0],A
+    0B45: 53 A4    MOV   [__r5],A
     0B47: 18       POP   A
-    0B48: 60 D5    MOV   REG[0xD5],A
+    0B48: 53 A5    MOV   [__r4],A
     0B4A: 18       POP   A
-    0B4B: 60 D4    MOV   REG[0xD4],A
+    0B4B: 53 A6    MOV   [__r3],A
     0B4D: 18       POP   A
-    0B4E: 60 D3    MOV   REG[0xD3],A
+    0B4E: 53 A7    MOV   [__r2],A
     0B50: 18       POP   A
-    0B51: 60 D0    MOV   REG[0xD0],A
+    0B51: 53 A8    MOV   [__r1],A
     0B53: 18       POP   A
-    0B54: 7E       RETI  
-(0067)     }
-(0068) }
-(0069) 
-(0070) #pragma interrupt_handler INT_GPIO
-(0071) void INT_GPIO(void){
+    0B54: 53 A9    MOV   [__r0],A
+    0B56: 18       POP   A
+    0B57: 60 D5    MOV   REG[0xD5],A
+    0B59: 18       POP   A
+    0B5A: 60 D4    MOV   REG[0xD4],A
+    0B5C: 18       POP   A
+    0B5D: 60 D3    MOV   REG[0xD3],A
+    0B5F: 18       POP   A
+    0B60: 60 D0    MOV   REG[0xD0],A
+    0B62: 18       POP   A
+    0B63: 7E       RETI  
+(0068)     }
+(0069) }
+(0070) 
+(0071) #pragma interrupt_handler INT_GPIO
+(0072) void INT_GPIO(void){
 _INT_GPIO:
-    0B55: 71 C0    OR    F,0xC0
-    0B57: 08       PUSH  A
-    0B58: 5D D0    MOV   A,REG[0xD0]
-    0B5A: 08       PUSH  A
-    0B5B: 5D D3    MOV   A,REG[0xD3]
-    0B5D: 08       PUSH  A
-    0B5E: 5D D4    MOV   A,REG[0xD4]
-    0B60: 08       PUSH  A
-    0B61: 5D D5    MOV   A,REG[0xD5]
-    0B63: 08       PUSH  A
-    0B64: 62 D0 00 MOV   REG[0xD0],0x0
-    0B67: 51 A9    MOV   A,[__r0]
+    0B64: 71 C0    OR    F,0xC0
+    0B66: 08       PUSH  A
+    0B67: 5D D0    MOV   A,REG[0xD0]
     0B69: 08       PUSH  A
-    0B6A: 51 A8    MOV   A,[__r1]
+    0B6A: 5D D3    MOV   A,REG[0xD3]
     0B6C: 08       PUSH  A
-    0B6D: 51 A7    MOV   A,[__r2]
+    0B6D: 5D D4    MOV   A,REG[0xD4]
     0B6F: 08       PUSH  A
-    0B70: 51 A6    MOV   A,[__r3]
+    0B70: 5D D5    MOV   A,REG[0xD5]
     0B72: 08       PUSH  A
-    0B73: 51 A5    MOV   A,[__r4]
-    0B75: 08       PUSH  A
-    0B76: 51 A4    MOV   A,[__r5]
+    0B73: 62 D0 00 MOV   REG[0xD0],0x0
+    0B76: 51 A9    MOV   A,[__r0]
     0B78: 08       PUSH  A
-    0B79: 51 A3    MOV   A,[__r6]
+    0B79: 51 A8    MOV   A,[__r1]
     0B7B: 08       PUSH  A
-    0B7C: 51 A2    MOV   A,[__r7]
+    0B7C: 51 A7    MOV   A,[__r2]
     0B7E: 08       PUSH  A
-    0B7F: 51 A1    MOV   A,[__r8]
+    0B7F: 51 A6    MOV   A,[__r3]
     0B81: 08       PUSH  A
-    0B82: 51 A0    MOV   A,[__r9]
+    0B82: 51 A5    MOV   A,[__r4]
     0B84: 08       PUSH  A
-    0B85: 51 9F    MOV   A,[__r10]
+    0B85: 51 A4    MOV   A,[__r5]
     0B87: 08       PUSH  A
-    0B88: 51 9E    MOV   A,[__r11]
+    0B88: 51 A3    MOV   A,[__r6]
     0B8A: 08       PUSH  A
-    0B8B: 51 9D    MOV   A,[__rX]
+    0B8B: 51 A2    MOV   A,[__r7]
     0B8D: 08       PUSH  A
-    0B8E: 51 9C    MOV   A,[__rY]
+    0B8E: 51 A1    MOV   A,[__r8]
     0B90: 08       PUSH  A
-    0B91: 51 9B    MOV   A,[__rZ]
+    0B91: 51 A0    MOV   A,[__r9]
     0B93: 08       PUSH  A
-(0072)     if(bit_is_set(SW_PORT, SW_BIT)){
-    0B94: 5D 08    MOV   A,REG[0x8]
-    0B96: 62 D0 00 MOV   REG[0xD0],0x0
-    0B99: 53 A9    MOV   [__r0],A
-    0B9B: 47 A9 04 TST   [__r0],0x4
-    0B9E: A0 12    JZ    0x0BB1
-(0073)     LED_ON();
-    0BA0: 43 08 01 OR    REG[0x8],0x1
-(0074)     UART_1_CPutString("ON\r\n");
-    0BA3: 10       PUSH  X
-    0BA4: 50 01    MOV   A,0x1
-    0BA6: 08       PUSH  A
-    0BA7: 50 A6    MOV   A,0xA6
-    0BA9: 5C       MOV   X,A
-    0BAA: 18       POP   A
-    0BAB: 7C 05 47 LCALL 0x0547
-    0BAE: 20       POP   X
-(0075)   }
-    0BAF: 80 10    JMP   0x0BC0
-(0076)   else{
-(0077)     LED_OFF();
-    0BB1: 41 08 FE AND   REG[0x8],0xFE
-(0078)     UART_1_CPutString("OFF\r\n");
-    0BB4: 10       PUSH  X
-    0BB5: 50 01    MOV   A,0x1
-    0BB7: 08       PUSH  A
-    0BB8: 50 A0    MOV   A,0xA0
-    0BBA: 5C       MOV   X,A
-    0BBB: 18       POP   A
-    0BBC: 7C 05 47 LCALL 0x0547
-    0BBF: 20       POP   X
-(0079)   }
-    0BC0: 62 D0 00 MOV   REG[0xD0],0x0
-    0BC3: 18       POP   A
-    0BC4: 53 9B    MOV   [__rZ],A
-    0BC6: 18       POP   A
-    0BC7: 53 9C    MOV   [__rY],A
-    0BC9: 18       POP   A
-    0BCA: 53 9D    MOV   [__rX],A
-    0BCC: 18       POP   A
-    0BCD: 53 9E    MOV   [__r11],A
-    0BCF: 18       POP   A
-    0BD0: 53 9F    MOV   [__r10],A
+    0B94: 51 9F    MOV   A,[__r10]
+    0B96: 08       PUSH  A
+    0B97: 51 9E    MOV   A,[__r11]
+    0B99: 08       PUSH  A
+    0B9A: 51 9D    MOV   A,[__rX]
+    0B9C: 08       PUSH  A
+    0B9D: 51 9C    MOV   A,[__rY]
+    0B9F: 08       PUSH  A
+    0BA0: 51 9B    MOV   A,[__rZ]
+    0BA2: 08       PUSH  A
+(0073)     if(bit_is_set(SW_PORT, SW_BIT)){
+    0BA3: 5D 08    MOV   A,REG[0x8]
+    0BA5: 62 D0 00 MOV   REG[0xD0],0x0
+    0BA8: 53 A9    MOV   [__r0],A
+    0BAA: 47 A9 04 TST   [__r0],0x4
+    0BAD: A0 12    JZ    0x0BC0
+(0074)     LED_ON();
+    0BAF: 43 08 01 OR    REG[0x8],0x1
+(0075)     UART_1_CPutString("ON\r\n");
+    0BB2: 10       PUSH  X
+    0BB3: 50 01    MOV   A,0x1
+    0BB5: 08       PUSH  A
+    0BB6: 50 A6    MOV   A,0xA6
+    0BB8: 5C       MOV   X,A
+    0BB9: 18       POP   A
+    0BBA: 7C 05 47 LCALL 0x0547
+    0BBD: 20       POP   X
+(0076)   }
+    0BBE: 80 10    JMP   0x0BCF
+(0077)   else{
+(0078)     LED_OFF();
+    0BC0: 41 08 FE AND   REG[0x8],0xFE
+(0079)     UART_1_CPutString("OFF\r\n");
+    0BC3: 10       PUSH  X
+    0BC4: 50 01    MOV   A,0x1
+    0BC6: 08       PUSH  A
+    0BC7: 50 A0    MOV   A,0xA0
+    0BC9: 5C       MOV   X,A
+    0BCA: 18       POP   A
+    0BCB: 7C 05 47 LCALL 0x0547
+    0BCE: 20       POP   X
+(0080)   }
+    0BCF: 62 D0 00 MOV   REG[0xD0],0x0
     0BD2: 18       POP   A
-    0BD3: 53 A0    MOV   [__r9],A
+    0BD3: 53 9B    MOV   [__rZ],A
     0BD5: 18       POP   A
-    0BD6: 53 A1    MOV   [__r8],A
+    0BD6: 53 9C    MOV   [__rY],A
     0BD8: 18       POP   A
-    0BD9: 53 A2    MOV   [__r7],A
+    0BD9: 53 9D    MOV   [__rX],A
     0BDB: 18       POP   A
-    0BDC: 53 A3    MOV   [__r6],A
+    0BDC: 53 9E    MOV   [__r11],A
     0BDE: 18       POP   A
-    0BDF: 53 A4    MOV   [__r5],A
+    0BDF: 53 9F    MOV   [__r10],A
     0BE1: 18       POP   A
-    0BE2: 53 A5    MOV   [__r4],A
+    0BE2: 53 A0    MOV   [__r9],A
     0BE4: 18       POP   A
-    0BE5: 53 A6    MOV   [__r3],A
+    0BE5: 53 A1    MOV   [__r8],A
     0BE7: 18       POP   A
-    0BE8: 53 A7    MOV   [__r2],A
+    0BE8: 53 A2    MOV   [__r7],A
     0BEA: 18       POP   A
-    0BEB: 53 A8    MOV   [__r1],A
+    0BEB: 53 A3    MOV   [__r6],A
     0BED: 18       POP   A
-    0BEE: 53 A9    MOV   [__r0],A
+    0BEE: 53 A4    MOV   [__r5],A
     0BF0: 18       POP   A
-    0BF1: 60 D5    MOV   REG[0xD5],A
+    0BF1: 53 A5    MOV   [__r4],A
     0BF3: 18       POP   A
-    0BF4: 60 D4    MOV   REG[0xD4],A
+    0BF4: 53 A6    MOV   [__r3],A
     0BF6: 18       POP   A
-    0BF7: 60 D3    MOV   REG[0xD3],A
+    0BF7: 53 A7    MOV   [__r2],A
     0BF9: 18       POP   A
-    0BFA: 60 D0    MOV   REG[0xD0],A
+    0BFA: 53 A8    MOV   [__r1],A
     0BFC: 18       POP   A
-(0080) }
+    0BFD: 53 A9    MOV   [__r0],A
+    0BFF: 18       POP   A
+    0C00: 60 D5    MOV   REG[0xD5],A
+    0C02: 18       POP   A
+    0C03: 60 D4    MOV   REG[0xD4],A
+    0C05: 18       POP   A
+    0C06: 60 D3    MOV   REG[0xD3],A
+    0C08: 18       POP   A
+    0C09: 60 D0    MOV   REG[0xD0],A
+    0C0B: 18       POP   A
+(0081) }
 FILE: lib\psocgpioint.asm
                                         (0001) ; Generated by PSoC Designer 5.0.1127.0
                                         (0002) ;
@@ -6097,14 +6105,14 @@ FILE: lib\psocgpioint.asm
                                         (0058)    ;---------------------------------------------------
                                         (0059) 
 
-0BFE: 7D 0B 55 LJMP  _INT_GPIO          (0060) 	ljmp _INT_GPIO
+0C0D: 7D 0B 64 LJMP  _INT_GPIO          (0060) 	ljmp _INT_GPIO
                                         (0061) 
                                         (0062)    ;---------------------------------------------------
                                         (0063)    ; Insert your custom code above this banner
                                         (0064)    ;---------------------------------------------------
                                         (0065)    ;@PSoC_UserCode_END@ (Do not change this line.)
                                         (0066) 
-0C01: 7E       RETI                     (0067)    reti
+0C10: 7E       RETI                     (0067)    reti
 (0068) 
 (0069) 
 (0070) ; end of file PSoCGPIOINT.asm

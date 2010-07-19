@@ -1,10 +1,10 @@
 Project:      output/i2c_master
 Build Number: 0
-Date:         Tue Jul 20 06:50:40 2010
+Date:         Tue Jul 20 08:30:40 2010
 Compiler:     ICCM8C
 Version:      7.02.004
 
-  ROM 9% full. 2658 out of 32768 bytes used (does not include absolute areas).
+  ROM 9% full. 2673 out of 32768 bytes used (does not include absolute areas).
   RAM 10% full. 172 bytes used (does not include stack usage).
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
@@ -59,8 +59,8 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
        0439  _UART_1_Stop
        0440  _UART_1_SendData
        0440  UART_1_SendData
-       0443  _UART_1_bReadTxStatus
        0443  _bUART_1_ReadTxStatus
+       0443  _UART_1_bReadTxStatus
        0443  bUART_1_ReadTxStatus
        0443  UART_1_bReadTxStatus
        0446  _UART_1_bReadRxData
@@ -159,17 +159,17 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   09E4   021E =    542. bytes (rel,con,rom)
+                            text   09E4   022D =    557. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
        09E4  _main
        09E4  __text_start
-       0A78  _INT_UART_RX
-       0B55  _INT_GPIO
-       0BFE  PSoC_GPIO_ISR
-       0C02  __text_end
-       0C11  __xidata_end
+       0A87  _INT_UART_RX
+       0B64  _INT_GPIO
+       0C0D  PSoC_GPIO_ISR
+       0C11  __text_end
+       0C20  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
