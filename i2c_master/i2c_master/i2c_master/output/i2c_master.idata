@@ -1,11 +1,5 @@
-flash  CAA SRAM    B:
- <size at next line>  41 42
-  [size:] 2 bytes
-flash  CAF SRAM    D:
- 00 126 bytes
-flash  CB3 SRAM   AA:
- <size at next line>   0  0
-  [size:] 2 bytes
-flash  CB8 SRAM   AD:
- <size at next line>   0  0
-  [size:] 2 bytes
+flash  F04 SRAM   2A:
+ 00 32 bytes
+flash  F08 SRAM   4B:
+ <size at next line>   0  0  0
+  [size:] 3 bytes

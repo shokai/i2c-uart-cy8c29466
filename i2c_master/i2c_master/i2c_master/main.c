@@ -17,13 +17,14 @@
 #define SW_PORT PRT2DR
 #define SW_BIT _BV(2) // switch
 
-#define BUF_SIZE 64
-BYTE buf_tx[BUF_SIZE] = "AB";
+#define BUF_SIZE 8
+BYTE buf_tx[BUF_SIZE];
 BYTE buf_rx[BUF_SIZE];
-#define SLAVE_ADDR 0
+char buf_uart_tx[BUF_SIZE];
 BYTE status;
 char slave;
-int wait_count;
+char wait_count;
+char tmp[8];
 
 void main(void)
 {
@@ -38,7 +39,7 @@ void main(void)
     I2CHW_1_EnableMstr();
     I2CHW_1_EnableInt();
     for(;;){
-        for(slave = 0; slave < 2; slave++){
+        for(slave = 0; slave < 10; slave++){
             I2CHW_1_bWriteBytes(slave, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
             wait_count = 0;
             for(;;){
@@ -54,9 +55,15 @@ void main(void)
                    wait_count++ > 100) break;
             }
             I2CHW_1_ClrRdStatus();
-            
+
             while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
+            UART_1_CPutString("I2C:");
+            itoa(tmp, slave, 10);
+            UART_1_PutString(tmp);
+            UART_1_CPutString(",");
             UART_1_PutString(buf_rx);
+            UART_1_PutCRLF();
+            buf_rx[0] = '\0';
         }
     }
 }
@@ -83,10 +90,12 @@ void INT_UART_RX(void){
 void INT_GPIO(void){
     if(bit_is_set(SW_PORT, SW_BIT)){
     LED_ON();
+    buf_tx[0] = 'A';
     UART_1_CPutString("ON\r\n");
   }
   else{
     LED_OFF();
+    buf_tx[0] = 'B';
     UART_1_CPutString("OFF\r\n");
   }
 }
