@@ -1,11 +1,11 @@
 Project:      output/i2c_master
 Build Number: 0
-Date:         Tue Jul 20 17:51:27 2010
+Date:         Tue Jul 20 17:57:07 2010
 Compiler:     ICCM8C
 Version:      7.02.004
 
-  ROM 11% full. 3441 out of 32768 bytes used (does not include absolute areas).
-  RAM 5% full. 78 bytes used (does not include stack usage).
+  ROM 9% full. 2865 out of 32768 bytes used (does not include absolute areas).
+  RAM 4% full. 62 bytes used (does not include stack usage).
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -159,20 +159,17 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   09E7   052A =   1322. bytes (rel,con,rom)
+                            text   09E7   02EA =    746. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
-       09E7  __text_start
        09E7  _main
-       0B52  _INT_UART_RX
-       0C3B  _INT_GPIO
-       0CF0  PSoC_GPIO_ISR
-       0CF4  __divmodu_16X16_16
-       0CFF  __i_div16_block_util
-       0D38  _itoa
-       0F1D  __xidata_end
-       0F11  __text_end
+       09E7  __text_start
+       0B2F  _INT_UART_RX
+       0C18  _INT_GPIO
+       0CCD  PSoC_GPIO_ISR
+       0CD1  __text_end
+       0CDD  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -252,18 +249,16 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            data   0000   0023 =     35. bytes (rel,con,ram)
+                            data   0000   0013 =     19. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
        0000  __data_start
-       002A  _tmp
+       002A  _buf_rx
        0032  _buf_tx
-       003A  _buf_uart_tx
-       0042  _buf_rx
-       004B  _wait_count
-       004C  _slave
-       004D  _status
+       003B  _slave
+       003C  _status
+       003D  _wait_count
 
 Files Linked      [ module(s) ]
 
@@ -271,8 +266,7 @@ Files Linked      [ module(s) ]
 ./obj/main.o	[ main.c ]
 <library>	[ uart_1int.asm, uart_1.asm, psocgpioint.asm, psocconfigtbl.asm, psocconfig.asm, i2chw_1rsrcinits.asm ]
 [ i2chw_1mstr.asm, i2chw_1int.asm, i2chw_1common.asm, rZ.asm, rY.asm, rX.asm, r11.asm, r10.asm, r9.asm ]
-[ r8.asm, r7.asm, r6.asm, r5.asm, r4.asm, r3.asm, r2.asm, r1.asm, r0.asm, divmodu_16x16_16_util.asm, i_div16_block_util.asm ]
-[ itoa.s ]
+[ r8.asm, r7.asm, r6.asm, r5.asm, r4.asm, r3.asm, r2.asm, r1.asm, r0.asm ]
 
 Area Definitions
 

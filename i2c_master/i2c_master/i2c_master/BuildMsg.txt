@@ -12,22 +12,18 @@ lib/uart_1int.asm
 lib/uart_1plus.asm
 ./boot.asm
 ./main.c
-!W C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\main.c(60):[warning] calling a function without prototype may cause runtime errors if the function 
-does not return int or unsigned int
 Linking..
 LMM info: area 'InterruptRAM' uses 11 bytes in SRAM bank 0
 LMM info: area 'UART_1_RAM' item of 16 bytes allocated in SRAM page 0
 LMM info: area 'virtual_registers' uses 15 bytes in SRAM page 0
 LMM info: area 'data' item of 8 bytes allocated in SRAM page 0
 LMM info: area 'data' item of 8 bytes allocated in SRAM page 0
-LMM info: area 'data' item of 8 bytes allocated in SRAM page 0
-LMM info: area 'data' item of 8 bytes allocated in SRAM page 0
 LMM info: area 'UART_1_RAM' item of 1 bytes allocated in SRAM page 0
 LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
 LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
 LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
-  ROM 11% full. 3441 out of 32768 bytes used (does not include absolute areas).
-  RAM 5% full. 78 bytes used (does not include stack usage).
+  ROM 9% full. 2865 out of 32768 bytes used (does not include absolute areas).
+  RAM 4% full. 62 bytes used (does not include stack usage).
 idata dump at output/i2c_master.idata
  
-i2c_master - 0 error(s) 1 warning(s) 17:51:26
+i2c_master - 0 error(s) 0 warning(s) 17:57:07

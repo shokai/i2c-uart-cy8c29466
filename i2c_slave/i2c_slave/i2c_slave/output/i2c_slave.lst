@@ -1917,7 +1917,7 @@ FILE: lib\i2chw_1int.asm
 0434: 6D       RRC   A                  (0430)     rrc A                                                            ;carry now holds bit 0 (r/~w) from addr byte
                                         (0431) IF (I2CHW_1_AUTO_ADDR_CHECK^1)   ;; for CY8C28X45 chip: skip address comparison and NACK sending stage-hardware will do this for us  if AutoAddressCompare feature is enabled.
                                         (0432)                                           ;; The code in this pre-compiler directive will be executed for all chips except CY8C28X45.
-0435: 31 00    XOR   A,0x0              (0433)     xor A,  I2CHW_1_SLAVE_ADDR                                       ;for an equate
+0435: 31 12    XOR   A,0x12             (0433)     xor A,  I2CHW_1_SLAVE_ADDR                                       ;for an equate
 0437: B0 4E    JNZ   0x0486             (0434)     jnz I2C_Terminate
                                         (0435) ENDIF
 0439: 2E 01 80 OR    [0x1],0x80         (0436)     or [I2CHW_1_RsrcStatus], I2CHW_ISR_ACTIVE

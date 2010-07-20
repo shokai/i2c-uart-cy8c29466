@@ -18,4 +18,4 @@ LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
   RAM 2% full. 27 bytes used (does not include stack usage).
 idata dump at output/i2c_slave.idata
  
-i2c_slave - 0 error(s) 0 warning(s) 16:55:38
+i2c_slave - 0 error(s) 0 warning(s) 17:58:01

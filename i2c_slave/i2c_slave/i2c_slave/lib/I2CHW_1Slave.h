@@ -38,7 +38,7 @@ extern unsigned char    I2CHW_1_Read_Count;
 // Constants for I2CHW_1 API's.
 //-------------------------------------------------
 //
-#define I2CHW_1_SLAVE_ADDR                  0x0
+#define I2CHW_1_SLAVE_ADDR                  0x12
 
 extern char I2CHW_1_bStatus;
 extern char I2CHW_1_RsrcStatus;

@@ -16,13 +16,11 @@
 #define BTN_BIT _BV(2)
 
 #define BUF_SIZE 8
-BYTE buf_tx[BUF_SIZE];
+BYTE buf_tx[BUF_SIZE]; // I2C buffer
 BYTE buf_rx[BUF_SIZE];
-BYTE buf_uart_tx[BUF_SIZE];
-BYTE status;
-BYTE slave;
+BYTE status; // I2C status
+BYTE slave; // slave address
 BYTE wait_count;
-BYTE tmp[8];
 
 void main(void)
 {
@@ -38,7 +36,7 @@ void main(void)
     I2CHW_1_EnableMstr();
     I2CHW_1_EnableInt();
     for(;;){
-        for(slave = 0; slave < 10; slave++){
+        for(slave = 0x11; slave < 0x21; slave++){
             I2CHW_1_bWriteBytes(slave, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
             wait_count = 0;
             for(;;){
@@ -57,12 +55,11 @@ void main(void)
 
             while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
             UART_1_CPutString("I2C:");
-            itoa(tmp, slave, 10);
-            UART_1_PutString(tmp);
+            UART_1_PutSHexByte(slave); // slaveアドレス
             UART_1_CPutString(",");
-            UART_1_PutString(buf_rx);
+            UART_1_PutString(buf_rx); // slaveからの受信データ
             UART_1_PutCRLF();
-            buf_rx[0] = '\0';
+            buf_rx[0] = '\0'; // 受信バッファを初期化
         }
     }
 }

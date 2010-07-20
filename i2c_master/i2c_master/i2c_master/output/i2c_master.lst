@@ -159,7 +159,7 @@ FILE: .\boot.asm
 0019: 30       HALT                     
 001A: 30       HALT                     
 001B: 30       HALT                     
-001C: 7D 0C F0 LJMP  PSoC_GPIO_ISR      (0141)     ljmp	PSoC_GPIO_ISR
+001C: 7D 0C CD LJMP  PSoC_GPIO_ISR      (0141)     ljmp	PSoC_GPIO_ISR
 001F: 7E       RETI                     (0142)     reti
                                         (0143) 
                                         (0144)     org   20h                      ;PSoC Block DBB00 Interrupt Vector
@@ -360,8 +360,8 @@ FILE: .\boot.asm
                                         (0294)  ENDIF
                                         (0295) ENDIF ; 3.3 Volt Operation
                                         (0296) 
-0081: 55 F8 00 MOV   [status+171],0x0   (0297)     mov  [bSSC_KEY1],  0           ; Lock out Flash and Supervisiory operations
-0084: 55 F9 00 MOV   [status+172],0x0   (0298)     mov  [bSSC_KEYSP], 0
+0081: 55 F8 00 MOV   [wait_count+187],0x0(0297)     mov  [bSSC_KEY1],  0           ; Lock out Flash and Supervisiory operations
+0084: 55 F9 00 MOV   [wait_count+188],0x0(0298)     mov  [bSSC_KEYSP], 0
                                         (0299) 
                                         (0300)     ;---------------------------------------
                                         (0301)     ; Initialize Crystal Oscillator and PLL
@@ -707,7 +707,7 @@ FILE: .\boot.asm
                                         (0641) IF ENABLE_LJMP_TO_MAIN
                                         (0642)     ljmp  _main                    ; goto main (no return)
                                         (0643) ELSE
-0135: 7C 09 E7 LCALL __text_start|_main|_main(0644)     lcall _main                    ; call main
+0135: 7C 09 E7 LCALL _main|__text_start|_main(0644)     lcall _main                    ; call main
                                         (0645) .Exit:
 0138: 8F FF    JMP   0x0138             (0646)     jmp  .Exit                     ; Wait here after return till power-off or reset
                                         (0647) ENDIF
@@ -1019,8 +1019,7 @@ FILE: lib\psocconfig.asm
                                         (0056)     RAM_PROLOGUE RAM_USE_CLASS_4
                                         (0057)     
 
-(0058) 	lcall	LoadConfig_i2c_master
-033A: 03 40    ADD   A,[X+64]           
+0339: 7C 03 40 LCALL 0x0340             (0058) 	lcall	LoadConfig_i2c_master
 033C: 7C 02 4C LCALL 0x024C             (0059) 	lcall	LoadConfigTBL_i2c_master_Ordered
                                         (0060) 
                                         (0061) 
@@ -1288,7 +1287,7 @@ FILE: lib\uart_1int.asm
                                         (0143)    ;   NOTE: interrupt service routines must preserve
                                         (0144)    ;   the values of the A and X CPU registers.
                                         (0145)    
-039C: 7D 0B 52 LJMP  _INT_UART_RX       (0146)    ljmp _INT_UART_RX
+039C: 7D 0B 2F LJMP  _INT_UART_RX       (0146)    ljmp _INT_UART_RX
                                         (0147) 
                                         (0148)    ;---------------------------------------------------
                                         (0149)    ; Insert your custom code above this banner
@@ -2552,7 +2551,7 @@ FILE: lib\uart_1.asm
 056E: 55 01 00 MOV   [0x1],0x0          (1124)    mov [UART_1_bRxCnt], 0x00
 0571: 26 00 00 AND   [0x0],0x0          (1125)    and [UART_1_fStatus], 0x00
 0574: 62 D0 00 MOV   REG[0xD0],0x0      (1126)    RAM_SETPAGE_CUR >ptrParam
-0577: 55 4A 00 MOV   [buf_rx+8],0x0     (1127)    mov [ptrParam],0x00
+0577: 55 3A 00 MOV   [buf_tx+8],0x0     (1127)    mov [ptrParam],0x00
                                         (1128)    RAM_EPILOGUE RAM_USE_CLASS_4
 057A: 7F       RET                      (1129)    ret
                                         (1130) .ENDSECTION
@@ -2730,7 +2729,7 @@ FILE: lib\uart_1.asm
                                         (1302)     
 0596: 62 D0 00 MOV   REG[0xD0],0x0      (1303)    RAM_SETPAGE_CUR >ptrParam
 0599: 50 0B    MOV   A,0xB              (1304)    mov   A, <UART_1_aRxBuffer               ; Get address to receive buffer
-059B: 02 4A    ADD   A,[buf_rx+8]       (1305)    add   A, [ptrParam]                      ; Add string offset
+059B: 02 3A    ADD   A,[buf_tx+8]       (1305)    add   A, [ptrParam]                      ; Add string offset
 059D: 5C       MOV   X,A                (1306)    mov   X, A
 059E: 62 D3 00 MOV   REG[0xD3],0x0      (1307)    RAM_SETPAGE_IDX >UART_1_aRxBuffer
 05A1: 52 00    MOV   A,[X+0]            (1308)    mov   A, [X]                             ; Get character pointed by X
@@ -2743,9 +2742,9 @@ FILE: lib\uart_1.asm
 05A8: 39 20    CMP   A,0x20             (1315)    cmp   A, UART_1_DELIMITER                ; Do we have a delimiter?
 05AA: B0 11    JNZ   0x05BC             (1316)    jnz   .ParamStartFound                   ;   No,  Bingo! found a parameter
 05AC: 75       INC   X                  (1317)    inc   X                                  ;   Yes, Increment both index and...
-05AD: 76 4A    INC   [buf_rx+8]         (1318)    inc   [ptrParam]                         ;          the stored pointer.
+05AD: 76 3A    INC   [buf_tx+8]         (1318)    inc   [ptrParam]                         ;          the stored pointer.
 05AF: 52 00    MOV   A,[X+0]            (1319)    mov   A, [X]                             ; Get character pointed by X
-05B1: 3C 4A 0F CMP   [buf_rx+8],0xF     (1320)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; End of buffer?
+05B1: 3C 3A 0F CMP   [buf_tx+8],0xF     (1320)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; End of buffer?
 05B4: BF F3    JNZ   0x05A8             (1321)    jnz   .SkipOverDelimitersLoop            ;   No,  continue the scan
                                         (1322) 
                                         (1323) .EndOfString:                               ;   Yes, end of string found...
@@ -2759,18 +2758,18 @@ FILE: lib\uart_1.asm
                                         (1331) 
                                         (1332) .ParamLoop:                                 ; Now loop until end of parameter found.
 05BD: 75       INC   X                  (1333)    inc   X                                  ; Advance pointers.
-05BE: 76 4A    INC   [buf_rx+8]         (1334)    inc   [ptrParam]
-05C0: 3C 4A 0F CMP   [buf_rx+8],0xF     (1335)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Check if we are at the end of buffer
+05BE: 76 3A    INC   [buf_tx+8]         (1334)    inc   [ptrParam]
+05C0: 3C 3A 0F CMP   [buf_tx+8],0xF     (1335)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Check if we are at the end of buffer
 05C3: AF F3    JZ    0x05B7             (1336)    jz    .TerminateString
 05C5: 52 00    MOV   A,[X+0]            (1337)    mov   A, [X]                             ; Get next character
 05C7: A0 12    JZ    0x05DA             (1338)    jz    .End_GetNextParam
 05C9: 39 20    CMP   A,0x20             (1339)    cmp   A, UART_1_DELIMITER                ; Check if we have a delimiter
 05CB: BF F1    JNZ   0x05BD             (1340)    jnz   .ParamLoop                         ; Still no delimiter, loop again
 05CD: 56 00 00 MOV   [X+0],0x0          (1341)    mov   [X], 0x00                          ; Replace delimiter with null for end of substring
-05D0: 76 4A    INC   [buf_rx+8]         (1342)    inc   [ptrParam]
-05D2: 3C 4A 0F CMP   [buf_rx+8],0xF     (1343)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Check if we are at the end of buffer
+05D0: 76 3A    INC   [buf_tx+8]         (1342)    inc   [ptrParam]
+05D2: 3C 3A 0F CMP   [buf_tx+8],0xF     (1343)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Check if we are at the end of buffer
 05D5: B0 04    JNZ   0x05DA             (1344)    jnz   .End_GetNextParam                  ; If not end of string leave
-05D7: 55 4A 0F MOV   [buf_rx+8],0xF     (1345)    mov   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Reset pointer to end of string.
+05D7: 55 3A 0F MOV   [buf_tx+8],0xF     (1345)    mov   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Reset pointer to end of string.
                                         (1346) 
                                         (1347) .End_GetNextParam:
 05DA: 20       POP   X                  (1348)    pop   X
@@ -2824,7 +2823,7 @@ FILE: lib\uart_1.asm
                                         (1394)    RAM_PROLOGUE RAM_USE_CLASS_4
 05F3: 62 D0 00 MOV   REG[0xD0],0x0      (1395)    RAM_SETPAGE_CUR >ptrParam
 05F6: 50 0B    MOV   A,0xB              (1396)    mov  A, <UART_1_aRxBuffer                ; Get address to receive buffer
-05F8: 02 4A    ADD   A,[buf_rx+8]       (1397)    add  A, [ptrParam]                       ; Add string offset
+05F8: 02 3A    ADD   A,[buf_tx+8]       (1397)    add  A, [ptrParam]                       ; Add string offset
 05FA: 5C       MOV   X,A                (1398)    mov  X,A
 05FB: 50 00    MOV   A,0x0              (1399)    mov  A,>UART_1_aRxBuffer                 ; Return pointer
                                         (1400)    RAM_EPILOGUE RAM_USE_CLASS_4
@@ -5650,38 +5649,36 @@ FILE: C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\main.c
 (0016) #define BTN_BIT _BV(2)
 (0017) 
 (0018) #define BUF_SIZE 8
-(0019) BYTE buf_tx[BUF_SIZE];
+(0019) BYTE buf_tx[BUF_SIZE]; // I2C buffer
 (0020) BYTE buf_rx[BUF_SIZE];
-(0021) BYTE buf_uart_tx[BUF_SIZE];
-(0022) BYTE status;
-(0023) BYTE slave;
-(0024) BYTE wait_count;
-(0025) BYTE tmp[8];
-(0026) 
-(0027) void main(void)
-__text_start|_main|_main:
+(0021) BYTE status; // I2C status
+(0022) BYTE slave; // slave address
+(0023) BYTE wait_count;
+(0024) 
+(0025) void main(void)
+_main|__text_start|_main:
     09E7: 71 01    OR    F,0x1
-(0028) {
-(0029)     M8C_EnableGInt; // enable global interrupt
-(0030)     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
+(0026) {
+(0027)     M8C_EnableGInt; // enable global interrupt
+(0028)     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
     09E9: 43 E0 20 OR    REG[0xE0],0x20
-(0031)     UART_1_CmdReset(); // uart init
+(0029)     UART_1_CmdReset(); // uart init
     09EC: 10       PUSH  X
     09ED: 7C 05 65 LCALL 0x0565
     09F0: 20       POP   X
-(0032)     UART_1_IntCntl(UART_1_ENABLE_RX_INT); // enable receive interrupt
+(0030)     UART_1_IntCntl(UART_1_ENABLE_RX_INT); // enable receive interrupt
     09F1: 10       PUSH  X
     09F2: 50 01    MOV   A,0x1
     09F4: 7C 04 62 LCALL 0x0462
     09F7: 20       POP   X
-(0033)     UART_1_Start(UART_1_PARITY_NONE);
+(0031)     UART_1_Start(UART_1_PARITY_NONE);
     09F8: 10       PUSH  X
     09F9: 50 00    MOV   A,0x0
     09FB: 7C 04 33 LCALL 0x0433
     09FE: 20       POP   X
-(0034)     LED_ON();
+(0032)     LED_ON();
     09FF: 43 08 01 OR    REG[0x8],0x1
-(0035)     UART_1_CPutString("start");
+(0033)     UART_1_CPutString("start");
     0A02: 10       PUSH  X
     0A03: 50 01    MOV   A,0x1
     0A05: 08       PUSH  A
@@ -5690,22 +5687,22 @@ __text_start|_main|_main:
     0A09: 18       POP   A
     0A0A: 7C 05 4A LCALL 0x054A
     0A0D: 20       POP   X
-(0036)     LED_OFF();
+(0034)     LED_OFF();
     0A0E: 41 08 FE AND   REG[0x8],0xFE
-(0037)     I2CHW_1_Start();
+(0035)     I2CHW_1_Start();
     0A11: 10       PUSH  X
     0A12: 7C 05 FE LCALL 0x05FE
-(0038)     I2CHW_1_EnableMstr();
+(0036)     I2CHW_1_EnableMstr();
     0A15: 7C 06 17 LCALL 0x0617
-(0039)     I2CHW_1_EnableInt();
+(0037)     I2CHW_1_EnableInt();
     0A18: 7C 06 02 LCALL 0x0602
     0A1B: 20       POP   X
-(0040)     for(;;){
-(0041)         for(slave = 0; slave < 10; slave++){
+(0038)     for(;;){
+(0039)         for(slave = 0x11; slave < 0x21; slave++){
     0A1C: 62 D0 00 MOV   REG[0xD0],0x0
-    0A1F: 55 4C 00 MOV   [slave],0x0
-    0A22: 81 23    JMP   0x0B46
-(0042)             I2CHW_1_bWriteBytes(slave, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
+    0A1F: 55 3B 11 MOV   [slave],0x11
+    0A22: 81 00    JMP   0x0B23
+(0040)             I2CHW_1_bWriteBytes(slave, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
     0A24: 10       PUSH  X
     0A25: 50 00    MOV   A,0x0
     0A27: 08       PUSH  A
@@ -5716,16 +5713,16 @@ __text_start|_main|_main:
     0A2E: 50 32    MOV   A,0x32
     0A30: 08       PUSH  A
     0A31: 62 D0 00 MOV   REG[0xD0],0x0
-    0A34: 51 4C    MOV   A,[slave]
+    0A34: 51 3B    MOV   A,[slave]
     0A36: 08       PUSH  A
     0A37: 7C 06 7B LCALL 0x067B
     0A3A: 38 FB    ADD   SP,0xFB
     0A3C: 20       POP   X
-(0043)             wait_count = 0;
+(0041)             wait_count = 0;
     0A3D: 62 D0 00 MOV   REG[0xD0],0x0
-    0A40: 55 4B 00 MOV   [wait_count],0x0
-(0044)             for(;;){
-(0045)                 if(I2CHW_1_bReadI2CStatus() & I2CHW_WR_COMPLETE ||
+    0A40: 55 3D 00 MOV   [wait_count],0x0
+(0042)             for(;;){
+(0043)                 if(I2CHW_1_bReadI2CStatus() & I2CHW_WR_COMPLETE ||
     0A43: 10       PUSH  X
     0A44: 7C 09 D3 LCALL 0x09D3
     0A47: 62 D0 00 MOV   REG[0xD0],0x0
@@ -5734,13 +5731,13 @@ __text_start|_main|_main:
     0A4D: 47 29 40 TST   [__r0],0x40
     0A50: B0 28    JNZ   0x0A79
     0A52: 62 D0 00 MOV   REG[0xD0],0x0
-    0A55: 51 4B    MOV   A,[wait_count]
+    0A55: 51 3D    MOV   A,[wait_count]
     0A57: 62 D0 00 MOV   REG[0xD0],0x0
     0A5A: 53 28    MOV   [__r1],A
     0A5C: 55 29 00 MOV   [__r0],0x0
     0A5F: 01 01    ADD   A,0x1
     0A61: 62 D0 00 MOV   REG[0xD0],0x0
-    0A64: 53 4B    MOV   [wait_count],A
+    0A64: 53 3D    MOV   [wait_count],A
     0A66: 62 D0 00 MOV   REG[0xD0],0x0
     0A69: 50 64    MOV   A,0x64
     0A6B: 12 28    SUB   A,[__r1]
@@ -5750,14 +5747,14 @@ __text_start|_main|_main:
     0A73: 50 80    MOV   A,0x80
     0A75: 1A 1D    SBB   A,[__rX]
     0A77: DF CB    JNC   0x0A43
-(0046)                    wait_count++ > 100) break;
-(0047)             }
+(0044)                    wait_count++ > 100) break;
+(0045)             }
     0A79: 10       PUSH  X
     0A7A: 7C 09 E0 LCALL 0x09E0
     0A7D: 20       POP   X
-(0048)             I2CHW_1_ClrWrStatus();
-(0049)             
-(0050)             I2CHW_1_fReadBytes(slave, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
+(0046)             I2CHW_1_ClrWrStatus();
+(0047)             
+(0048)             I2CHW_1_fReadBytes(slave, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
     0A7E: 10       PUSH  X
     0A7F: 50 00    MOV   A,0x0
     0A81: 08       PUSH  A
@@ -5765,19 +5762,19 @@ __text_start|_main|_main:
     0A84: 08       PUSH  A
     0A85: 50 00    MOV   A,0x0
     0A87: 08       PUSH  A
-    0A88: 50 42    MOV   A,0x42
+    0A88: 50 2A    MOV   A,0x2A
     0A8A: 08       PUSH  A
     0A8B: 62 D0 00 MOV   REG[0xD0],0x0
-    0A8E: 51 4C    MOV   A,[slave]
+    0A8E: 51 3B    MOV   A,[slave]
     0A90: 08       PUSH  A
     0A91: 7C 06 37 LCALL 0x0637
     0A94: 38 FB    ADD   SP,0xFB
     0A96: 20       POP   X
-(0051)             wait_count = 0;
+(0049)             wait_count = 0;
     0A97: 62 D0 00 MOV   REG[0xD0],0x0
-    0A9A: 55 4B 00 MOV   [wait_count],0x0
-(0052)             for(;;){
-(0053)                 if(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE ||
+    0A9A: 55 3D 00 MOV   [wait_count],0x0
+(0050)             for(;;){
+(0051)                 if(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE ||
     0A9D: 10       PUSH  X
     0A9E: 7C 09 D3 LCALL 0x09D3
     0AA1: 62 D0 00 MOV   REG[0xD0],0x0
@@ -5786,13 +5783,13 @@ __text_start|_main|_main:
     0AA7: 47 29 04 TST   [__r0],0x4
     0AAA: B0 28    JNZ   0x0AD3
     0AAC: 62 D0 00 MOV   REG[0xD0],0x0
-    0AAF: 51 4B    MOV   A,[wait_count]
+    0AAF: 51 3D    MOV   A,[wait_count]
     0AB1: 62 D0 00 MOV   REG[0xD0],0x0
     0AB4: 53 28    MOV   [__r1],A
     0AB6: 55 29 00 MOV   [__r0],0x0
     0AB9: 01 01    ADD   A,0x1
     0ABB: 62 D0 00 MOV   REG[0xD0],0x0
-    0ABE: 53 4B    MOV   [wait_count],A
+    0ABE: 53 3D    MOV   [wait_count],A
     0AC0: 62 D0 00 MOV   REG[0xD0],0x0
     0AC3: 50 64    MOV   A,0x64
     0AC5: 12 28    SUB   A,[__r1]
@@ -5802,14 +5799,14 @@ __text_start|_main|_main:
     0ACD: 50 80    MOV   A,0x80
     0ACF: 1A 1D    SBB   A,[__rX]
     0AD1: DF CB    JNC   0x0A9D
-(0054)                    wait_count++ > 100) break;
-(0055)             }
+(0052)                    wait_count++ > 100) break;
+(0053)             }
     0AD3: 10       PUSH  X
     0AD4: 7C 09 D9 LCALL 0x09D9
     0AD7: 20       POP   X
-(0056)             I2CHW_1_ClrRdStatus();
-(0057) 
-(0058)             while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
+(0054)             I2CHW_1_ClrRdStatus();
+(0055) 
+(0056)             while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
     0AD8: 10       PUSH  X
     0AD9: 7C 04 46 LCALL 0x0446
     0ADC: 62 D0 00 MOV   REG[0xD0],0x0
@@ -5817,7 +5814,7 @@ __text_start|_main|_main:
     0AE0: 53 29    MOV   [__r0],A
     0AE2: 47 29 10 TST   [__r0],0x10
     0AE5: AF F2    JZ    0x0AD8
-(0059)             UART_1_CPutString("I2C:");
+(0057)             UART_1_CPutString("I2C:");
     0AE7: 10       PUSH  X
     0AE8: 50 01    MOV   A,0x1
     0AEA: 08       PUSH  A
@@ -5826,352 +5823,330 @@ __text_start|_main|_main:
     0AEE: 18       POP   A
     0AEF: 7C 05 4A LCALL 0x054A
     0AF2: 20       POP   X
-(0060)             itoa(tmp, slave, 10);
-    0AF3: 50 00    MOV   A,0x0
-    0AF5: 08       PUSH  A
-    0AF6: 50 0A    MOV   A,0xA
-    0AF8: 08       PUSH  A
-    0AF9: 62 D0 00 MOV   REG[0xD0],0x0
-    0AFC: 51 4C    MOV   A,[slave]
-    0AFE: 62 D0 00 MOV   REG[0xD0],0x0
-    0B01: 53 28    MOV   [__r1],A
-    0B03: 50 00    MOV   A,0x0
-    0B05: 08       PUSH  A
-    0B06: 51 28    MOV   A,[__r1]
-    0B08: 08       PUSH  A
-    0B09: 50 00    MOV   A,0x0
-    0B0B: 08       PUSH  A
-    0B0C: 50 2A    MOV   A,0x2A
-    0B0E: 08       PUSH  A
-    0B0F: 7C 0D 38 LCALL _itoa
-    0B12: 38 FA    ADD   SP,0xFA
-(0061)             UART_1_PutString(tmp);
-    0B14: 10       PUSH  X
-    0B15: 50 00    MOV   A,0x0
-    0B17: 08       PUSH  A
-    0B18: 50 2A    MOV   A,0x2A
-    0B1A: 5C       MOV   X,A
-    0B1B: 18       POP   A
-    0B1C: 7C 04 E4 LCALL 0x04E4
-    0B1F: 20       POP   X
-(0062)             UART_1_CPutString(",");
-    0B20: 10       PUSH  X
-    0B21: 50 01    MOV   A,0x1
-    0B23: 08       PUSH  A
-    0B24: 50 B3    MOV   A,0xB3
-    0B26: 5C       MOV   X,A
-    0B27: 18       POP   A
-    0B28: 7C 05 4A LCALL 0x054A
-    0B2B: 20       POP   X
-(0063)             UART_1_PutString(buf_rx);
-    0B2C: 10       PUSH  X
-    0B2D: 50 00    MOV   A,0x0
-    0B2F: 08       PUSH  A
-    0B30: 50 42    MOV   A,0x42
-    0B32: 5C       MOV   X,A
-    0B33: 18       POP   A
-    0B34: 7C 04 E4 LCALL 0x04E4
-(0064)             UART_1_PutCRLF();
-    0B37: 7C 05 5C LCALL 0x055C
-    0B3A: 20       POP   X
-(0065)             buf_rx[0] = '\0';
-    0B3B: 62 D0 00 MOV   REG[0xD0],0x0
-    0B3E: 55 42 00 MOV   [buf_rx],0x0
-(0066)         }
-    0B41: 62 D0 00 MOV   REG[0xD0],0x0
-    0B44: 76 4C    INC   [slave]
-    0B46: 62 D0 00 MOV   REG[0xD0],0x0
-    0B49: 3C 4C 0A CMP   [slave],0xA
-    0B4C: CE D7    JC    0x0A24
-(0067)     }
-    0B4E: 8E CD    JMP   0x0A1C
-    0B50: 8F FF    JMP   0x0B50
-(0068) }
-(0069) 
-(0070) 
-(0071) // UART受信割り込み
-(0072) #pragma interrupt_handler INT_UART_RX
-(0073) void INT_UART_RX(void){
+(0058)             UART_1_PutSHexByte(slave); // slaveアドレス
+    0AF3: 10       PUSH  X
+    0AF4: 62 D0 00 MOV   REG[0xD0],0x0
+    0AF7: 51 3B    MOV   A,[slave]
+    0AF9: 7C 04 8D LCALL 0x048D
+    0AFC: 20       POP   X
+(0059)             UART_1_CPutString(",");
+    0AFD: 10       PUSH  X
+    0AFE: 50 01    MOV   A,0x1
+    0B00: 08       PUSH  A
+    0B01: 50 B3    MOV   A,0xB3
+    0B03: 5C       MOV   X,A
+    0B04: 18       POP   A
+    0B05: 7C 05 4A LCALL 0x054A
+    0B08: 20       POP   X
+(0060)             UART_1_PutString(buf_rx); // slaveからの受信データ
+    0B09: 10       PUSH  X
+    0B0A: 50 00    MOV   A,0x0
+    0B0C: 08       PUSH  A
+    0B0D: 50 2A    MOV   A,0x2A
+    0B0F: 5C       MOV   X,A
+    0B10: 18       POP   A
+    0B11: 7C 04 E4 LCALL 0x04E4
+(0061)             UART_1_PutCRLF();
+    0B14: 7C 05 5C LCALL 0x055C
+    0B17: 20       POP   X
+(0062)             buf_rx[0] = '\0'; // 受信バッファを初期化
+    0B18: 62 D0 00 MOV   REG[0xD0],0x0
+    0B1B: 55 2A 00 MOV   [buf_rx],0x0
+(0063)         }
+    0B1E: 62 D0 00 MOV   REG[0xD0],0x0
+    0B21: 76 3B    INC   [slave]
+    0B23: 62 D0 00 MOV   REG[0xD0],0x0
+    0B26: 3C 3B 21 CMP   [slave],0x21
+    0B29: CE FA    JC    0x0A24
+(0064)     }
+    0B2B: 8E F0    JMP   0x0A1C
+    0B2D: 8F FF    JMP   0x0B2D
+(0065) }
+(0066) 
+(0067) 
+(0068) // UART受信割り込み
+(0069) #pragma interrupt_handler INT_UART_RX
+(0070) void INT_UART_RX(void){
 _INT_UART_RX:
   recv_data            --> X+0
-    0B52: 71 C0    OR    F,0xC0
-    0B54: 08       PUSH  A
-    0B55: 5D D0    MOV   A,REG[0xD0]
-    0B57: 08       PUSH  A
-    0B58: 5D D3    MOV   A,REG[0xD3]
-    0B5A: 08       PUSH  A
-    0B5B: 5D D4    MOV   A,REG[0xD4]
-    0B5D: 08       PUSH  A
-    0B5E: 5D D5    MOV   A,REG[0xD5]
-    0B60: 08       PUSH  A
-    0B61: 62 D0 00 MOV   REG[0xD0],0x0
-    0B64: 51 29    MOV   A,[__r0]
-    0B66: 08       PUSH  A
-    0B67: 51 28    MOV   A,[__r1]
-    0B69: 08       PUSH  A
-    0B6A: 51 27    MOV   A,[__r2]
-    0B6C: 08       PUSH  A
-    0B6D: 51 26    MOV   A,[__r3]
-    0B6F: 08       PUSH  A
-    0B70: 51 25    MOV   A,[__r4]
-    0B72: 08       PUSH  A
-    0B73: 51 24    MOV   A,[__r5]
-    0B75: 08       PUSH  A
-    0B76: 51 23    MOV   A,[__r6]
-    0B78: 08       PUSH  A
-    0B79: 51 22    MOV   A,[__r7]
-    0B7B: 08       PUSH  A
-    0B7C: 51 21    MOV   A,[__r8]
-    0B7E: 08       PUSH  A
-    0B7F: 51 20    MOV   A,[__r9]
-    0B81: 08       PUSH  A
-    0B82: 51 1F    MOV   A,[__r10]
-    0B84: 08       PUSH  A
-    0B85: 51 1E    MOV   A,[__r11]
-    0B87: 08       PUSH  A
-    0B88: 51 1D    MOV   A,[__rX]
-    0B8A: 08       PUSH  A
-    0B8B: 51 1C    MOV   A,[__rY]
-    0B8D: 08       PUSH  A
-    0B8E: 51 1B    MOV   A,[__rZ]
-    0B90: 08       PUSH  A
-    0B91: 10       PUSH  X
-    0B92: 4F       MOV   X,SP
-    0B93: 38 03    ADD   SP,0x3
-(0074)     char recv_data;
-(0075)     recv_data = UART_1_cGetChar(); // read UART
-    0B95: 10       PUSH  X
-    0B96: 7C 04 AF LCALL 0x04AF
-    0B99: 62 D0 00 MOV   REG[0xD0],0x0
-    0B9C: 20       POP   X
-    0B9D: 54 00    MOV   [X+0],A
-(0076)     UART_1_PutChar(recv_data); // echo
-    0B9F: 10       PUSH  X
-    0BA0: 52 00    MOV   A,[X+0]
-    0BA2: 7C 04 A7 LCALL 0x04A7
-    0BA5: 20       POP   X
-(0077)     switch(recv_data){
-    0BA6: 52 00    MOV   A,[X+0]
-    0BA8: 54 02    MOV   [X+2],A
-    0BAA: 56 01 00 MOV   [X+1],0x0
-    0BAD: 52 02    MOV   A,[X+2]
-    0BAF: 11 44    SUB   A,0x44
-    0BB1: 62 D0 00 MOV   REG[0xD0],0x0
-    0BB4: 53 1C    MOV   [__rY],A
-    0BB6: 52 01    MOV   A,[X+1]
-    0BB8: 31 80    XOR   A,0x80
-    0BBA: 19 80    SBB   A,0x80
-    0BBC: C0 3D    JC    0x0BFA
-    0BBE: 2A 1C    OR    A,[__rY]
-    0BC0: A0 24    JZ    0x0BE5
-    0BC2: 3D 01 00 CMP   [X+1],0x0
-    0BC5: B0 06    JNZ   0x0BCC
-    0BC7: 3D 02 55 CMP   [X+2],0x55
-    0BCA: A0 03    JZ    0x0BCE
-    0BCC: 80 2D    JMP   0x0BFA
-(0078)     case 'U':
-(0079)         LED_ON();
-    0BCE: 43 08 01 OR    REG[0x8],0x1
-(0080)         buf_tx[0] = 'A'; // slaveにLED点灯を指示
-    0BD1: 62 D0 00 MOV   REG[0xD0],0x0
-    0BD4: 55 32 41 MOV   [buf_tx],0x41
-(0081)         UART_1_CPutString("LED:ON\r\n");
-    0BD7: 10       PUSH  X
-    0BD8: 50 01    MOV   A,0x1
-    0BDA: 08       PUSH  A
-    0BDB: 50 AA    MOV   A,0xAA
-    0BDD: 5C       MOV   X,A
-    0BDE: 18       POP   A
-    0BDF: 7C 05 4A LCALL 0x054A
-    0BE2: 20       POP   X
-(0082)         break;
-    0BE3: 80 16    JMP   0x0BFA
-(0083)     case 'D':
-(0084)         LED_OFF();
-    0BE5: 41 08 FE AND   REG[0x8],0xFE
-(0085)         buf_tx[0] = 'B'; // slaveにLED消灯を指示
-    0BE8: 62 D0 00 MOV   REG[0xD0],0x0
-    0BEB: 55 32 42 MOV   [buf_tx],0x42
-(0086)         UART_1_CPutString("LED:OFF\r\n");
-    0BEE: 10       PUSH  X
-    0BEF: 50 01    MOV   A,0x1
-    0BF1: 08       PUSH  A
-    0BF2: 50 A0    MOV   A,0xA0
-    0BF4: 5C       MOV   X,A
+    0B2F: 71 C0    OR    F,0xC0
+    0B31: 08       PUSH  A
+    0B32: 5D D0    MOV   A,REG[0xD0]
+    0B34: 08       PUSH  A
+    0B35: 5D D3    MOV   A,REG[0xD3]
+    0B37: 08       PUSH  A
+    0B38: 5D D4    MOV   A,REG[0xD4]
+    0B3A: 08       PUSH  A
+    0B3B: 5D D5    MOV   A,REG[0xD5]
+    0B3D: 08       PUSH  A
+    0B3E: 62 D0 00 MOV   REG[0xD0],0x0
+    0B41: 51 29    MOV   A,[__r0]
+    0B43: 08       PUSH  A
+    0B44: 51 28    MOV   A,[__r1]
+    0B46: 08       PUSH  A
+    0B47: 51 27    MOV   A,[__r2]
+    0B49: 08       PUSH  A
+    0B4A: 51 26    MOV   A,[__r3]
+    0B4C: 08       PUSH  A
+    0B4D: 51 25    MOV   A,[__r4]
+    0B4F: 08       PUSH  A
+    0B50: 51 24    MOV   A,[__r5]
+    0B52: 08       PUSH  A
+    0B53: 51 23    MOV   A,[__r6]
+    0B55: 08       PUSH  A
+    0B56: 51 22    MOV   A,[__r7]
+    0B58: 08       PUSH  A
+    0B59: 51 21    MOV   A,[__r8]
+    0B5B: 08       PUSH  A
+    0B5C: 51 20    MOV   A,[__r9]
+    0B5E: 08       PUSH  A
+    0B5F: 51 1F    MOV   A,[__r10]
+    0B61: 08       PUSH  A
+    0B62: 51 1E    MOV   A,[__r11]
+    0B64: 08       PUSH  A
+    0B65: 51 1D    MOV   A,[__rX]
+    0B67: 08       PUSH  A
+    0B68: 51 1C    MOV   A,[__rY]
+    0B6A: 08       PUSH  A
+    0B6B: 51 1B    MOV   A,[__rZ]
+    0B6D: 08       PUSH  A
+    0B6E: 10       PUSH  X
+    0B6F: 4F       MOV   X,SP
+    0B70: 38 03    ADD   SP,0x3
+(0071)     char recv_data;
+(0072)     recv_data = UART_1_cGetChar(); // read UART
+    0B72: 10       PUSH  X
+    0B73: 7C 04 AF LCALL 0x04AF
+    0B76: 62 D0 00 MOV   REG[0xD0],0x0
+    0B79: 20       POP   X
+    0B7A: 54 00    MOV   [X+0],A
+(0073)     UART_1_PutChar(recv_data); // echo
+    0B7C: 10       PUSH  X
+    0B7D: 52 00    MOV   A,[X+0]
+    0B7F: 7C 04 A7 LCALL 0x04A7
+    0B82: 20       POP   X
+(0074)     switch(recv_data){
+    0B83: 52 00    MOV   A,[X+0]
+    0B85: 54 02    MOV   [X+2],A
+    0B87: 56 01 00 MOV   [X+1],0x0
+    0B8A: 52 02    MOV   A,[X+2]
+    0B8C: 11 44    SUB   A,0x44
+    0B8E: 62 D0 00 MOV   REG[0xD0],0x0
+    0B91: 53 1C    MOV   [__rY],A
+    0B93: 52 01    MOV   A,[X+1]
+    0B95: 31 80    XOR   A,0x80
+    0B97: 19 80    SBB   A,0x80
+    0B99: C0 3D    JC    0x0BD7
+    0B9B: 2A 1C    OR    A,[__rY]
+    0B9D: A0 24    JZ    0x0BC2
+    0B9F: 3D 01 00 CMP   [X+1],0x0
+    0BA2: B0 06    JNZ   0x0BA9
+    0BA4: 3D 02 55 CMP   [X+2],0x55
+    0BA7: A0 03    JZ    0x0BAB
+    0BA9: 80 2D    JMP   0x0BD7
+(0075)     case 'U':
+(0076)         LED_ON();
+    0BAB: 43 08 01 OR    REG[0x8],0x1
+(0077)         buf_tx[0] = 'A'; // slaveにLED点灯を指示
+    0BAE: 62 D0 00 MOV   REG[0xD0],0x0
+    0BB1: 55 32 41 MOV   [buf_tx],0x41
+(0078)         UART_1_CPutString("LED:ON\r\n");
+    0BB4: 10       PUSH  X
+    0BB5: 50 01    MOV   A,0x1
+    0BB7: 08       PUSH  A
+    0BB8: 50 AA    MOV   A,0xAA
+    0BBA: 5C       MOV   X,A
+    0BBB: 18       POP   A
+    0BBC: 7C 05 4A LCALL 0x054A
+    0BBF: 20       POP   X
+(0079)         break;
+    0BC0: 80 16    JMP   0x0BD7
+(0080)     case 'D':
+(0081)         LED_OFF();
+    0BC2: 41 08 FE AND   REG[0x8],0xFE
+(0082)         buf_tx[0] = 'B'; // slaveにLED消灯を指示
+    0BC5: 62 D0 00 MOV   REG[0xD0],0x0
+    0BC8: 55 32 42 MOV   [buf_tx],0x42
+(0083)         UART_1_CPutString("LED:OFF\r\n");
+    0BCB: 10       PUSH  X
+    0BCC: 50 01    MOV   A,0x1
+    0BCE: 08       PUSH  A
+    0BCF: 50 A0    MOV   A,0xA0
+    0BD1: 5C       MOV   X,A
+    0BD2: 18       POP   A
+    0BD3: 7C 05 4A LCALL 0x054A
+    0BD6: 20       POP   X
+(0084)         break;
+    0BD7: 38 FD    ADD   SP,0xFD
+    0BD9: 20       POP   X
+    0BDA: 62 D0 00 MOV   REG[0xD0],0x0
+    0BDD: 18       POP   A
+    0BDE: 53 1B    MOV   [__rZ],A
+    0BE0: 18       POP   A
+    0BE1: 53 1C    MOV   [__rY],A
+    0BE3: 18       POP   A
+    0BE4: 53 1D    MOV   [__rX],A
+    0BE6: 18       POP   A
+    0BE7: 53 1E    MOV   [__r11],A
+    0BE9: 18       POP   A
+    0BEA: 53 1F    MOV   [__r10],A
+    0BEC: 18       POP   A
+    0BED: 53 20    MOV   [__r9],A
+    0BEF: 18       POP   A
+    0BF0: 53 21    MOV   [__r8],A
+    0BF2: 18       POP   A
+    0BF3: 53 22    MOV   [__r7],A
     0BF5: 18       POP   A
-    0BF6: 7C 05 4A LCALL 0x054A
-    0BF9: 20       POP   X
-(0087)         break;
-    0BFA: 38 FD    ADD   SP,0xFD
-    0BFC: 20       POP   X
-    0BFD: 62 D0 00 MOV   REG[0xD0],0x0
-    0C00: 18       POP   A
-    0C01: 53 1B    MOV   [__rZ],A
-    0C03: 18       POP   A
-    0C04: 53 1C    MOV   [__rY],A
-    0C06: 18       POP   A
-    0C07: 53 1D    MOV   [__rX],A
-    0C09: 18       POP   A
-    0C0A: 53 1E    MOV   [__r11],A
-    0C0C: 18       POP   A
-    0C0D: 53 1F    MOV   [__r10],A
-    0C0F: 18       POP   A
-    0C10: 53 20    MOV   [__r9],A
-    0C12: 18       POP   A
-    0C13: 53 21    MOV   [__r8],A
-    0C15: 18       POP   A
-    0C16: 53 22    MOV   [__r7],A
-    0C18: 18       POP   A
-    0C19: 53 23    MOV   [__r6],A
-    0C1B: 18       POP   A
-    0C1C: 53 24    MOV   [__r5],A
-    0C1E: 18       POP   A
-    0C1F: 53 25    MOV   [__r4],A
-    0C21: 18       POP   A
-    0C22: 53 26    MOV   [__r3],A
-    0C24: 18       POP   A
-    0C25: 53 27    MOV   [__r2],A
-    0C27: 18       POP   A
-    0C28: 53 28    MOV   [__r1],A
-    0C2A: 18       POP   A
-    0C2B: 53 29    MOV   [__r0],A
-    0C2D: 18       POP   A
-    0C2E: 60 D5    MOV   REG[0xD5],A
-    0C30: 18       POP   A
-    0C31: 60 D4    MOV   REG[0xD4],A
-    0C33: 18       POP   A
-    0C34: 60 D3    MOV   REG[0xD3],A
-    0C36: 18       POP   A
-    0C37: 60 D0    MOV   REG[0xD0],A
-    0C39: 18       POP   A
-    0C3A: 7E       RETI  
-(0088)     }
-(0089) }
-(0090) 
-(0091) // I/Oピン状態変化割り込み
-(0092) #pragma interrupt_handler INT_GPIO
-(0093) void INT_GPIO(void){
+    0BF6: 53 23    MOV   [__r6],A
+    0BF8: 18       POP   A
+    0BF9: 53 24    MOV   [__r5],A
+    0BFB: 18       POP   A
+    0BFC: 53 25    MOV   [__r4],A
+    0BFE: 18       POP   A
+    0BFF: 53 26    MOV   [__r3],A
+    0C01: 18       POP   A
+    0C02: 53 27    MOV   [__r2],A
+    0C04: 18       POP   A
+    0C05: 53 28    MOV   [__r1],A
+    0C07: 18       POP   A
+    0C08: 53 29    MOV   [__r0],A
+    0C0A: 18       POP   A
+    0C0B: 60 D5    MOV   REG[0xD5],A
+    0C0D: 18       POP   A
+    0C0E: 60 D4    MOV   REG[0xD4],A
+    0C10: 18       POP   A
+    0C11: 60 D3    MOV   REG[0xD3],A
+    0C13: 18       POP   A
+    0C14: 60 D0    MOV   REG[0xD0],A
+    0C16: 18       POP   A
+    0C17: 7E       RETI  
+(0085)     }
+(0086) }
+(0087) 
+(0088) // I/Oピン状態変化割り込み
+(0089) #pragma interrupt_handler INT_GPIO
+(0090) void INT_GPIO(void){
 _INT_GPIO:
-    0C3B: 71 C0    OR    F,0xC0
-    0C3D: 08       PUSH  A
-    0C3E: 5D D0    MOV   A,REG[0xD0]
-    0C40: 08       PUSH  A
-    0C41: 5D D3    MOV   A,REG[0xD3]
-    0C43: 08       PUSH  A
-    0C44: 5D D4    MOV   A,REG[0xD4]
-    0C46: 08       PUSH  A
-    0C47: 5D D5    MOV   A,REG[0xD5]
-    0C49: 08       PUSH  A
-    0C4A: 62 D0 00 MOV   REG[0xD0],0x0
-    0C4D: 51 29    MOV   A,[__r0]
-    0C4F: 08       PUSH  A
-    0C50: 51 28    MOV   A,[__r1]
-    0C52: 08       PUSH  A
-    0C53: 51 27    MOV   A,[__r2]
-    0C55: 08       PUSH  A
-    0C56: 51 26    MOV   A,[__r3]
-    0C58: 08       PUSH  A
-    0C59: 51 25    MOV   A,[__r4]
-    0C5B: 08       PUSH  A
-    0C5C: 51 24    MOV   A,[__r5]
-    0C5E: 08       PUSH  A
-    0C5F: 51 23    MOV   A,[__r6]
-    0C61: 08       PUSH  A
-    0C62: 51 22    MOV   A,[__r7]
-    0C64: 08       PUSH  A
-    0C65: 51 21    MOV   A,[__r8]
-    0C67: 08       PUSH  A
-    0C68: 51 20    MOV   A,[__r9]
-    0C6A: 08       PUSH  A
-    0C6B: 51 1F    MOV   A,[__r10]
-    0C6D: 08       PUSH  A
-    0C6E: 51 1E    MOV   A,[__r11]
-    0C70: 08       PUSH  A
-    0C71: 51 1D    MOV   A,[__rX]
-    0C73: 08       PUSH  A
-    0C74: 51 1C    MOV   A,[__rY]
-    0C76: 08       PUSH  A
-    0C77: 51 1B    MOV   A,[__rZ]
-    0C79: 08       PUSH  A
-(0094)     if(BTN_PORT & BTN_BIT){ // ボタンが押されている時
-    0C7A: 5D 08    MOV   A,REG[0x8]
-    0C7C: 62 D0 00 MOV   REG[0xD0],0x0
-    0C7F: 53 29    MOV   [__r0],A
-    0C81: 47 29 04 TST   [__r0],0x4
-    0C84: A0 18    JZ    0x0C9D
-(0095)     LED_ON();
-    0C86: 43 08 01 OR    REG[0x8],0x1
-(0096)     buf_tx[0] = 'A'; // slaveにLED点灯を指示
-    0C89: 62 D0 00 MOV   REG[0xD0],0x0
-    0C8C: 55 32 41 MOV   [buf_tx],0x41
-(0097)     UART_1_CPutString("LED:ON\r\n");
-    0C8F: 10       PUSH  X
-    0C90: 50 01    MOV   A,0x1
-    0C92: 08       PUSH  A
-    0C93: 50 AA    MOV   A,0xAA
-    0C95: 5C       MOV   X,A
-    0C96: 18       POP   A
-    0C97: 7C 05 4A LCALL 0x054A
-    0C9A: 20       POP   X
-(0098)   }
-    0C9B: 80 16    JMP   0x0CB2
-(0099)   else{
-(0100)     LED_OFF();
-    0C9D: 41 08 FE AND   REG[0x8],0xFE
-(0101)     buf_tx[0] = 'B'; // slaveにLED消灯を指示
-    0CA0: 62 D0 00 MOV   REG[0xD0],0x0
-    0CA3: 55 32 42 MOV   [buf_tx],0x42
-(0102)     UART_1_CPutString("LED:OFF\r\n");
-    0CA6: 10       PUSH  X
-    0CA7: 50 01    MOV   A,0x1
-    0CA9: 08       PUSH  A
-    0CAA: 50 A0    MOV   A,0xA0
-    0CAC: 5C       MOV   X,A
+    0C18: 71 C0    OR    F,0xC0
+    0C1A: 08       PUSH  A
+    0C1B: 5D D0    MOV   A,REG[0xD0]
+    0C1D: 08       PUSH  A
+    0C1E: 5D D3    MOV   A,REG[0xD3]
+    0C20: 08       PUSH  A
+    0C21: 5D D4    MOV   A,REG[0xD4]
+    0C23: 08       PUSH  A
+    0C24: 5D D5    MOV   A,REG[0xD5]
+    0C26: 08       PUSH  A
+    0C27: 62 D0 00 MOV   REG[0xD0],0x0
+    0C2A: 51 29    MOV   A,[__r0]
+    0C2C: 08       PUSH  A
+    0C2D: 51 28    MOV   A,[__r1]
+    0C2F: 08       PUSH  A
+    0C30: 51 27    MOV   A,[__r2]
+    0C32: 08       PUSH  A
+    0C33: 51 26    MOV   A,[__r3]
+    0C35: 08       PUSH  A
+    0C36: 51 25    MOV   A,[__r4]
+    0C38: 08       PUSH  A
+    0C39: 51 24    MOV   A,[__r5]
+    0C3B: 08       PUSH  A
+    0C3C: 51 23    MOV   A,[__r6]
+    0C3E: 08       PUSH  A
+    0C3F: 51 22    MOV   A,[__r7]
+    0C41: 08       PUSH  A
+    0C42: 51 21    MOV   A,[__r8]
+    0C44: 08       PUSH  A
+    0C45: 51 20    MOV   A,[__r9]
+    0C47: 08       PUSH  A
+    0C48: 51 1F    MOV   A,[__r10]
+    0C4A: 08       PUSH  A
+    0C4B: 51 1E    MOV   A,[__r11]
+    0C4D: 08       PUSH  A
+    0C4E: 51 1D    MOV   A,[__rX]
+    0C50: 08       PUSH  A
+    0C51: 51 1C    MOV   A,[__rY]
+    0C53: 08       PUSH  A
+    0C54: 51 1B    MOV   A,[__rZ]
+    0C56: 08       PUSH  A
+(0091)     if(BTN_PORT & BTN_BIT){ // ボタンが押されている時
+    0C57: 5D 08    MOV   A,REG[0x8]
+    0C59: 62 D0 00 MOV   REG[0xD0],0x0
+    0C5C: 53 29    MOV   [__r0],A
+    0C5E: 47 29 04 TST   [__r0],0x4
+    0C61: A0 18    JZ    0x0C7A
+(0092)     LED_ON();
+    0C63: 43 08 01 OR    REG[0x8],0x1
+(0093)     buf_tx[0] = 'A'; // slaveにLED点灯を指示
+    0C66: 62 D0 00 MOV   REG[0xD0],0x0
+    0C69: 55 32 41 MOV   [buf_tx],0x41
+(0094)     UART_1_CPutString("LED:ON\r\n");
+    0C6C: 10       PUSH  X
+    0C6D: 50 01    MOV   A,0x1
+    0C6F: 08       PUSH  A
+    0C70: 50 AA    MOV   A,0xAA
+    0C72: 5C       MOV   X,A
+    0C73: 18       POP   A
+    0C74: 7C 05 4A LCALL 0x054A
+    0C77: 20       POP   X
+(0095)   }
+    0C78: 80 16    JMP   0x0C8F
+(0096)   else{
+(0097)     LED_OFF();
+    0C7A: 41 08 FE AND   REG[0x8],0xFE
+(0098)     buf_tx[0] = 'B'; // slaveにLED消灯を指示
+    0C7D: 62 D0 00 MOV   REG[0xD0],0x0
+    0C80: 55 32 42 MOV   [buf_tx],0x42
+(0099)     UART_1_CPutString("LED:OFF\r\n");
+    0C83: 10       PUSH  X
+    0C84: 50 01    MOV   A,0x1
+    0C86: 08       PUSH  A
+    0C87: 50 A0    MOV   A,0xA0
+    0C89: 5C       MOV   X,A
+    0C8A: 18       POP   A
+    0C8B: 7C 05 4A LCALL 0x054A
+    0C8E: 20       POP   X
+(0100)   }
+    0C8F: 62 D0 00 MOV   REG[0xD0],0x0
+    0C92: 18       POP   A
+    0C93: 53 1B    MOV   [__rZ],A
+    0C95: 18       POP   A
+    0C96: 53 1C    MOV   [__rY],A
+    0C98: 18       POP   A
+    0C99: 53 1D    MOV   [__rX],A
+    0C9B: 18       POP   A
+    0C9C: 53 1E    MOV   [__r11],A
+    0C9E: 18       POP   A
+    0C9F: 53 1F    MOV   [__r10],A
+    0CA1: 18       POP   A
+    0CA2: 53 20    MOV   [__r9],A
+    0CA4: 18       POP   A
+    0CA5: 53 21    MOV   [__r8],A
+    0CA7: 18       POP   A
+    0CA8: 53 22    MOV   [__r7],A
+    0CAA: 18       POP   A
+    0CAB: 53 23    MOV   [__r6],A
     0CAD: 18       POP   A
-    0CAE: 7C 05 4A LCALL 0x054A
-    0CB1: 20       POP   X
-(0103)   }
-    0CB2: 62 D0 00 MOV   REG[0xD0],0x0
-    0CB5: 18       POP   A
-    0CB6: 53 1B    MOV   [__rZ],A
-    0CB8: 18       POP   A
-    0CB9: 53 1C    MOV   [__rY],A
-    0CBB: 18       POP   A
-    0CBC: 53 1D    MOV   [__rX],A
-    0CBE: 18       POP   A
-    0CBF: 53 1E    MOV   [__r11],A
-    0CC1: 18       POP   A
-    0CC2: 53 1F    MOV   [__r10],A
-    0CC4: 18       POP   A
-    0CC5: 53 20    MOV   [__r9],A
-    0CC7: 18       POP   A
-    0CC8: 53 21    MOV   [__r8],A
-    0CCA: 18       POP   A
-    0CCB: 53 22    MOV   [__r7],A
-    0CCD: 18       POP   A
-    0CCE: 53 23    MOV   [__r6],A
-    0CD0: 18       POP   A
-    0CD1: 53 24    MOV   [__r5],A
-    0CD3: 18       POP   A
-    0CD4: 53 25    MOV   [__r4],A
-    0CD6: 18       POP   A
-    0CD7: 53 26    MOV   [__r3],A
-    0CD9: 18       POP   A
-    0CDA: 53 27    MOV   [__r2],A
-    0CDC: 18       POP   A
-    0CDD: 53 28    MOV   [__r1],A
-    0CDF: 18       POP   A
-    0CE0: 53 29    MOV   [__r0],A
-    0CE2: 18       POP   A
-    0CE3: 60 D5    MOV   REG[0xD5],A
-    0CE5: 18       POP   A
-    0CE6: 60 D4    MOV   REG[0xD4],A
-    0CE8: 18       POP   A
-    0CE9: 60 D3    MOV   REG[0xD3],A
-    0CEB: 18       POP   A
-    0CEC: 60 D0    MOV   REG[0xD0],A
-    0CEE: 18       POP   A
-(0104) }
+    0CAE: 53 24    MOV   [__r5],A
+    0CB0: 18       POP   A
+    0CB1: 53 25    MOV   [__r4],A
+    0CB3: 18       POP   A
+    0CB4: 53 26    MOV   [__r3],A
+    0CB6: 18       POP   A
+    0CB7: 53 27    MOV   [__r2],A
+    0CB9: 18       POP   A
+    0CBA: 53 28    MOV   [__r1],A
+    0CBC: 18       POP   A
+    0CBD: 53 29    MOV   [__r0],A
+    0CBF: 18       POP   A
+    0CC0: 60 D5    MOV   REG[0xD5],A
+    0CC2: 18       POP   A
+    0CC3: 60 D4    MOV   REG[0xD4],A
+    0CC5: 18       POP   A
+    0CC6: 60 D3    MOV   REG[0xD3],A
+    0CC8: 18       POP   A
+    0CC9: 60 D0    MOV   REG[0xD0],A
+    0CCB: 18       POP   A
+(0101) }
 FILE: lib\psocgpioint.asm
                                         (0001) ; Generated by PSoC Designer 5.0.1127.0
                                         (0002) ;
@@ -6233,14 +6208,14 @@ FILE: lib\psocgpioint.asm
                                         (0058)    ;---------------------------------------------------
                                         (0059) 
 
-0CF0: 7D 0C 3B LJMP  _INT_GPIO          (0060) 	ljmp _INT_GPIO
+0CCD: 7D 0C 18 LJMP  _INT_GPIO          (0060) 	ljmp _INT_GPIO
                                         (0061) 
                                         (0062)    ;---------------------------------------------------
                                         (0063)    ; Insert your custom code above this banner
                                         (0064)    ;---------------------------------------------------
                                         (0065)    ;@PSoC_UserCode_END@ (Do not change this line.)
                                         (0066) 
-0CF3: 7E       RETI                     (0067)    reti
+0CD0: 7E       RETI                     (0067)    reti
 (0068) 
 (0069) 
 (0070) ; end of file PSoCGPIOINT.asm
