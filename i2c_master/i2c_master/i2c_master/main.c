@@ -20,7 +20,9 @@ BYTE buf_tx[BUF_SIZE]; // I2C buffer
 BYTE buf_rx[BUF_SIZE];
 BYTE status; // I2C status
 BYTE slave; // slave address
-BYTE wait_count;
+BYTE timeout_count; // 長時間応答が返ってこないslaveデバイスを無視する
+#define I2C_TIMEOUT 128
+BYTE i;
 
 void main(void)
 {
@@ -38,18 +40,18 @@ void main(void)
     for(;;){
         for(slave = 0x11; slave < 0x21; slave++){
             I2CHW_1_bWriteBytes(slave, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
-            wait_count = 0;
+            timeout_count = 0;
             for(;;){
                 if(I2CHW_1_bReadI2CStatus() & I2CHW_WR_COMPLETE ||
-                   wait_count++ > 100) break;
+                   timeout_count++ > I2C_TIMEOUT) break;
             }
             I2CHW_1_ClrWrStatus();
             
             I2CHW_1_fReadBytes(slave, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
-            wait_count = 0;
+            timeout_count = 0;
             for(;;){
                 if(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE ||
-                   wait_count++ > 100) break;
+                   timeout_count++ > I2C_TIMEOUT) break;
             }
             I2CHW_1_ClrRdStatus();
 
@@ -59,7 +61,7 @@ void main(void)
             UART_1_CPutString(",");
             UART_1_PutString(buf_rx); // slaveからの受信データ
             UART_1_PutCRLF();
-            buf_rx[0] = '\0'; // 受信バッファを初期化
+            for(i = 0; i < BUF_SIZE-1; i++) buf_rx[i] = '\0'; // 受信バッファを初期化
         }
     }
 }
