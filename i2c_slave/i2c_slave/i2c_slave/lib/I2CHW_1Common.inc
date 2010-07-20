@@ -12,7 +12,7 @@
 
 
 
-;I2CHW_1_SLAVE_ADDR:                        equ   1h                 ;Permanent Slave Address
+;I2CHW_1_SLAVE_ADDR:                        equ   0h                 ;Permanent Slave Address
 I2CHW_1_ADDR_REG_PRESENT:                   equ   0                  ;CY8C28X45 have 1 always while all other have 0
 I2CHW_1_AUTO_ADDR_CHECK:                    equ   0                  ;CY8C28X45 may have this 0 or 1 while all other have 0
 I2CHW_1_USED_I2C_BLOCK:                     equ   0                  ;CY8C28X45 have 0 for I2C Controller_0 and 1 for I2C Controller_1, other have 0

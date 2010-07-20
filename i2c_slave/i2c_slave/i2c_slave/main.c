@@ -6,21 +6,19 @@
 #include <m8c.h>        // part specific constants and macros
 #include <I2CHW_1Common.h>
 #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
-#include <string.h>
 #define _BV(BIT) (1<<BIT)
 #define sbi(BYTE,BIT) (BYTE |= _BV(BIT))
 #define cbi(BYTE,BIT) (BYTE &= ~_BV(BIT))
-#define LED_ON() sbi(PRT2DR, 0)
+
+#define LED_ON() sbi(PRT2DR, 0) // LED
 #define LED_OFF() cbi(PRT2DR, 0)
-#define bit_is_set(BYTE, BIT) BYTE & BIT
-#define loop_until_bit_is_set(BYTE, BIT) while(!bit_is_set(BYTE,BIT));
-#define SW_PORT PRT2DR
-#define SW_BIT _BV(2) // switch
+#define BTN_PORT PRT2DR // push button
+#define BTN_BIT _BV(2)
 
 #define BUF_SIZE 8
-BYTE buf_rx[BUF_SIZE];
+BYTE buf_rx[BUF_SIZE]; // I2C buffer
 BYTE buf_tx[BUF_SIZE] = {'x'};
-BYTE status;
+BYTE status; // I2C status
 
 void main(void)
 {
@@ -29,9 +27,6 @@ void main(void)
     I2CHW_1_Start();
     I2CHW_1_EnableSlave();
     I2CHW_1_EnableInt();
-    I2CHW_1_InitRamRead(buf_tx, BUF_SIZE);
-    I2CHW_1_InitWrite(buf_rx, BUF_SIZE);
-
     for(;;){
         status = I2CHW_1_bReadI2CStatus();
         if(status & I2CHW_WR_COMPLETE){
@@ -42,14 +37,14 @@ void main(void)
             I2CHW_1_ClrRdStatus();
             I2CHW_1_InitRamRead(buf_tx, BUF_SIZE);
         }
-        if(buf_rx[0] == 'A') LED_ON();
+        if(buf_rx[0] == 'A') LED_ON(); // masterからの指示でLEDの点灯/消灯を切り替え
         else if(buf_rx[0] == 'B') LED_OFF();
     }
 }
 
 #pragma interrupt_handler INT_GPIO
 void INT_GPIO(void){
-    if(bit_is_set(SW_PORT, SW_BIT)){ // ボタンを押している時
+    if(BTN_PORT & BTN_BIT){ // ボタンを押している時
         buf_tx[0] = 'd'; // 押下をmasterに通知
     }
     else{

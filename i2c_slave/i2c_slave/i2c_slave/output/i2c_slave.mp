@@ -1,10 +1,10 @@
 Project:      output/i2c_slave
 Build Number: 0
-Date:         Tue Jul 20 16:19:34 2010
+Date:         Tue Jul 20 16:55:39 2010
 Compiler:     ICCM8C
 Version:      7.02.004
 
-  ROM 4% full. 1109 out of 32768 bytes used (does not include absolute areas).
+  ROM 4% full. 1077 out of 32768 bytes used (does not include absolute areas).
   RAM 2% full. 27 bytes used (does not include stack usage).
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
@@ -84,16 +84,16 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   0533   00C2 =    194. bytes (rel,con,rom)
+                            text   0533   00A2 =    162. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
        0533  _main
        0533  __text_start
-       05C0  _INT_GPIO
-       05F1  PSoC_GPIO_ISR
-       05F5  __text_end
-       0607  __xidata_end
+       05A0  _INT_GPIO
+       05D1  PSoC_GPIO_ISR
+       05D5  __text_end
+       05E7  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------

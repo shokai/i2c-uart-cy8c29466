@@ -15,6 +15,6 @@
 ; Constants for I2CHW_1 API's.
 ;--------------------------------------------------
 
-I2CHW_1_SLAVE_ADDR:                         equ        1h     ;     Permanent Slave Address
+I2CHW_1_SLAVE_ADDR:                         equ        0h     ;     Permanent Slave Address
 I2CHW_1_USED_I2C_BLOCK:                equ   0                       ;CY8C28X45 have 0 for I2C Controller_0 and 1 for I2C Controller_1, other have 0
 

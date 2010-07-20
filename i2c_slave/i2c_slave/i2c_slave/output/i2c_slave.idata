@@ -1,10 +1,10 @@
-flash  5F5 SRAM    8:
+flash  5D5 SRAM    8:
  00 8 bytes
-flash  5F9 SRAM   10:
+flash  5D9 SRAM   10:
  <size at next line>  78
   [size:] 1 bytes
-flash  5FD SRAM   11:
+flash  5DD SRAM   11:
  00 7 bytes
-flash  601 SRAM   1A:
+flash  5E1 SRAM   1A:
  <size at next line>   0
   [size:] 1 bytes
