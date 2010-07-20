@@ -3,8 +3,10 @@
   <APP_EDITOR_SETTINGS>
     <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_slave\i2c_slave\i2c_slave\i2c_slave.soc" />
     <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_slave\i2c_slave\i2c_slave.cmx" />
-    <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_slave\i2c_slave\i2c_slave\i2c_slave_pinout.soc" />
     <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_slave\i2c_slave\i2c_slave\lib\PSoCGPIOINT.asm" />
+    <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_slave\i2c_slave\i2c_slave\lib\I2CHW_1Slave.h" />
+    <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_slave\i2c_slave\i2c_slave\lib\I2CHW_1Common.h" />
+    <OPEN_FILE PATH="C:\src\psoc\cy8c29466\designer\i2c-uart\i2c_slave\i2c_slave\i2c_slave\i2c_slave_pinout.soc" ACTIVE="true" />
   </APP_EDITOR_SETTINGS>
   <DEBUGGER_SETTINGS>
     <TRACE_MODE VALUE="PCOnly" />

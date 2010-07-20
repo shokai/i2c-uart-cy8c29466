@@ -103,10 +103,10 @@ LoadConfigTBL_i2c_master_Ordered:
 	M8C_SetBank0
 	mov	reg[01h], 00h		; Port_0_IntEn register (PRT0IE)
 	M8C_SetBank1
-	mov	reg[04h], a0h		; Port_1_DriveMode_0 register (PRT1DM0)
-	mov	reg[05h], ffh		; Port_1_DriveMode_1 register (PRT1DM1)
+	mov	reg[04h], f0h		; Port_1_DriveMode_0 register (PRT1DM0)
+	mov	reg[05h], afh		; Port_1_DriveMode_1 register (PRT1DM1)
 	M8C_SetBank0
-	mov	reg[07h], ffh		; Port_1_DriveMode_2 register (PRT1DM2)
+	mov	reg[07h], afh		; Port_1_DriveMode_2 register (PRT1DM2)
 	mov	reg[06h], 00h		; Port_1_GlobalSelect register (PRT1GS)
 	M8C_SetBank1
 	mov	reg[06h], 00h		; Port_1_IntCtrl_0 register (PRT1IC0)

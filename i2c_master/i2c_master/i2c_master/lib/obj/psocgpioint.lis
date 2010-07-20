@@ -833,15 +833,25 @@
  0000               or   F, 0
  0000               macro Resume_CodeCompressor
  0000               add  SP, 0
- 0008           SW_Data_ADDR:	equ	8h
- 0108           SW_DriveMode_0_ADDR:	equ	108h
- 0109           SW_DriveMode_1_ADDR:	equ	109h
- 000B           SW_DriveMode_2_ADDR:	equ	bh
- 000A           SW_GlobalSelect_ADDR:	equ	ah
- 010A           SW_IntCtrl_0_ADDR:	equ	10ah
- 010B           SW_IntCtrl_1_ADDR:	equ	10bh
- 0009           SW_IntEn_ADDR:	equ	9h
- 0004           SW_MASK:	equ	4h
+ 0008           Button_Data_ADDR:	equ	8h
+ 0108           Button_DriveMode_0_ADDR:	equ	108h
+ 0109           Button_DriveMode_1_ADDR:	equ	109h
+ 000B           Button_DriveMode_2_ADDR:	equ	bh
+ 000A           Button_GlobalSelect_ADDR:	equ	ah
+ 010A           Button_IntCtrl_0_ADDR:	equ	10ah
+ 010B           Button_IntCtrl_1_ADDR:	equ	10bh
+ 0009           Button_IntEn_ADDR:	equ	9h
+ 0004           Button_MASK:	equ	4h
+ 0000           ; LED3 address and mask equates
+ 0004           LED3_Data_ADDR:	equ	4h
+ 0104           LED3_DriveMode_0_ADDR:	equ	104h
+ 0105           LED3_DriveMode_1_ADDR:	equ	105h
+ 0007           LED3_DriveMode_2_ADDR:	equ	7h
+ 0006           LED3_GlobalSelect_ADDR:	equ	6h
+ 0106           LED3_IntCtrl_0_ADDR:	equ	106h
+ 0107           LED3_IntCtrl_1_ADDR:	equ	107h
+ 0005           LED3_IntEn_ADDR:	equ	5h
+ 0010           LED3_MASK:	equ	10h
  0000           ; I2CHW_1SDA address and mask equates
  0004           I2CHW_1SDA_Data_ADDR:	equ	4h
  0104           I2CHW_1SDA_DriveMode_0_ADDR:	equ	104h
@@ -852,6 +862,16 @@
  0107           I2CHW_1SDA_IntCtrl_1_ADDR:	equ	107h
  0005           I2CHW_1SDA_IntEn_ADDR:	equ	5h
  0020           I2CHW_1SDA_MASK:	equ	20h
+ 0000           ; LED2 address and mask equates
+ 0004           LED2_Data_ADDR:	equ	4h
+ 0104           LED2_DriveMode_0_ADDR:	equ	104h
+ 0105           LED2_DriveMode_1_ADDR:	equ	105h
+ 0007           LED2_DriveMode_2_ADDR:	equ	7h
+ 0006           LED2_GlobalSelect_ADDR:	equ	6h
+ 0106           LED2_IntCtrl_0_ADDR:	equ	106h
+ 0107           LED2_IntCtrl_1_ADDR:	equ	107h
+ 0005           LED2_IntEn_ADDR:	equ	5h
+ 0040           LED2_MASK:	equ	40h
  0000           ; I2CHW_1SCL address and mask equates
  0004           I2CHW_1SCL_Data_ADDR:	equ	4h
  0104           I2CHW_1SCL_DriveMode_0_ADDR:	equ	104h

@@ -71,7 +71,7 @@
  0015 62D000            mov REG[0xd0],>_status
  0018 5300              mov [_status],A
  001A                   .dbline 32
- 001A           ;         if(status & I2CHW_WR_COMPLETE){
+ 001A           ;         if(status & I2CHW_WR_COMPLETE){ // master->slave
  001A 470040            tst [_status],64
  001D A016              jz L6
  001F                   .dbline 32
@@ -96,7 +96,7 @@
  0034           ;         }
  0034           L6:
  0034                   .dbline 36
- 0034           ;         if(status & I2CHW_RD_COMPLETE){
+ 0034           ;         if(status & I2CHW_RD_COMPLETE){ // slave->master
  0034 62D000            mov REG[0xd0],>_status
  0037 470004            tst [_status],4
  003A A016              jz L8

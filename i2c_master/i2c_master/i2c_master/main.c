@@ -10,8 +10,14 @@
 #define _BV(BIT) (1<<BIT)
 #define sbi(BYTE,BIT) (BYTE |= _BV(BIT))
 #define cbi(BYTE,BIT) (BYTE &= ~_BV(BIT))
+
 #define LED_ON() sbi(PRT2DR, 0) // LED
 #define LED_OFF() cbi(PRT2DR, 0)
+#define LED2_ON() sbi(PRT1DR, 6)
+#define LED2_OFF() cbi(PRT1DR, 6)
+#define LED3_ON() sbi(PRT1DR, 4)
+#define LED3_OFF() cbi(PRT1DR, 4)
+
 #define BTN_PORT PRT2DR // push button
 #define BTN_BIT _BV(2)
 
@@ -20,9 +26,8 @@ BYTE buf_tx[BUF_SIZE]; // I2C buffer
 BYTE buf_rx[BUF_SIZE];
 BYTE status; // I2C status
 BYTE slave; // slave address
-BYTE timeout_count; // 長時間応答が返ってこないslaveデバイスを無視する
-#define I2C_TIMEOUT 128
-BYTE i;
+#define I2C_TIMEOUT 128 // 長時間応答が返ってこないslaveデバイスを無視する
+BYTE timeout_count, i;
 
 void main(void)
 {
@@ -39,7 +44,7 @@ void main(void)
     I2CHW_1_EnableInt();
     for(;;){
         for(slave = 0x11; slave < 0x21; slave++){
-            I2CHW_1_bWriteBytes(slave, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
+            I2CHW_1_bWriteBytes(slave, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer); // master->slave
             timeout_count = 0;
             for(;;){
                 if(I2CHW_1_bReadI2CStatus() & I2CHW_WR_COMPLETE ||
@@ -47,7 +52,7 @@ void main(void)
             }
             I2CHW_1_ClrWrStatus();
             
-            I2CHW_1_fReadBytes(slave, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
+            I2CHW_1_fReadBytes(slave, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer); // slave->master
             timeout_count = 0;
             for(;;){
                 if(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE ||
@@ -55,7 +60,18 @@ void main(void)
             }
             I2CHW_1_ClrRdStatus();
 
-            while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
+            switch(slave){
+            case 0x11:
+                if(buf_rx[0] == 'u') LED2_OFF();
+                else if(buf_rx[0] == 'd') LED2_ON();
+                break;
+            case 0x12:
+                if(buf_rx[0] == 'u') LED3_OFF();
+                else if(buf_rx[0] == 'd') LED3_ON();
+                break;
+            }
+            
+            while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY)); // slaveからの受信データをシリアル通信出力
             UART_1_CPutString("I2C:");
             UART_1_PutSHexByte(slave); // slaveアドレス
             UART_1_CPutString(",");

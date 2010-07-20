@@ -833,15 +833,15 @@
  0000               or   F, 0
  0000               macro Resume_CodeCompressor
  0000               add  SP, 0
- 0008           SW_Data_ADDR:	equ	8h
- 0108           SW_DriveMode_0_ADDR:	equ	108h
- 0109           SW_DriveMode_1_ADDR:	equ	109h
- 000B           SW_DriveMode_2_ADDR:	equ	bh
- 000A           SW_GlobalSelect_ADDR:	equ	ah
- 010A           SW_IntCtrl_0_ADDR:	equ	10ah
- 010B           SW_IntCtrl_1_ADDR:	equ	10bh
- 0009           SW_IntEn_ADDR:	equ	9h
- 0004           SW_MASK:	equ	4h
+ 0008           Button_Data_ADDR:	equ	8h
+ 0108           Button_DriveMode_0_ADDR:	equ	108h
+ 0109           Button_DriveMode_1_ADDR:	equ	109h
+ 000B           Button_DriveMode_2_ADDR:	equ	bh
+ 000A           Button_GlobalSelect_ADDR:	equ	ah
+ 010A           Button_IntCtrl_0_ADDR:	equ	10ah
+ 010B           Button_IntCtrl_1_ADDR:	equ	10bh
+ 0009           Button_IntEn_ADDR:	equ	9h
+ 0004           Button_MASK:	equ	4h
  0000           ; I2CHW_1SDA address and mask equates
  0004           I2CHW_1SDA_Data_ADDR:	equ	4h
  0104           I2CHW_1SDA_DriveMode_0_ADDR:	equ	104h

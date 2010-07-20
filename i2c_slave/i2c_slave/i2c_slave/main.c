@@ -29,11 +29,11 @@ void main(void)
     I2CHW_1_EnableInt();
     for(;;){
         status = I2CHW_1_bReadI2CStatus();
-        if(status & I2CHW_WR_COMPLETE){
+        if(status & I2CHW_WR_COMPLETE){ // master->slave
             I2CHW_1_ClrWrStatus();
             I2CHW_1_InitWrite(buf_rx, BUF_SIZE);
         }
-        if(status & I2CHW_RD_COMPLETE){
+        if(status & I2CHW_RD_COMPLETE){ // slave->master
             I2CHW_1_ClrRdStatus();
             I2CHW_1_InitRamRead(buf_tx, BUF_SIZE);
         }

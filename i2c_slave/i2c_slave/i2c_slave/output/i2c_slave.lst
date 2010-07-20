@@ -2623,7 +2623,7 @@ _main|__text_start|_main:
     0547: 20       POP   X
     0548: 62 D0 00 MOV   REG[0xD0],0x0
     054B: 53 1A    MOV   [status],A
-(0032)         if(status & I2CHW_WR_COMPLETE){
+(0032)         if(status & I2CHW_WR_COMPLETE){ // master->slave
     054D: 47 1A 40 TST   [status],0x40
     0550: A0 16    JZ    0x0567
 (0033)             I2CHW_1_ClrWrStatus();
@@ -2642,7 +2642,7 @@ _main|__text_start|_main:
     0564: 38 FD    ADD   SP,0xFD
     0566: 20       POP   X
 (0035)         }
-(0036)         if(status & I2CHW_RD_COMPLETE){
+(0036)         if(status & I2CHW_RD_COMPLETE){ // slave->master
     0567: 62 D0 00 MOV   REG[0xD0],0x0
     056A: 47 1A 04 TST   [status],0x4
     056D: A0 16    JZ    0x0584

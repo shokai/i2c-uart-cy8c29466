@@ -23,8 +23,8 @@ LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
 LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
 LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
 LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
-  ROM 9% full. 2907 out of 32768 bytes used (does not include absolute areas).
+  ROM 10% full. 2996 out of 32768 bytes used (does not include absolute areas).
   RAM 4% full. 63 bytes used (does not include stack usage).
 idata dump at output/i2c_master.idata
  
-i2c_master - 0 error(s) 0 warning(s) 18:23:59
+i2c_master - 0 error(s) 0 warning(s) 20:09:11
