@@ -1,5 +1,5 @@
-flash  F04 SRAM   2A:
+flash  F11 SRAM   2A:
  00 32 bytes
-flash  F08 SRAM   4B:
+flash  F15 SRAM   4B:
  <size at next line>   0  0  0
   [size:] 3 bytes

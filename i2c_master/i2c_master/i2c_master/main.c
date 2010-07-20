@@ -10,21 +10,19 @@
 #define _BV(BIT) (1<<BIT)
 #define sbi(BYTE,BIT) (BYTE |= _BV(BIT))
 #define cbi(BYTE,BIT) (BYTE &= ~_BV(BIT))
-#define LED_ON() sbi(PRT2DR, 0)
+#define LED_ON() sbi(PRT2DR, 0) // LED
 #define LED_OFF() cbi(PRT2DR, 0)
-#define bit_is_set(BYTE, BIT) BYTE & BIT
-#define loop_until_bit_is_set(BYTE, BIT) while(!bit_is_set(BYTE,BIT));
-#define SW_PORT PRT2DR
-#define SW_BIT _BV(2) // switch
+#define BTN_PORT PRT2DR // push button
+#define BTN_BIT _BV(2)
 
 #define BUF_SIZE 8
 BYTE buf_tx[BUF_SIZE];
 BYTE buf_rx[BUF_SIZE];
-char buf_uart_tx[BUF_SIZE];
+BYTE buf_uart_tx[BUF_SIZE];
 BYTE status;
-char slave;
-char wait_count;
-char tmp[8];
+BYTE slave;
+BYTE wait_count;
+BYTE tmp[8];
 
 void main(void)
 {
@@ -35,6 +33,7 @@ void main(void)
     UART_1_Start(UART_1_PARITY_NONE);
     LED_ON();
     UART_1_CPutString("start");
+    LED_OFF();
     I2CHW_1_Start();
     I2CHW_1_EnableMstr();
     I2CHW_1_EnableInt();
@@ -69,6 +68,7 @@ void main(void)
 }
 
 
+// UART受信割り込み
 #pragma interrupt_handler INT_UART_RX
 void INT_UART_RX(void){
     char recv_data;
@@ -77,25 +77,28 @@ void INT_UART_RX(void){
     switch(recv_data){
     case 'U':
         LED_ON();
-        UART_1_CPutString("!Up!");
+        buf_tx[0] = 'A'; // slaveにLED点灯を指示
+        UART_1_CPutString("LED:ON\r\n");
         break;
     case 'D':
         LED_OFF();
-        UART_1_CPutString("!Down!");
+        buf_tx[0] = 'B'; // slaveにLED消灯を指示
+        UART_1_CPutString("LED:OFF\r\n");
         break;
     }
 }
 
+// I/Oピン状態変化割り込み
 #pragma interrupt_handler INT_GPIO
 void INT_GPIO(void){
-    if(bit_is_set(SW_PORT, SW_BIT)){
+    if(BTN_PORT & BTN_BIT){ // ボタンが押されている時
     LED_ON();
-    buf_tx[0] = 'A';
-    UART_1_CPutString("ON\r\n");
+    buf_tx[0] = 'A'; // slaveにLED点灯を指示
+    UART_1_CPutString("LED:ON\r\n");
   }
   else{
     LED_OFF();
-    buf_tx[0] = 'B';
-    UART_1_CPutString("OFF\r\n");
+    buf_tx[0] = 'B'; // slaveにLED消灯を指示
+    UART_1_CPutString("LED:OFF\r\n");
   }
 }
