@@ -18,10 +18,12 @@ LMM info: area 'data' item of 64 bytes allocated in SRAM page 0
 LMM info: area 'data' item of 64 bytes allocated in SRAM page 0
 LMM info: area 'UART_1_RAM' item of 16 bytes allocated in SRAM page 0
 LMM info: area 'virtual_registers' uses 15 bytes in SRAM page 0
+LMM info: area 'data' item of 2 bytes allocated in SRAM page 0
 LMM info: area 'UART_1_RAM' item of 1 bytes allocated in SRAM page 0
 LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
-  ROM 9% full. 2673 out of 32768 bytes used (does not include absolute areas).
-  RAM 10% full. 172 bytes used (does not include stack usage).
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+  ROM 9% full. 2826 out of 32768 bytes used (does not include absolute areas).
+  RAM 10% full. 175 bytes used (does not include stack usage).
 idata dump at output/i2c_master.idata
  
-i2c_master - 0 error(s) 0 warning(s) 08:30:39
+i2c_master - 0 error(s) 0 warning(s) 08:41:17

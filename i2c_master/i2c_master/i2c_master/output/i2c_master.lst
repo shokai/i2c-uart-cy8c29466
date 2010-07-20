@@ -159,7 +159,7 @@ FILE: .\boot.asm
 0019: 30       HALT                     
 001A: 30       HALT                     
 001B: 30       HALT                     
-001C: 7D 0C 0D LJMP  PSoC_GPIO_ISR      (0141)     ljmp	PSoC_GPIO_ISR
+001C: 7D 0C A6 LJMP  PSoC_GPIO_ISR      (0141)     ljmp	PSoC_GPIO_ISR
 001F: 7E       RETI                     (0142)     reti
                                         (0143) 
                                         (0144)     org   20h                      ;PSoC Block DBB00 Interrupt Vector
@@ -360,8 +360,8 @@ FILE: .\boot.asm
                                         (0294)  ENDIF
                                         (0295) ENDIF ; 3.3 Volt Operation
                                         (0296) 
-0081: 55 F8 00 MOV   [status+77],0x0    (0297)     mov  [bSSC_KEY1],  0           ; Lock out Flash and Supervisiory operations
-0084: 55 F9 00 MOV   [status+78],0x0    (0298)     mov  [bSSC_KEYSP], 0
+0081: 55 F8 00 MOV   [status+74],0x0    (0297)     mov  [bSSC_KEY1],  0           ; Lock out Flash and Supervisiory operations
+0084: 55 F9 00 MOV   [status+75],0x0    (0298)     mov  [bSSC_KEYSP], 0
                                         (0299) 
                                         (0300)     ;---------------------------------------
                                         (0301)     ; Initialize Crystal Oscillator and PLL
@@ -1287,7 +1287,7 @@ FILE: lib\uart_1int.asm
                                         (0143)    ;   NOTE: interrupt service routines must preserve
                                         (0144)    ;   the values of the A and X CPU registers.
                                         (0145)    
-0399: 7D 0A 87 LJMP  _INT_UART_RX       (0146)    ljmp _INT_UART_RX
+0399: 7D 0B 20 LJMP  _INT_UART_RX       (0146)    ljmp _INT_UART_RX
                                         (0147) 
                                         (0148)    ;---------------------------------------------------
                                         (0149)    ; Insert your custom code above this banner
@@ -2551,7 +2551,7 @@ FILE: lib\uart_1.asm
 056B: 55 01 00 MOV   [0x1],0x0          (1124)    mov [UART_1_bRxCnt], 0x00
 056E: 26 00 00 AND   [0x0],0x0          (1125)    and [UART_1_fStatus], 0x00
 0571: 62 D0 00 MOV   REG[0xD0],0x0      (1126)    RAM_SETPAGE_CUR >ptrParam
-0574: 55 AA 00 MOV   [0xAA],0x0         (1127)    mov [ptrParam],0x00
+0574: 55 AC 00 MOV   [wait_count+2],0x0 (1127)    mov [ptrParam],0x00
                                         (1128)    RAM_EPILOGUE RAM_USE_CLASS_4
 0577: 7F       RET                      (1129)    ret
                                         (1130) .ENDSECTION
@@ -2729,7 +2729,7 @@ FILE: lib\uart_1.asm
                                         (1302)     
 0593: 62 D0 00 MOV   REG[0xD0],0x0      (1303)    RAM_SETPAGE_CUR >ptrParam
 0596: 50 8B    MOV   A,0x8B             (1304)    mov   A, <UART_1_aRxBuffer               ; Get address to receive buffer
-0598: 02 AA    ADD   A,[0xAA]           (1305)    add   A, [ptrParam]                      ; Add string offset
+0598: 02 AC    ADD   A,[wait_count+2]   (1305)    add   A, [ptrParam]                      ; Add string offset
 059A: 5C       MOV   X,A                (1306)    mov   X, A
 059B: 62 D3 00 MOV   REG[0xD3],0x0      (1307)    RAM_SETPAGE_IDX >UART_1_aRxBuffer
 059E: 52 00    MOV   A,[X+0]            (1308)    mov   A, [X]                             ; Get character pointed by X
@@ -2742,9 +2742,9 @@ FILE: lib\uart_1.asm
 05A5: 39 20    CMP   A,0x20             (1315)    cmp   A, UART_1_DELIMITER                ; Do we have a delimiter?
 05A7: B0 11    JNZ   0x05B9             (1316)    jnz   .ParamStartFound                   ;   No,  Bingo! found a parameter
 05A9: 75       INC   X                  (1317)    inc   X                                  ;   Yes, Increment both index and...
-05AA: 76 AA    INC   [0xAA]             (1318)    inc   [ptrParam]                         ;          the stored pointer.
+05AA: 76 AC    INC   [wait_count+2]     (1318)    inc   [ptrParam]                         ;          the stored pointer.
 05AC: 52 00    MOV   A,[X+0]            (1319)    mov   A, [X]                             ; Get character pointed by X
-05AE: 3C AA 0F CMP   [0xAA],0xF         (1320)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; End of buffer?
+05AE: 3C AC 0F CMP   [wait_count+2],0xF (1320)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; End of buffer?
 05B1: BF F3    JNZ   0x05A5             (1321)    jnz   .SkipOverDelimitersLoop            ;   No,  continue the scan
                                         (1322) 
                                         (1323) .EndOfString:                               ;   Yes, end of string found...
@@ -2758,18 +2758,18 @@ FILE: lib\uart_1.asm
                                         (1331) 
                                         (1332) .ParamLoop:                                 ; Now loop until end of parameter found.
 05BA: 75       INC   X                  (1333)    inc   X                                  ; Advance pointers.
-05BB: 76 AA    INC   [0xAA]             (1334)    inc   [ptrParam]
-05BD: 3C AA 0F CMP   [0xAA],0xF         (1335)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Check if we are at the end of buffer
+05BB: 76 AC    INC   [wait_count+2]     (1334)    inc   [ptrParam]
+05BD: 3C AC 0F CMP   [wait_count+2],0xF (1335)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Check if we are at the end of buffer
 05C0: AF F3    JZ    0x05B4             (1336)    jz    .TerminateString
 05C2: 52 00    MOV   A,[X+0]            (1337)    mov   A, [X]                             ; Get next character
 05C4: A0 12    JZ    0x05D7             (1338)    jz    .End_GetNextParam
 05C6: 39 20    CMP   A,0x20             (1339)    cmp   A, UART_1_DELIMITER                ; Check if we have a delimiter
 05C8: BF F1    JNZ   0x05BA             (1340)    jnz   .ParamLoop                         ; Still no delimiter, loop again
 05CA: 56 00 00 MOV   [X+0],0x0          (1341)    mov   [X], 0x00                          ; Replace delimiter with null for end of substring
-05CD: 76 AA    INC   [0xAA]             (1342)    inc   [ptrParam]
-05CF: 3C AA 0F CMP   [0xAA],0xF         (1343)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Check if we are at the end of buffer
+05CD: 76 AC    INC   [wait_count+2]     (1342)    inc   [ptrParam]
+05CF: 3C AC 0F CMP   [wait_count+2],0xF (1343)    cmp   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Check if we are at the end of buffer
 05D2: B0 04    JNZ   0x05D7             (1344)    jnz   .End_GetNextParam                  ; If not end of string leave
-05D4: 55 AA 0F MOV   [0xAA],0xF         (1345)    mov   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Reset pointer to end of string.
+05D4: 55 AC 0F MOV   [wait_count+2],0xF (1345)    mov   [ptrParam], (UART_1_RX_BUFFER_SIZE -1)   ; Reset pointer to end of string.
                                         (1346) 
                                         (1347) .End_GetNextParam:
 05D7: 20       POP   X                  (1348)    pop   X
@@ -2823,7 +2823,7 @@ FILE: lib\uart_1.asm
                                         (1394)    RAM_PROLOGUE RAM_USE_CLASS_4
 05F0: 62 D0 00 MOV   REG[0xD0],0x0      (1395)    RAM_SETPAGE_CUR >ptrParam
 05F3: 50 8B    MOV   A,0x8B             (1396)    mov  A, <UART_1_aRxBuffer                ; Get address to receive buffer
-05F5: 02 AA    ADD   A,[0xAA]           (1397)    add  A, [ptrParam]                       ; Add string offset
+05F5: 02 AC    ADD   A,[wait_count+2]   (1397)    add  A, [ptrParam]                       ; Add string offset
 05F7: 5C       MOV   X,A                (1398)    mov  X,A
 05F8: 50 00    MOV   A,0x0              (1399)    mov  A,>UART_1_aRxBuffer                 ; Return pointer
                                         (1400)    RAM_EPILOGUE RAM_USE_CLASS_4
@@ -5655,31 +5655,33 @@ FILE: C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_MA~1\I2C_MA~1\I2C_MA~1\main.c
 (0022) BYTE buf_rx[BUF_SIZE];
 (0023) #define SLAVE_ADDR 0
 (0024) BYTE status;
-(0025) 
-(0026) void main(void)
+(0025) char slave;
+(0026) int wait_count;
+(0027) 
+(0028) void main(void)
 _main|__text_start|_main:
     09E4: 71 01    OR    F,0x1
-(0027) {
-(0028)     M8C_EnableGInt; // enable global interrupt
-(0029)     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
+(0029) {
+(0030)     M8C_EnableGInt; // enable global interrupt
+(0031)     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
     09E6: 43 E0 20 OR    REG[0xE0],0x20
-(0030)     UART_1_CmdReset(); // uart init
+(0032)     UART_1_CmdReset(); // uart init
     09E9: 10       PUSH  X
     09EA: 7C 05 62 LCALL 0x0562
     09ED: 20       POP   X
-(0031)     UART_1_IntCntl(UART_1_ENABLE_RX_INT); // enable receive interrupt
+(0033)     UART_1_IntCntl(UART_1_ENABLE_RX_INT); // enable receive interrupt
     09EE: 10       PUSH  X
     09EF: 50 01    MOV   A,0x1
     09F1: 7C 04 5F LCALL 0x045F
     09F4: 20       POP   X
-(0032)     UART_1_Start(UART_1_PARITY_NONE);
+(0034)     UART_1_Start(UART_1_PARITY_NONE);
     09F5: 10       PUSH  X
     09F6: 50 00    MOV   A,0x0
     09F8: 7C 04 30 LCALL 0x0430
     09FB: 20       POP   X
-(0033)     LED_ON();
+(0035)     LED_ON();
     09FC: 43 08 01 OR    REG[0x8],0x1
-(0034)     UART_1_CPutString("start");
+(0036)     UART_1_CPutString("start");
     09FF: 10       PUSH  X
     0A00: 50 01    MOV   A,0x1
     0A02: 08       PUSH  A
@@ -5687,363 +5689,438 @@ _main|__text_start|_main:
     0A05: 5C       MOV   X,A
     0A06: 18       POP   A
     0A07: 7C 05 47 LCALL 0x0547
-(0035)     I2CHW_1_Start();
+(0037)     I2CHW_1_Start();
     0A0A: 7C 05 FB LCALL 0x05FB
-(0036)     I2CHW_1_EnableMstr();
+(0038)     I2CHW_1_EnableMstr();
     0A0D: 7C 06 14 LCALL 0x0614
-(0037)     I2CHW_1_EnableInt();
+(0039)     I2CHW_1_EnableInt();
     0A10: 7C 05 FF LCALL 0x05FF
     0A13: 20       POP   X
-(0038) 
-(0039)     for(;;){
-(0040)         I2CHW_1_bWriteBytes(SLAVE_ADDR, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
-    0A14: 10       PUSH  X
-    0A15: 50 00    MOV   A,0x0
-    0A17: 08       PUSH  A
-    0A18: 50 40    MOV   A,0x40
-    0A1A: 08       PUSH  A
-    0A1B: 50 00    MOV   A,0x0
-    0A1D: 08       PUSH  A
-    0A1E: 50 0B    MOV   A,0xB
-    0A20: 08       PUSH  A
-    0A21: 50 00    MOV   A,0x0
-    0A23: 08       PUSH  A
-    0A24: 7C 06 78 LCALL 0x0678
-    0A27: 38 FB    ADD   SP,0xFB
-    0A29: 20       POP   X
-(0041)         while(!(I2CHW_1_bReadI2CStatus() & I2CHW_WR_COMPLETE));
-    0A2A: 10       PUSH  X
-    0A2B: 7C 09 D0 LCALL 0x09D0
-    0A2E: 62 D0 00 MOV   REG[0xD0],0x0
-    0A31: 20       POP   X
-    0A32: 53 A9    MOV   [__r0],A
-    0A34: 47 A9 40 TST   [__r0],0x40
-    0A37: AF F2    JZ    0x0A2A
-(0042)         I2CHW_1_ClrWrStatus();
-    0A39: 10       PUSH  X
-    0A3A: 7C 09 DD LCALL 0x09DD
-    0A3D: 20       POP   X
-(0043) 
-(0044)         I2CHW_1_fReadBytes(SLAVE_ADDR, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
+(0040)     for(;;){
+(0041)         for(slave = 0; slave < 2; slave++){
+    0A14: 62 D0 00 MOV   REG[0xD0],0x0
+    0A17: 55 AD 00 MOV   [slave],0x0
+    0A1A: 80 F9    JMP   0x0B14
+(0042)             I2CHW_1_bWriteBytes(slave, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
+    0A1C: 10       PUSH  X
+    0A1D: 50 00    MOV   A,0x0
+    0A1F: 08       PUSH  A
+    0A20: 50 40    MOV   A,0x40
+    0A22: 08       PUSH  A
+    0A23: 50 00    MOV   A,0x0
+    0A25: 08       PUSH  A
+    0A26: 50 0B    MOV   A,0xB
+    0A28: 08       PUSH  A
+    0A29: 62 D0 00 MOV   REG[0xD0],0x0
+    0A2C: 51 AD    MOV   A,[slave]
+    0A2E: 08       PUSH  A
+    0A2F: 7C 06 78 LCALL 0x0678
+    0A32: 38 FB    ADD   SP,0xFB
+    0A34: 20       POP   X
+(0043)             wait_count = 0;
+    0A35: 62 D0 00 MOV   REG[0xD0],0x0
+    0A38: 55 AB 00 MOV   [wait_count+1],0x0
+    0A3B: 55 AA 00 MOV   [wait_count],0x0
+(0044)             for(;;){
+(0045)                 if(I2CHW_1_bReadI2CStatus() & I2CHW_WR_COMPLETE ||
     0A3E: 10       PUSH  X
-    0A3F: 50 00    MOV   A,0x0
-    0A41: 08       PUSH  A
-    0A42: 50 40    MOV   A,0x40
-    0A44: 08       PUSH  A
-    0A45: 50 00    MOV   A,0x0
-    0A47: 08       PUSH  A
-    0A48: 50 4B    MOV   A,0x4B
-    0A4A: 08       PUSH  A
-    0A4B: 50 00    MOV   A,0x0
-    0A4D: 08       PUSH  A
-    0A4E: 7C 06 34 LCALL 0x0634
-    0A51: 38 FB    ADD   SP,0xFB
-    0A53: 20       POP   X
-(0045)         while(!(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE));
-    0A54: 10       PUSH  X
-    0A55: 7C 09 D0 LCALL 0x09D0
-    0A58: 62 D0 00 MOV   REG[0xD0],0x0
-    0A5B: 20       POP   X
-    0A5C: 53 A9    MOV   [__r0],A
-    0A5E: 47 A9 04 TST   [__r0],0x4
-    0A61: AF F2    JZ    0x0A54
-(0046)         I2CHW_1_ClrRdStatus();
-    0A63: 10       PUSH  X
-    0A64: 7C 09 D6 LCALL 0x09D6
-    0A67: 20       POP   X
-(0047) 
-(0048)         while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
-    0A68: 10       PUSH  X
-    0A69: 7C 04 43 LCALL 0x0443
-    0A6C: 62 D0 00 MOV   REG[0xD0],0x0
-    0A6F: 20       POP   X
-    0A70: 53 A9    MOV   [__r0],A
-    0A72: 47 A9 10 TST   [__r0],0x10
-    0A75: AF F2    JZ    0x0A68
-(0049)         UART_1_PutString(buf_rx);
-    0A77: 10       PUSH  X
-    0A78: 50 00    MOV   A,0x0
-    0A7A: 08       PUSH  A
-    0A7B: 50 4B    MOV   A,0x4B
-    0A7D: 5C       MOV   X,A
-    0A7E: 18       POP   A
-    0A7F: 7C 04 E1 LCALL 0x04E1
-    0A82: 20       POP   X
-(0050)     }
-    0A83: 8F 90    JMP   0x0A14
-    0A85: 8F FF    JMP   0x0A85
-(0051) }
-(0052) 
-(0053) 
-(0054) #pragma interrupt_handler INT_UART_RX
-(0055) void INT_UART_RX(void){
+    0A3F: 7C 09 D0 LCALL 0x09D0
+    0A42: 62 D0 00 MOV   REG[0xD0],0x0
+    0A45: 20       POP   X
+    0A46: 53 A9    MOV   [__r0],A
+    0A48: 47 A9 40 TST   [__r0],0x40
+    0A4B: B0 37    JNZ   0x0A83
+    0A4D: 62 D0 00 MOV   REG[0xD0],0x0
+    0A50: 51 AB    MOV   A,[wait_count+1]
+    0A52: 08       PUSH  A
+    0A53: 51 AA    MOV   A,[wait_count]
+    0A55: 62 D0 00 MOV   REG[0xD0],0x0
+    0A58: 53 A9    MOV   [__r0],A
+    0A5A: 18       POP   A
+    0A5B: 53 A8    MOV   [__r1],A
+    0A5D: 01 01    ADD   A,0x1
+    0A5F: 62 D0 00 MOV   REG[0xD0],0x0
+    0A62: 53 AB    MOV   [wait_count+1],A
+    0A64: 62 D0 00 MOV   REG[0xD0],0x0
+    0A67: 51 A9    MOV   A,[__r0]
+    0A69: 09 00    ADC   A,0x0
+    0A6B: 62 D0 00 MOV   REG[0xD0],0x0
+    0A6E: 53 AA    MOV   [wait_count],A
+    0A70: 62 D0 00 MOV   REG[0xD0],0x0
+    0A73: 50 64    MOV   A,0x64
+    0A75: 12 A8    SUB   A,[__r1]
+    0A77: 51 A9    MOV   A,[__r0]
+    0A79: 31 80    XOR   A,0x80
+    0A7B: 53 9D    MOV   [__rX],A
+    0A7D: 50 80    MOV   A,0x80
+    0A7F: 1A 9D    SBB   A,[__rX]
+    0A81: DF BC    JNC   0x0A3E
+(0046)                    wait_count++ > 100) break;
+(0047)             }
+    0A83: 10       PUSH  X
+    0A84: 7C 09 DD LCALL 0x09DD
+    0A87: 20       POP   X
+(0048)             I2CHW_1_ClrWrStatus();
+(0049)             
+(0050)             I2CHW_1_fReadBytes(slave, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
+    0A88: 10       PUSH  X
+    0A89: 50 00    MOV   A,0x0
+    0A8B: 08       PUSH  A
+    0A8C: 50 40    MOV   A,0x40
+    0A8E: 08       PUSH  A
+    0A8F: 50 00    MOV   A,0x0
+    0A91: 08       PUSH  A
+    0A92: 50 4B    MOV   A,0x4B
+    0A94: 08       PUSH  A
+    0A95: 62 D0 00 MOV   REG[0xD0],0x0
+    0A98: 51 AD    MOV   A,[slave]
+    0A9A: 08       PUSH  A
+    0A9B: 7C 06 34 LCALL 0x0634
+    0A9E: 38 FB    ADD   SP,0xFB
+    0AA0: 20       POP   X
+(0051)             wait_count = 0;
+    0AA1: 62 D0 00 MOV   REG[0xD0],0x0
+    0AA4: 55 AB 00 MOV   [wait_count+1],0x0
+    0AA7: 55 AA 00 MOV   [wait_count],0x0
+(0052)             for(;;){
+(0053)                 if(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE ||
+    0AAA: 10       PUSH  X
+    0AAB: 7C 09 D0 LCALL 0x09D0
+    0AAE: 62 D0 00 MOV   REG[0xD0],0x0
+    0AB1: 20       POP   X
+    0AB2: 53 A9    MOV   [__r0],A
+    0AB4: 47 A9 04 TST   [__r0],0x4
+    0AB7: B0 37    JNZ   0x0AEF
+    0AB9: 62 D0 00 MOV   REG[0xD0],0x0
+    0ABC: 51 AB    MOV   A,[wait_count+1]
+    0ABE: 08       PUSH  A
+    0ABF: 51 AA    MOV   A,[wait_count]
+    0AC1: 62 D0 00 MOV   REG[0xD0],0x0
+    0AC4: 53 A9    MOV   [__r0],A
+    0AC6: 18       POP   A
+    0AC7: 53 A8    MOV   [__r1],A
+    0AC9: 01 01    ADD   A,0x1
+    0ACB: 62 D0 00 MOV   REG[0xD0],0x0
+    0ACE: 53 AB    MOV   [wait_count+1],A
+    0AD0: 62 D0 00 MOV   REG[0xD0],0x0
+    0AD3: 51 A9    MOV   A,[__r0]
+    0AD5: 09 00    ADC   A,0x0
+    0AD7: 62 D0 00 MOV   REG[0xD0],0x0
+    0ADA: 53 AA    MOV   [wait_count],A
+    0ADC: 62 D0 00 MOV   REG[0xD0],0x0
+    0ADF: 50 64    MOV   A,0x64
+    0AE1: 12 A8    SUB   A,[__r1]
+    0AE3: 51 A9    MOV   A,[__r0]
+    0AE5: 31 80    XOR   A,0x80
+    0AE7: 53 9D    MOV   [__rX],A
+    0AE9: 50 80    MOV   A,0x80
+    0AEB: 1A 9D    SBB   A,[__rX]
+    0AED: DF BC    JNC   0x0AAA
+(0054)                    wait_count++ > 100) break;
+(0055)             }
+    0AEF: 10       PUSH  X
+    0AF0: 7C 09 D6 LCALL 0x09D6
+    0AF3: 20       POP   X
+(0056)             I2CHW_1_ClrRdStatus();
+(0057)             
+(0058)             while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
+    0AF4: 10       PUSH  X
+    0AF5: 7C 04 43 LCALL 0x0443
+    0AF8: 62 D0 00 MOV   REG[0xD0],0x0
+    0AFB: 20       POP   X
+    0AFC: 53 A9    MOV   [__r0],A
+    0AFE: 47 A9 10 TST   [__r0],0x10
+    0B01: AF F2    JZ    0x0AF4
+(0059)             UART_1_PutString(buf_rx);
+    0B03: 10       PUSH  X
+    0B04: 50 00    MOV   A,0x0
+    0B06: 08       PUSH  A
+    0B07: 50 4B    MOV   A,0x4B
+    0B09: 5C       MOV   X,A
+    0B0A: 18       POP   A
+    0B0B: 7C 04 E1 LCALL 0x04E1
+    0B0E: 20       POP   X
+(0060)         }
+    0B0F: 62 D0 00 MOV   REG[0xD0],0x0
+    0B12: 76 AD    INC   [slave]
+    0B14: 62 D0 00 MOV   REG[0xD0],0x0
+    0B17: 3C AD 02 CMP   [slave],0x2
+    0B1A: CF 01    JC    0x0A1C
+(0061)     }
+    0B1C: 8E F7    JMP   0x0A14
+    0B1E: 8F FF    JMP   0x0B1E
+(0062) }
+(0063) 
+(0064) 
+(0065) #pragma interrupt_handler INT_UART_RX
+(0066) void INT_UART_RX(void){
 _INT_UART_RX:
   recv_data            --> X+0
-    0A87: 71 C0    OR    F,0xC0
-    0A89: 08       PUSH  A
-    0A8A: 5D D0    MOV   A,REG[0xD0]
-    0A8C: 08       PUSH  A
-    0A8D: 5D D3    MOV   A,REG[0xD3]
-    0A8F: 08       PUSH  A
-    0A90: 5D D4    MOV   A,REG[0xD4]
-    0A92: 08       PUSH  A
-    0A93: 5D D5    MOV   A,REG[0xD5]
-    0A95: 08       PUSH  A
-    0A96: 62 D0 00 MOV   REG[0xD0],0x0
-    0A99: 51 A9    MOV   A,[__r0]
-    0A9B: 08       PUSH  A
-    0A9C: 51 A8    MOV   A,[__r1]
-    0A9E: 08       PUSH  A
-    0A9F: 51 A7    MOV   A,[__r2]
-    0AA1: 08       PUSH  A
-    0AA2: 51 A6    MOV   A,[__r3]
-    0AA4: 08       PUSH  A
-    0AA5: 51 A5    MOV   A,[__r4]
-    0AA7: 08       PUSH  A
-    0AA8: 51 A4    MOV   A,[__r5]
-    0AAA: 08       PUSH  A
-    0AAB: 51 A3    MOV   A,[__r6]
-    0AAD: 08       PUSH  A
-    0AAE: 51 A2    MOV   A,[__r7]
-    0AB0: 08       PUSH  A
-    0AB1: 51 A1    MOV   A,[__r8]
-    0AB3: 08       PUSH  A
-    0AB4: 51 A0    MOV   A,[__r9]
-    0AB6: 08       PUSH  A
-    0AB7: 51 9F    MOV   A,[__r10]
-    0AB9: 08       PUSH  A
-    0ABA: 51 9E    MOV   A,[__r11]
-    0ABC: 08       PUSH  A
-    0ABD: 51 9D    MOV   A,[__rX]
-    0ABF: 08       PUSH  A
-    0AC0: 51 9C    MOV   A,[__rY]
-    0AC2: 08       PUSH  A
-    0AC3: 51 9B    MOV   A,[__rZ]
-    0AC5: 08       PUSH  A
-    0AC6: 10       PUSH  X
-    0AC7: 4F       MOV   X,SP
-    0AC8: 38 03    ADD   SP,0x3
-(0056)     char recv_data;
-(0057)     recv_data = UART_1_cGetChar(); // read UART
-    0ACA: 10       PUSH  X
-    0ACB: 7C 04 AC LCALL 0x04AC
-    0ACE: 62 D0 00 MOV   REG[0xD0],0x0
-    0AD1: 20       POP   X
-    0AD2: 54 00    MOV   [X+0],A
-(0058)     UART_1_PutChar(recv_data); // echo
-    0AD4: 10       PUSH  X
-    0AD5: 52 00    MOV   A,[X+0]
-    0AD7: 7C 04 A4 LCALL 0x04A4
-    0ADA: 20       POP   X
-(0059)     switch(recv_data){
-    0ADB: 52 00    MOV   A,[X+0]
-    0ADD: 54 02    MOV   [X+2],A
-    0ADF: 56 01 00 MOV   [X+1],0x0
-    0AE2: 52 02    MOV   A,[X+2]
-    0AE4: 11 44    SUB   A,0x44
-    0AE6: 62 D0 00 MOV   REG[0xD0],0x0
-    0AE9: 53 9C    MOV   [__rY],A
-    0AEB: 52 01    MOV   A,[X+1]
-    0AED: 31 80    XOR   A,0x80
-    0AEF: 19 80    SBB   A,0x80
-    0AF1: C0 31    JC    0x0B23
-    0AF3: 2A 9C    OR    A,[__rY]
-    0AF5: A0 1E    JZ    0x0B14
-    0AF7: 3D 01 00 CMP   [X+1],0x0
-    0AFA: B0 06    JNZ   0x0B01
-    0AFC: 3D 02 55 CMP   [X+2],0x55
-    0AFF: A0 03    JZ    0x0B03
-    0B01: 80 21    JMP   0x0B23
-(0060)     case 'U':
-(0061)         LED_ON();
-    0B03: 43 08 01 OR    REG[0x8],0x1
-(0062)         UART_1_CPutString("!Up!");
-    0B06: 10       PUSH  X
-    0B07: 50 01    MOV   A,0x1
-    0B09: 08       PUSH  A
-    0B0A: 50 B2    MOV   A,0xB2
-    0B0C: 5C       MOV   X,A
-    0B0D: 18       POP   A
-    0B0E: 7C 05 47 LCALL 0x0547
-    0B11: 20       POP   X
-(0063)         break;
-    0B12: 80 10    JMP   0x0B23
-(0064)     case 'D':
-(0065)         LED_OFF();
-    0B14: 41 08 FE AND   REG[0x8],0xFE
-(0066)         UART_1_CPutString("!Down!");
-    0B17: 10       PUSH  X
-    0B18: 50 01    MOV   A,0x1
-    0B1A: 08       PUSH  A
-    0B1B: 50 AB    MOV   A,0xAB
-    0B1D: 5C       MOV   X,A
-    0B1E: 18       POP   A
-    0B1F: 7C 05 47 LCALL 0x0547
-    0B22: 20       POP   X
-(0067)         break;
-    0B23: 38 FD    ADD   SP,0xFD
-    0B25: 20       POP   X
-    0B26: 62 D0 00 MOV   REG[0xD0],0x0
-    0B29: 18       POP   A
-    0B2A: 53 9B    MOV   [__rZ],A
-    0B2C: 18       POP   A
-    0B2D: 53 9C    MOV   [__rY],A
-    0B2F: 18       POP   A
-    0B30: 53 9D    MOV   [__rX],A
-    0B32: 18       POP   A
-    0B33: 53 9E    MOV   [__r11],A
-    0B35: 18       POP   A
-    0B36: 53 9F    MOV   [__r10],A
-    0B38: 18       POP   A
-    0B39: 53 A0    MOV   [__r9],A
-    0B3B: 18       POP   A
-    0B3C: 53 A1    MOV   [__r8],A
-    0B3E: 18       POP   A
-    0B3F: 53 A2    MOV   [__r7],A
-    0B41: 18       POP   A
-    0B42: 53 A3    MOV   [__r6],A
-    0B44: 18       POP   A
-    0B45: 53 A4    MOV   [__r5],A
-    0B47: 18       POP   A
-    0B48: 53 A5    MOV   [__r4],A
-    0B4A: 18       POP   A
-    0B4B: 53 A6    MOV   [__r3],A
-    0B4D: 18       POP   A
-    0B4E: 53 A7    MOV   [__r2],A
-    0B50: 18       POP   A
-    0B51: 53 A8    MOV   [__r1],A
-    0B53: 18       POP   A
-    0B54: 53 A9    MOV   [__r0],A
-    0B56: 18       POP   A
-    0B57: 60 D5    MOV   REG[0xD5],A
-    0B59: 18       POP   A
-    0B5A: 60 D4    MOV   REG[0xD4],A
-    0B5C: 18       POP   A
-    0B5D: 60 D3    MOV   REG[0xD3],A
-    0B5F: 18       POP   A
-    0B60: 60 D0    MOV   REG[0xD0],A
-    0B62: 18       POP   A
-    0B63: 7E       RETI  
-(0068)     }
-(0069) }
-(0070) 
-(0071) #pragma interrupt_handler INT_GPIO
-(0072) void INT_GPIO(void){
-_INT_GPIO:
-    0B64: 71 C0    OR    F,0xC0
-    0B66: 08       PUSH  A
-    0B67: 5D D0    MOV   A,REG[0xD0]
-    0B69: 08       PUSH  A
-    0B6A: 5D D3    MOV   A,REG[0xD3]
-    0B6C: 08       PUSH  A
-    0B6D: 5D D4    MOV   A,REG[0xD4]
-    0B6F: 08       PUSH  A
-    0B70: 5D D5    MOV   A,REG[0xD5]
-    0B72: 08       PUSH  A
-    0B73: 62 D0 00 MOV   REG[0xD0],0x0
-    0B76: 51 A9    MOV   A,[__r0]
-    0B78: 08       PUSH  A
-    0B79: 51 A8    MOV   A,[__r1]
-    0B7B: 08       PUSH  A
-    0B7C: 51 A7    MOV   A,[__r2]
-    0B7E: 08       PUSH  A
-    0B7F: 51 A6    MOV   A,[__r3]
-    0B81: 08       PUSH  A
-    0B82: 51 A5    MOV   A,[__r4]
-    0B84: 08       PUSH  A
-    0B85: 51 A4    MOV   A,[__r5]
-    0B87: 08       PUSH  A
-    0B88: 51 A3    MOV   A,[__r6]
-    0B8A: 08       PUSH  A
-    0B8B: 51 A2    MOV   A,[__r7]
-    0B8D: 08       PUSH  A
-    0B8E: 51 A1    MOV   A,[__r8]
-    0B90: 08       PUSH  A
-    0B91: 51 A0    MOV   A,[__r9]
-    0B93: 08       PUSH  A
-    0B94: 51 9F    MOV   A,[__r10]
-    0B96: 08       PUSH  A
-    0B97: 51 9E    MOV   A,[__r11]
-    0B99: 08       PUSH  A
-    0B9A: 51 9D    MOV   A,[__rX]
-    0B9C: 08       PUSH  A
-    0B9D: 51 9C    MOV   A,[__rY]
-    0B9F: 08       PUSH  A
-    0BA0: 51 9B    MOV   A,[__rZ]
+    0B20: 71 C0    OR    F,0xC0
+    0B22: 08       PUSH  A
+    0B23: 5D D0    MOV   A,REG[0xD0]
+    0B25: 08       PUSH  A
+    0B26: 5D D3    MOV   A,REG[0xD3]
+    0B28: 08       PUSH  A
+    0B29: 5D D4    MOV   A,REG[0xD4]
+    0B2B: 08       PUSH  A
+    0B2C: 5D D5    MOV   A,REG[0xD5]
+    0B2E: 08       PUSH  A
+    0B2F: 62 D0 00 MOV   REG[0xD0],0x0
+    0B32: 51 A9    MOV   A,[__r0]
+    0B34: 08       PUSH  A
+    0B35: 51 A8    MOV   A,[__r1]
+    0B37: 08       PUSH  A
+    0B38: 51 A7    MOV   A,[__r2]
+    0B3A: 08       PUSH  A
+    0B3B: 51 A6    MOV   A,[__r3]
+    0B3D: 08       PUSH  A
+    0B3E: 51 A5    MOV   A,[__r4]
+    0B40: 08       PUSH  A
+    0B41: 51 A4    MOV   A,[__r5]
+    0B43: 08       PUSH  A
+    0B44: 51 A3    MOV   A,[__r6]
+    0B46: 08       PUSH  A
+    0B47: 51 A2    MOV   A,[__r7]
+    0B49: 08       PUSH  A
+    0B4A: 51 A1    MOV   A,[__r8]
+    0B4C: 08       PUSH  A
+    0B4D: 51 A0    MOV   A,[__r9]
+    0B4F: 08       PUSH  A
+    0B50: 51 9F    MOV   A,[__r10]
+    0B52: 08       PUSH  A
+    0B53: 51 9E    MOV   A,[__r11]
+    0B55: 08       PUSH  A
+    0B56: 51 9D    MOV   A,[__rX]
+    0B58: 08       PUSH  A
+    0B59: 51 9C    MOV   A,[__rY]
+    0B5B: 08       PUSH  A
+    0B5C: 51 9B    MOV   A,[__rZ]
+    0B5E: 08       PUSH  A
+    0B5F: 10       PUSH  X
+    0B60: 4F       MOV   X,SP
+    0B61: 38 03    ADD   SP,0x3
+(0067)     char recv_data;
+(0068)     recv_data = UART_1_cGetChar(); // read UART
+    0B63: 10       PUSH  X
+    0B64: 7C 04 AC LCALL 0x04AC
+    0B67: 62 D0 00 MOV   REG[0xD0],0x0
+    0B6A: 20       POP   X
+    0B6B: 54 00    MOV   [X+0],A
+(0069)     UART_1_PutChar(recv_data); // echo
+    0B6D: 10       PUSH  X
+    0B6E: 52 00    MOV   A,[X+0]
+    0B70: 7C 04 A4 LCALL 0x04A4
+    0B73: 20       POP   X
+(0070)     switch(recv_data){
+    0B74: 52 00    MOV   A,[X+0]
+    0B76: 54 02    MOV   [X+2],A
+    0B78: 56 01 00 MOV   [X+1],0x0
+    0B7B: 52 02    MOV   A,[X+2]
+    0B7D: 11 44    SUB   A,0x44
+    0B7F: 62 D0 00 MOV   REG[0xD0],0x0
+    0B82: 53 9C    MOV   [__rY],A
+    0B84: 52 01    MOV   A,[X+1]
+    0B86: 31 80    XOR   A,0x80
+    0B88: 19 80    SBB   A,0x80
+    0B8A: C0 31    JC    0x0BBC
+    0B8C: 2A 9C    OR    A,[__rY]
+    0B8E: A0 1E    JZ    0x0BAD
+    0B90: 3D 01 00 CMP   [X+1],0x0
+    0B93: B0 06    JNZ   0x0B9A
+    0B95: 3D 02 55 CMP   [X+2],0x55
+    0B98: A0 03    JZ    0x0B9C
+    0B9A: 80 21    JMP   0x0BBC
+(0071)     case 'U':
+(0072)         LED_ON();
+    0B9C: 43 08 01 OR    REG[0x8],0x1
+(0073)         UART_1_CPutString("!Up!");
+    0B9F: 10       PUSH  X
+    0BA0: 50 01    MOV   A,0x1
     0BA2: 08       PUSH  A
-(0073)     if(bit_is_set(SW_PORT, SW_BIT)){
-    0BA3: 5D 08    MOV   A,REG[0x8]
-    0BA5: 62 D0 00 MOV   REG[0xD0],0x0
-    0BA8: 53 A9    MOV   [__r0],A
-    0BAA: 47 A9 04 TST   [__r0],0x4
-    0BAD: A0 12    JZ    0x0BC0
-(0074)     LED_ON();
-    0BAF: 43 08 01 OR    REG[0x8],0x1
-(0075)     UART_1_CPutString("ON\r\n");
-    0BB2: 10       PUSH  X
-    0BB3: 50 01    MOV   A,0x1
-    0BB5: 08       PUSH  A
-    0BB6: 50 A6    MOV   A,0xA6
-    0BB8: 5C       MOV   X,A
-    0BB9: 18       POP   A
-    0BBA: 7C 05 47 LCALL 0x0547
-    0BBD: 20       POP   X
-(0076)   }
-    0BBE: 80 10    JMP   0x0BCF
-(0077)   else{
-(0078)     LED_OFF();
-    0BC0: 41 08 FE AND   REG[0x8],0xFE
-(0079)     UART_1_CPutString("OFF\r\n");
-    0BC3: 10       PUSH  X
-    0BC4: 50 01    MOV   A,0x1
-    0BC6: 08       PUSH  A
-    0BC7: 50 A0    MOV   A,0xA0
-    0BC9: 5C       MOV   X,A
-    0BCA: 18       POP   A
-    0BCB: 7C 05 47 LCALL 0x0547
-    0BCE: 20       POP   X
-(0080)   }
-    0BCF: 62 D0 00 MOV   REG[0xD0],0x0
-    0BD2: 18       POP   A
-    0BD3: 53 9B    MOV   [__rZ],A
-    0BD5: 18       POP   A
-    0BD6: 53 9C    MOV   [__rY],A
-    0BD8: 18       POP   A
-    0BD9: 53 9D    MOV   [__rX],A
-    0BDB: 18       POP   A
-    0BDC: 53 9E    MOV   [__r11],A
-    0BDE: 18       POP   A
-    0BDF: 53 9F    MOV   [__r10],A
-    0BE1: 18       POP   A
-    0BE2: 53 A0    MOV   [__r9],A
-    0BE4: 18       POP   A
-    0BE5: 53 A1    MOV   [__r8],A
-    0BE7: 18       POP   A
-    0BE8: 53 A2    MOV   [__r7],A
-    0BEA: 18       POP   A
-    0BEB: 53 A3    MOV   [__r6],A
-    0BED: 18       POP   A
-    0BEE: 53 A4    MOV   [__r5],A
-    0BF0: 18       POP   A
-    0BF1: 53 A5    MOV   [__r4],A
-    0BF3: 18       POP   A
-    0BF4: 53 A6    MOV   [__r3],A
-    0BF6: 18       POP   A
-    0BF7: 53 A7    MOV   [__r2],A
-    0BF9: 18       POP   A
-    0BFA: 53 A8    MOV   [__r1],A
-    0BFC: 18       POP   A
-    0BFD: 53 A9    MOV   [__r0],A
-    0BFF: 18       POP   A
-    0C00: 60 D5    MOV   REG[0xD5],A
-    0C02: 18       POP   A
-    0C03: 60 D4    MOV   REG[0xD4],A
-    0C05: 18       POP   A
-    0C06: 60 D3    MOV   REG[0xD3],A
-    0C08: 18       POP   A
-    0C09: 60 D0    MOV   REG[0xD0],A
-    0C0B: 18       POP   A
-(0081) }
+    0BA3: 50 B2    MOV   A,0xB2
+    0BA5: 5C       MOV   X,A
+    0BA6: 18       POP   A
+    0BA7: 7C 05 47 LCALL 0x0547
+    0BAA: 20       POP   X
+(0074)         break;
+    0BAB: 80 10    JMP   0x0BBC
+(0075)     case 'D':
+(0076)         LED_OFF();
+    0BAD: 41 08 FE AND   REG[0x8],0xFE
+(0077)         UART_1_CPutString("!Down!");
+    0BB0: 10       PUSH  X
+    0BB1: 50 01    MOV   A,0x1
+    0BB3: 08       PUSH  A
+    0BB4: 50 AB    MOV   A,0xAB
+    0BB6: 5C       MOV   X,A
+    0BB7: 18       POP   A
+    0BB8: 7C 05 47 LCALL 0x0547
+    0BBB: 20       POP   X
+(0078)         break;
+    0BBC: 38 FD    ADD   SP,0xFD
+    0BBE: 20       POP   X
+    0BBF: 62 D0 00 MOV   REG[0xD0],0x0
+    0BC2: 18       POP   A
+    0BC3: 53 9B    MOV   [__rZ],A
+    0BC5: 18       POP   A
+    0BC6: 53 9C    MOV   [__rY],A
+    0BC8: 18       POP   A
+    0BC9: 53 9D    MOV   [__rX],A
+    0BCB: 18       POP   A
+    0BCC: 53 9E    MOV   [__r11],A
+    0BCE: 18       POP   A
+    0BCF: 53 9F    MOV   [__r10],A
+    0BD1: 18       POP   A
+    0BD2: 53 A0    MOV   [__r9],A
+    0BD4: 18       POP   A
+    0BD5: 53 A1    MOV   [__r8],A
+    0BD7: 18       POP   A
+    0BD8: 53 A2    MOV   [__r7],A
+    0BDA: 18       POP   A
+    0BDB: 53 A3    MOV   [__r6],A
+    0BDD: 18       POP   A
+    0BDE: 53 A4    MOV   [__r5],A
+    0BE0: 18       POP   A
+    0BE1: 53 A5    MOV   [__r4],A
+    0BE3: 18       POP   A
+    0BE4: 53 A6    MOV   [__r3],A
+    0BE6: 18       POP   A
+    0BE7: 53 A7    MOV   [__r2],A
+    0BE9: 18       POP   A
+    0BEA: 53 A8    MOV   [__r1],A
+    0BEC: 18       POP   A
+    0BED: 53 A9    MOV   [__r0],A
+    0BEF: 18       POP   A
+    0BF0: 60 D5    MOV   REG[0xD5],A
+    0BF2: 18       POP   A
+    0BF3: 60 D4    MOV   REG[0xD4],A
+    0BF5: 18       POP   A
+    0BF6: 60 D3    MOV   REG[0xD3],A
+    0BF8: 18       POP   A
+    0BF9: 60 D0    MOV   REG[0xD0],A
+    0BFB: 18       POP   A
+    0BFC: 7E       RETI  
+(0079)     }
+(0080) }
+(0081) 
+(0082) #pragma interrupt_handler INT_GPIO
+(0083) void INT_GPIO(void){
+_INT_GPIO:
+    0BFD: 71 C0    OR    F,0xC0
+    0BFF: 08       PUSH  A
+    0C00: 5D D0    MOV   A,REG[0xD0]
+    0C02: 08       PUSH  A
+    0C03: 5D D3    MOV   A,REG[0xD3]
+    0C05: 08       PUSH  A
+    0C06: 5D D4    MOV   A,REG[0xD4]
+    0C08: 08       PUSH  A
+    0C09: 5D D5    MOV   A,REG[0xD5]
+    0C0B: 08       PUSH  A
+    0C0C: 62 D0 00 MOV   REG[0xD0],0x0
+    0C0F: 51 A9    MOV   A,[__r0]
+    0C11: 08       PUSH  A
+    0C12: 51 A8    MOV   A,[__r1]
+    0C14: 08       PUSH  A
+    0C15: 51 A7    MOV   A,[__r2]
+    0C17: 08       PUSH  A
+    0C18: 51 A6    MOV   A,[__r3]
+    0C1A: 08       PUSH  A
+    0C1B: 51 A5    MOV   A,[__r4]
+    0C1D: 08       PUSH  A
+    0C1E: 51 A4    MOV   A,[__r5]
+    0C20: 08       PUSH  A
+    0C21: 51 A3    MOV   A,[__r6]
+    0C23: 08       PUSH  A
+    0C24: 51 A2    MOV   A,[__r7]
+    0C26: 08       PUSH  A
+    0C27: 51 A1    MOV   A,[__r8]
+    0C29: 08       PUSH  A
+    0C2A: 51 A0    MOV   A,[__r9]
+    0C2C: 08       PUSH  A
+    0C2D: 51 9F    MOV   A,[__r10]
+    0C2F: 08       PUSH  A
+    0C30: 51 9E    MOV   A,[__r11]
+    0C32: 08       PUSH  A
+    0C33: 51 9D    MOV   A,[__rX]
+    0C35: 08       PUSH  A
+    0C36: 51 9C    MOV   A,[__rY]
+    0C38: 08       PUSH  A
+    0C39: 51 9B    MOV   A,[__rZ]
+    0C3B: 08       PUSH  A
+(0084)     if(bit_is_set(SW_PORT, SW_BIT)){
+    0C3C: 5D 08    MOV   A,REG[0x8]
+    0C3E: 62 D0 00 MOV   REG[0xD0],0x0
+    0C41: 53 A9    MOV   [__r0],A
+    0C43: 47 A9 04 TST   [__r0],0x4
+    0C46: A0 12    JZ    0x0C59
+(0085)     LED_ON();
+    0C48: 43 08 01 OR    REG[0x8],0x1
+(0086)     UART_1_CPutString("ON\r\n");
+    0C4B: 10       PUSH  X
+    0C4C: 50 01    MOV   A,0x1
+    0C4E: 08       PUSH  A
+    0C4F: 50 A6    MOV   A,0xA6
+    0C51: 5C       MOV   X,A
+    0C52: 18       POP   A
+    0C53: 7C 05 47 LCALL 0x0547
+    0C56: 20       POP   X
+(0087)   }
+    0C57: 80 10    JMP   0x0C68
+(0088)   else{
+(0089)     LED_OFF();
+    0C59: 41 08 FE AND   REG[0x8],0xFE
+(0090)     UART_1_CPutString("OFF\r\n");
+    0C5C: 10       PUSH  X
+    0C5D: 50 01    MOV   A,0x1
+    0C5F: 08       PUSH  A
+    0C60: 50 A0    MOV   A,0xA0
+    0C62: 5C       MOV   X,A
+    0C63: 18       POP   A
+    0C64: 7C 05 47 LCALL 0x0547
+    0C67: 20       POP   X
+(0091)   }
+    0C68: 62 D0 00 MOV   REG[0xD0],0x0
+    0C6B: 18       POP   A
+    0C6C: 53 9B    MOV   [__rZ],A
+    0C6E: 18       POP   A
+    0C6F: 53 9C    MOV   [__rY],A
+    0C71: 18       POP   A
+    0C72: 53 9D    MOV   [__rX],A
+    0C74: 18       POP   A
+    0C75: 53 9E    MOV   [__r11],A
+    0C77: 18       POP   A
+    0C78: 53 9F    MOV   [__r10],A
+    0C7A: 18       POP   A
+    0C7B: 53 A0    MOV   [__r9],A
+    0C7D: 18       POP   A
+    0C7E: 53 A1    MOV   [__r8],A
+    0C80: 18       POP   A
+    0C81: 53 A2    MOV   [__r7],A
+    0C83: 18       POP   A
+    0C84: 53 A3    MOV   [__r6],A
+    0C86: 18       POP   A
+    0C87: 53 A4    MOV   [__r5],A
+    0C89: 18       POP   A
+    0C8A: 53 A5    MOV   [__r4],A
+    0C8C: 18       POP   A
+    0C8D: 53 A6    MOV   [__r3],A
+    0C8F: 18       POP   A
+    0C90: 53 A7    MOV   [__r2],A
+    0C92: 18       POP   A
+    0C93: 53 A8    MOV   [__r1],A
+    0C95: 18       POP   A
+    0C96: 53 A9    MOV   [__r0],A
+    0C98: 18       POP   A
+    0C99: 60 D5    MOV   REG[0xD5],A
+    0C9B: 18       POP   A
+    0C9C: 60 D4    MOV   REG[0xD4],A
+    0C9E: 18       POP   A
+    0C9F: 60 D3    MOV   REG[0xD3],A
+    0CA1: 18       POP   A
+    0CA2: 60 D0    MOV   REG[0xD0],A
+    0CA4: 18       POP   A
+(0092) }
 FILE: lib\psocgpioint.asm
                                         (0001) ; Generated by PSoC Designer 5.0.1127.0
                                         (0002) ;
@@ -6105,14 +6182,14 @@ FILE: lib\psocgpioint.asm
                                         (0058)    ;---------------------------------------------------
                                         (0059) 
 
-0C0D: 7D 0B 64 LJMP  _INT_GPIO          (0060) 	ljmp _INT_GPIO
+0CA6: 7D 0B FD LJMP  _INT_GPIO          (0060) 	ljmp _INT_GPIO
                                         (0061) 
                                         (0062)    ;---------------------------------------------------
                                         (0063)    ; Insert your custom code above this banner
                                         (0064)    ;---------------------------------------------------
                                         (0065)    ;@PSoC_UserCode_END@ (Do not change this line.)
                                         (0066) 
-0C10: 7E       RETI                     (0067)    reti
+0CA9: 7E       RETI                     (0067)    reti
 (0068) 
 (0069) 
 (0070) ; end of file PSoCGPIOINT.asm

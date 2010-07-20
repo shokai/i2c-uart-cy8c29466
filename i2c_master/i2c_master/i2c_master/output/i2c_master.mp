@@ -1,11 +1,11 @@
 Project:      output/i2c_master
 Build Number: 0
-Date:         Tue Jul 20 08:30:40 2010
+Date:         Tue Jul 20 08:41:18 2010
 Compiler:     ICCM8C
 Version:      7.02.004
 
-  ROM 9% full. 2673 out of 32768 bytes used (does not include absolute areas).
-  RAM 10% full. 172 bytes used (does not include stack usage).
+  ROM 9% full. 2826 out of 32768 bytes used (does not include absolute areas).
+  RAM 10% full. 175 bytes used (does not include stack usage).
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -159,17 +159,17 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   09E4   022D =    557. bytes (rel,con,rom)
+                            text   09E4   02C6 =    710. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
        09E4  _main
        09E4  __text_start
-       0A87  _INT_UART_RX
-       0B64  _INT_GPIO
-       0C0D  PSoC_GPIO_ISR
-       0C11  __text_end
-       0C20  __xidata_end
+       0B20  _INT_UART_RX
+       0BFD  _INT_GPIO
+       0CA6  PSoC_GPIO_ISR
+       0CAA  __text_end
+       0CBF  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -249,14 +249,16 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            data   0000   0081 =    129. bytes (rel,con,ram)
+                            data   0000   0084 =    132. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
        0000  __data_start
        000B  _buf_tx
        004B  _buf_rx
-       00AB  _status
+       00AA  _wait_count
+       00AD  _slave
+       00AE  _status
 
 Files Linked      [ module(s) ]
 

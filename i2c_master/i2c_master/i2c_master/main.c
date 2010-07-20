@@ -22,6 +22,8 @@ BYTE buf_tx[BUF_SIZE] = "AB";
 BYTE buf_rx[BUF_SIZE];
 #define SLAVE_ADDR 0
 BYTE status;
+char slave;
+int wait_count;
 
 void main(void)
 {
@@ -35,18 +37,27 @@ void main(void)
     I2CHW_1_Start();
     I2CHW_1_EnableMstr();
     I2CHW_1_EnableInt();
-
     for(;;){
-        I2CHW_1_bWriteBytes(SLAVE_ADDR, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
-        while(!(I2CHW_1_bReadI2CStatus() & I2CHW_WR_COMPLETE));
-        I2CHW_1_ClrWrStatus();
-
-        I2CHW_1_fReadBytes(SLAVE_ADDR, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
-        while(!(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE));
-        I2CHW_1_ClrRdStatus();
-
-        while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
-        UART_1_PutString(buf_rx);
+        for(slave = 0; slave < 2; slave++){
+            I2CHW_1_bWriteBytes(slave, buf_tx, BUF_SIZE, I2CHW_1_CompleteXfer);
+            wait_count = 0;
+            for(;;){
+                if(I2CHW_1_bReadI2CStatus() & I2CHW_WR_COMPLETE ||
+                   wait_count++ > 100) break;
+            }
+            I2CHW_1_ClrWrStatus();
+            
+            I2CHW_1_fReadBytes(slave, buf_rx, BUF_SIZE, I2CHW_1_CompleteXfer);
+            wait_count = 0;
+            for(;;){
+                if(I2CHW_1_bReadI2CStatus() & I2CHW_RD_COMPLETE ||
+                   wait_count++ > 100) break;
+            }
+            I2CHW_1_ClrRdStatus();
+            
+            while(!(UART_1_bReadTxStatus() & UART_1_TX_BUFFER_EMPTY));
+            UART_1_PutString(buf_rx);
+        }
     }
 }
 
