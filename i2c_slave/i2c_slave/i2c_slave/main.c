@@ -18,7 +18,8 @@
 #define SW_BIT _BV(2) // switch
 
 #define BUF_SIZE 8
-BYTE buf[BUF_SIZE];
+BYTE buf_rx[BUF_SIZE];
+BYTE buf_tx[BUF_SIZE] = {'x'};
 BYTE status;
 
 void main(void)
@@ -28,32 +29,30 @@ void main(void)
     I2CHW_1_Start();
     I2CHW_1_EnableSlave();
     I2CHW_1_EnableInt();
-    I2CHW_1_InitRamRead(buf, BUF_SIZE);
-    I2CHW_1_InitWrite(buf, BUF_SIZE);
+    I2CHW_1_InitRamRead(buf_tx, BUF_SIZE);
+    I2CHW_1_InitWrite(buf_rx, BUF_SIZE);
 
     for(;;){
         status = I2CHW_1_bReadI2CStatus();
         if(status & I2CHW_WR_COMPLETE){
             I2CHW_1_ClrWrStatus();
-            buf[2] = 'C';
-            I2CHW_1_InitWrite(buf, BUF_SIZE);
-            LED_ON();
+            I2CHW_1_InitWrite(buf_rx, BUF_SIZE);
         }
         if(status & I2CHW_RD_COMPLETE){
             I2CHW_1_ClrRdStatus();
-            I2CHW_1_InitRamRead(buf, BUF_SIZE);
-            LED_OFF();
+            I2CHW_1_InitRamRead(buf_tx, BUF_SIZE);
         }
+        if(buf_rx[0] == 'A') LED_ON();
+        else if(buf_rx[0] == 'B') LED_OFF();
     }
 }
 
 #pragma interrupt_handler INT_GPIO
 void INT_GPIO(void){
-    if(bit_is_set(SW_PORT, SW_BIT)){
-        LED_ON();
+    if(bit_is_set(SW_PORT, SW_BIT)){ // ƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚¢‚éŽž
+        buf_tx[0] = 'd'; // ‰Ÿ‰º‚ðmaster‚É’Ê’m
     }
     else{
-        LED_OFF();
+        buf_tx[0] = 'u';
     }
 }
-

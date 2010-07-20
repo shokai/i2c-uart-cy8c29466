@@ -12,15 +12,30 @@
 				<SOURCE_FILE NAME="flashsecurity.txt" TYPE="TextFile" LANGUAGE="" OVERLAY_NAME=""/>
 				<SOURCE_FILE NAME="memory.inc" TYPE="UserIncludeFile" LANGUAGE="ASM" OVERLAY_NAME="" USER_FILE="FALSE"/>
 				<SOURCE_FILE NAME="i2chw_1int.asm" TYPE="LibrarySource" LANGUAGE="ASM" OVERLAY_NAME="" FILEMODTIME="42696" LIBTIME="33161216" USER_FILE="FALSE"/>
-				
-				
-				
-				
-				
-				
-				
 				<SOURCE_FILE NAME="psocapi.h" TYPE="LibraryIncludeFile" LANGUAGE="C" OVERLAY_NAME="" FILEMODTIME="33161216" LIBTIME="0" USER_FILE="FALSE"/>
 				<SOURCE_FILE NAME="psocapi.inc" TYPE="LibraryIncludeFile" LANGUAGE="ASM" OVERLAY_NAME="" FILEMODTIME="33161216" LIBTIME="0" USER_FILE="FALSE"/>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 				
 				
 				
@@ -48,7 +63,6 @@
 			</LIB_FILE_LIST>
 		</FILE_LIST>
 		<BUILD_SETTINGS>
-			
 			<BUILD COMPILER="IMAGECRAFT" INCLUDE_PATH="C:\PROGRA~1\Cypress\Common\CYPRES~3\tools\include\CY8C29~1"/>
 		</BUILD_SETTINGS>
 		<MISC>
@@ -63,15 +77,6 @@
 		</MISC>
 	</APPLICATION>
 	<PROJECT_SETTINGS>
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		<SECTION SECTION_NAME="Linker Settings" VENDOR="CypressPro" LIB_PATH="" LIBS="" RELOC_ADDR_START="416" OPTIONS=""/>
 		<SECTION SECTION_NAME="Linker Settings" VENDOR="HI-TECH" LIB_PATH="" LIBS="" OPTIONS=""/>
 		<SECTION SECTION_NAME="Linker Settings" VENDOR="IMAGECRAFT"/>

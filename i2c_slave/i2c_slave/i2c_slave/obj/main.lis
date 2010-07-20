@@ -2,11 +2,21 @@
                         .module main.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000           _buf_tx::
+ 0000 78                .byte 'x
+ 0001 00000000000000    .byte 0,0,0,0,0,0,0
+ 0008                   .dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
+ 0008                   .dbsym e buf_tx _buf_tx A[8:8]c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
+                        .area text(rom, con, rel)
  0000                   .dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
  0000                   .dbfunc e main _main fV
  0000           _main::
  0000                   .dbline -1
- 0000                   .dbline 25
+ 0000                   .dbline 26
  0000           ; // I2C-UART slave
  0000           ; // CY8C29466-24PXI(DIP Package)
  0000           ; // PSoC Designer 5.0 + SP6
@@ -27,185 +37,195 @@
  0000           ; #define SW_BIT _BV(2) // switch
  0000           ; 
  0000           ; #define BUF_SIZE 8
- 0000           ; BYTE buf[BUF_SIZE];
+ 0000           ; BYTE buf_rx[BUF_SIZE];
+ 0000           ; BYTE buf_tx[BUF_SIZE] = {'x'};
  0000           ; BYTE status;
  0000           ; 
  0000           ; void main(void)
  0000           ; {
- 0000                   .dbline 26
+ 0000                   .dbline 27
  0000           ;     M8C_EnableGInt;
  0000 7101                      or  F, 01h
  0002           
- 0002                   .dbline 27
+ 0002                   .dbline 28
  0002           ;     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
  0002 43E020            or REG[0xe0],32
- 0005                   .dbline 28
+ 0005                   .dbline 29
  0005           ;     I2CHW_1_Start();
  0005 10                push X
  0006 7C0000            xcall _I2CHW_1_Start
- 0009                   .dbline 29
+ 0009                   .dbline 30
  0009           ;     I2CHW_1_EnableSlave();
  0009 7C0000            xcall _I2CHW_1_EnableSlave
- 000C                   .dbline 30
+ 000C                   .dbline 31
  000C           ;     I2CHW_1_EnableInt();
  000C 7C0000            xcall _I2CHW_1_EnableInt
  000F 20                pop X
- 0010                   .dbline 31
- 0010           ;     I2CHW_1_InitRamRead(buf, BUF_SIZE);
+ 0010                   .dbline 32
+ 0010           ;     I2CHW_1_InitRamRead(buf_tx, BUF_SIZE);
  0010 10                push X
  0011 5008              mov A,8
  0013 08                push A
- 0014 5000              mov A,>_buf
+ 0014 5000              mov A,>_buf_tx
  0016 08                push A
- 0017 5000              mov A,<_buf
+ 0017 5000              mov A,<_buf_tx
  0019 08                push A
  001A 7C0000            xcall _I2CHW_1_InitRamRead
  001D 38FD              add SP,-3
  001F 20                pop X
- 0020                   .dbline 32
- 0020           ;     I2CHW_1_InitWrite(buf, BUF_SIZE);
+ 0020                   .dbline 33
+ 0020           ;     I2CHW_1_InitWrite(buf_rx, BUF_SIZE);
  0020 10                push X
  0021 5008              mov A,8
  0023 08                push A
- 0024 5000              mov A,>_buf
+ 0024 5000              mov A,>_buf_rx
  0026 08                push A
- 0027 5000              mov A,<_buf
+ 0027 5000              mov A,<_buf_rx
  0029 08                push A
  002A 7C0000            xcall _I2CHW_1_InitWrite
  002D 38FD              add SP,-3
  002F 20                pop X
- 0030                   .dbline 34
+ 0030                   .dbline 35
  0030           ; 
  0030           ;     for(;;){
  0030           L2:
- 0030                   .dbline 34
  0030                   .dbline 35
+ 0030                   .dbline 36
  0030           ;         status = I2CHW_1_bReadI2CStatus();
  0030 10                push X
  0031 7C0000            xcall _I2CHW_1_bReadI2CStatus
  0034 20                pop X
  0035 62D000            mov REG[0xd0],>_status
  0038 5300              mov [_status],A
- 003A                   .dbline 36
+ 003A                   .dbline 37
  003A           ;         if(status & I2CHW_WR_COMPLETE){
  003A 470040            tst [_status],64
- 003D A01F              jz L6
- 003F                   .dbline 36
+ 003D A016              jz L6
  003F                   .dbline 37
+ 003F                   .dbline 38
  003F           ;             I2CHW_1_ClrWrStatus();
  003F 10                push X
  0040 7C0000            xcall _I2CHW_1_ClrWrStatus
  0043 20                pop X
- 0044                   .dbline 38
- 0044           ;             buf[2] = 'C';
- 0044 62D000            mov REG[0xd0],>_buf
- 0047 550243            mov [_buf+2],67
- 004A                   .dbline 39
- 004A           ;             I2CHW_1_InitWrite(buf, BUF_SIZE);
- 004A 10                push X
- 004B 5008              mov A,8
+ 0044                   .dbline 39
+ 0044           ;             I2CHW_1_InitWrite(buf_rx, BUF_SIZE);
+ 0044 10                push X
+ 0045 5008              mov A,8
+ 0047 08                push A
+ 0048 5000              mov A,>_buf_rx
+ 004A 08                push A
+ 004B 5000              mov A,<_buf_rx
  004D 08                push A
- 004E 5000              mov A,>_buf
- 0050 08                push A
- 0051 5000              mov A,<_buf
- 0053 08                push A
- 0054 7C0000            xcall _I2CHW_1_InitWrite
- 0057 38FD              add SP,-3
- 0059 20                pop X
- 005A                   .dbline 40
- 005A           ;             LED_ON();
- 005A 430801            or REG[0x8],1
- 005D                   .dbline 41
- 005D           ;         }
- 005D           L6:
- 005D                   .dbline 42
- 005D           ;         if(status & I2CHW_RD_COMPLETE){
- 005D 62D000            mov REG[0xd0],>_status
- 0060 470004            tst [_status],4
- 0063 AFCC              jz L2
- 0065                   .dbline 42
- 0065                   .dbline 43
- 0065           ;             I2CHW_1_ClrRdStatus();
- 0065 10                push X
- 0066 7C0000            xcall _I2CHW_1_ClrRdStatus
- 0069 20                pop X
- 006A                   .dbline 44
- 006A           ;             I2CHW_1_InitRamRead(buf, BUF_SIZE);
- 006A 10                push X
- 006B 5008              mov A,8
- 006D 08                push A
- 006E 5000              mov A,>_buf
- 0070 08                push A
- 0071 5000              mov A,<_buf
- 0073 08                push A
- 0074 7C0000            xcall _I2CHW_1_InitRamRead
- 0077 38FD              add SP,-3
- 0079 20                pop X
- 007A                   .dbline 45
- 007A           ;             LED_OFF();
- 007A 4108FE            and REG[0x8],-2
- 007D                   .dbline 46
- 007D           ;         }
- 007D                   .dbline 47
- 007D           ;     }
- 007D                   .dbline 34
- 007D                   .dbline 34
- 007D 8FB2              xjmp L2
- 007F           X0:
- 007F                   .dbline -2
- 007F           L1:
- 007F                   .dbline 0 ; func end
- 007F 8FFF              jmp .
- 0081                   .dbend
- 0081                   .dbfunc e INT_GPIO _INT_GPIO fV
- 0081           _INT_GPIO::
- 0081                   .dbline -1
- 0081 71C0              or F,-64
- 0083 08                push A
- 0084 5DD0              mov A,REG[0xd0]
- 0086 08                push A
- 0087 62D000            mov REG[0xd0],>__r0
- 008A 5100              mov A,[__r0]
- 008C 08                push A
- 008D                   .dbline 51
- 008D           ; }
- 008D           ; 
- 008D           ; #pragma interrupt_handler INT_GPIO
- 008D           ; void INT_GPIO(void){
- 008D                   .dbline 52
- 008D           ;     if(bit_is_set(SW_PORT, SW_BIT)){
- 008D 5D08              mov A,REG[0x8]
- 008F 62D000            mov REG[0xd0],>__r0
- 0092 5300              mov [__r0],A
- 0094 470004            tst [__r0],4
- 0097 A006              jz L12
+ 004E 7C0000            xcall _I2CHW_1_InitWrite
+ 0051 38FD              add SP,-3
+ 0053 20                pop X
+ 0054                   .dbline 40
+ 0054           ;         }
+ 0054           L6:
+ 0054                   .dbline 41
+ 0054           ;         if(status & I2CHW_RD_COMPLETE){
+ 0054 62D000            mov REG[0xd0],>_status
+ 0057 470004            tst [_status],4
+ 005A A016              jz L8
+ 005C                   .dbline 41
+ 005C                   .dbline 42
+ 005C           ;             I2CHW_1_ClrRdStatus();
+ 005C 10                push X
+ 005D 7C0000            xcall _I2CHW_1_ClrRdStatus
+ 0060 20                pop X
+ 0061                   .dbline 43
+ 0061           ;             I2CHW_1_InitRamRead(buf_tx, BUF_SIZE);
+ 0061 10                push X
+ 0062 5008              mov A,8
+ 0064 08                push A
+ 0065 5000              mov A,>_buf_tx
+ 0067 08                push A
+ 0068 5000              mov A,<_buf_tx
+ 006A 08                push A
+ 006B 7C0000            xcall _I2CHW_1_InitRamRead
+ 006E 38FD              add SP,-3
+ 0070 20                pop X
+ 0071                   .dbline 44
+ 0071           ;         }
+ 0071           L8:
+ 0071                   .dbline 45
+ 0071           ;         if(buf_rx[0] == 'A') LED_ON();
+ 0071 62D000            mov REG[0xd0],>_buf_rx
+ 0074 3C0041            cmp [_buf_rx],65
+ 0077 B006              jnz L10
+ 0079                   .dbline 45
+ 0079 430801            or REG[0x8],1
+ 007C 8FB3              xjmp L2
+ 007E           L10:
+ 007E                   .dbline 46
+ 007E           ;         else if(buf_rx[0] == 'B') LED_OFF();
+ 007E 62D000            mov REG[0xd0],>_buf_rx
+ 0081 3C0042            cmp [_buf_rx],66
+ 0084 BFAB              jnz L2
+ 0086                   .dbline 46
+ 0086 4108FE            and REG[0x8],-2
+ 0089                   .dbline 47
+ 0089           ;     }
+ 0089                   .dbline 35
+ 0089                   .dbline 35
+ 0089 8FA6              xjmp L2
+ 008B           X0:
+ 008B                   .dbline -2
+ 008B           L1:
+ 008B                   .dbline 0 ; func end
+ 008B 8FFF              jmp .
+ 008D                   .dbend
+ 008D                   .dbfunc e INT_GPIO _INT_GPIO fV
+ 008D           _INT_GPIO::
+ 008D                   .dbline -1
+ 008D 71C0              or F,-64
+ 008F 08                push A
+ 0090 5DD0              mov A,REG[0xd0]
+ 0092 08                push A
+ 0093 62D000            mov REG[0xd0],>__r0
+ 0096 5100              mov A,[__r0]
+ 0098 08                push A
+ 0099                   .dbline 51
+ 0099           ; }
+ 0099           ; 
+ 0099           ; #pragma interrupt_handler INT_GPIO
+ 0099           ; void INT_GPIO(void){
  0099                   .dbline 52
- 0099                   .dbline 53
- 0099           ;         LED_ON();
- 0099 430801            or REG[0x8],1
- 009C                   .dbline 54
- 009C           ;     }
- 009C 8004              xjmp L13
- 009E           L12:
- 009E                   .dbline 55
- 009E           ;     else{
- 009E                   .dbline 56
- 009E           ;         LED_OFF();
- 009E 4108FE            and REG[0x8],-2
- 00A1                   .dbline 57
- 00A1           ;     }
- 00A1           L13:
- 00A1                   .dbline -2
- 00A1           L11:
- 00A1 62D000            mov REG[0xD0],>__r0
- 00A4 18                pop A
- 00A5 5300              mov [__r0],A
- 00A7 18                pop A
- 00A8 60D0              mov REG[208],A
- 00AA 18                pop A
- 00AB                   .dbline 0 ; func end
- 00AB 7E                reti
- 00AC                   .dbend
+ 0099           ;     if(bit_is_set(SW_PORT, SW_BIT)){ // ƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚¢‚éŽž
+ 0099 5D08              mov A,REG[0x8]
+ 009B 62D000            mov REG[0xd0],>__r0
+ 009E 5300              mov [__r0],A
+ 00A0 470004            tst [__r0],4
+ 00A3 A009              jz L15
+ 00A5                   .dbline 52
+ 00A5                   .dbline 53
+ 00A5           ;         buf_tx[0] = 'd'; // ‰Ÿ‰º‚ðmaster‚É’Ê’m
+ 00A5 62D000            mov REG[0xd0],>_buf_tx
+ 00A8 550064            mov [_buf_tx],100
+ 00AB                   .dbline 54
+ 00AB           ;     }
+ 00AB 8007              xjmp L16
+ 00AD           L15:
+ 00AD                   .dbline 55
+ 00AD           ;     else{
+ 00AD                   .dbline 56
+ 00AD           ;         buf_tx[0] = 'u';
+ 00AD 62D000            mov REG[0xd0],>_buf_tx
+ 00B0 550075            mov [_buf_tx],117
+ 00B3                   .dbline 57
+ 00B3           ;     }
+ 00B3           L16:
+ 00B3                   .dbline -2
+ 00B3           L14:
+ 00B3 62D000            mov REG[0xD0],>__r0
+ 00B6 18                pop A
+ 00B7 5300              mov [__r0],A
+ 00B9 18                pop A
+ 00BA 60D0              mov REG[208],A
+ 00BC 18                pop A
+ 00BD                   .dbline 0 ; func end
+ 00BD 7E                reti
+ 00BE                   .dbend
                         .area data(ram, con, rel)
  0000                   .dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
  0000           _status::
@@ -213,6 +233,6 @@
  0001                   .dbsym e status _status c
                         .area data(ram, con, rel)
  0000                   .dbfile C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
- 0000           _buf::
+ 0000           _buf_rx::
  0000 0000000000000000  .byte 0,0,0,0,0,0,0,0
- 0008                   .dbsym e buf _buf A[8:8]c
+ 0008                   .dbsym e buf_rx _buf_rx A[8:8]c

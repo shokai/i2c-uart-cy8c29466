@@ -159,7 +159,7 @@ FILE: .\boot.asm
 0019: 30       HALT                     
 001A: 30       HALT                     
 001B: 30       HALT                     
-001C: 7D 05 DF LJMP  PSoC_GPIO_ISR      (0141)     ljmp	PSoC_GPIO_ISR
+001C: 7D 05 F1 LJMP  PSoC_GPIO_ISR      (0141)     ljmp	PSoC_GPIO_ISR
 001F: 7E       RETI                     (0142)     reti
                                         (0143) 
                                         (0144)     org   20h                      ;PSoC Block DBB00 Interrupt Vector
@@ -366,8 +366,8 @@ FILE: .\boot.asm
                                         (0294)  ENDIF
                                         (0295) ENDIF ; 3.3 Volt Operation
                                         (0296) 
-0081: 55 F8 00 MOV   [status+230],0x0   (0297)     mov  [bSSC_KEY1],  0           ; Lock out Flash and Supervisiory operations
-0084: 55 F9 00 MOV   [status+231],0x0   (0298)     mov  [bSSC_KEYSP], 0
+0081: 55 F8 00 MOV   [status+222],0x0   (0297)     mov  [bSSC_KEY1],  0           ; Lock out Flash and Supervisiory operations
+0084: 55 F9 00 MOV   [status+223],0x0   (0298)     mov  [bSSC_KEYSP], 0
                                         (0299) 
                                         (0300)     ;---------------------------------------
                                         (0301)     ; Initialize Crystal Oscillator and PLL
@@ -526,13 +526,13 @@ FILE: .\boot.asm
 00B9: 57 FF    MOV   X,0xFF             (0454)     mov   X, <__pXIData                ;   pointer to the xidata area.
 00BB: 08       PUSH  A                  (0455)     push  A
 00BC: 28       ROMX                     (0456)     romx                               ; get the MSB of xidata's address
-00BD: 53 11    MOV   [__r0],A           (0457)     mov   [__r0], A
+00BD: 53 19    MOV   [__r0],A           (0457)     mov   [__r0], A
 00BF: 18       POP   A                  (0458)     pop   A
 00C0: 75       INC   X                  (0459)     inc   X
 00C1: 09 00    ADC   A,0x0              (0460)     adc   A, 0
 00C3: 28       ROMX                     (0461)     romx                               ; get the LSB of xidata's address
 00C4: 4B       SWAP  A,X                (0462)     swap  A, X
-00C5: 51 11    MOV   A,[__r0]           (0463)     mov   A, [__r0]                    ; pXIData (in [A,X]) points to the
+00C5: 51 19    MOV   A,[__r0]           (0463)     mov   A, [__r0]                    ; pXIData (in [A,X]) points to the
                                         (0464)                                        ;   XIData structure list in flash
 00C7: 80 04    JMP   0x00CC             (0465)     jmp   .AccessStruct
                                         (0466) 
@@ -569,14 +569,14 @@ FILE: .\boot.asm
 00D8: 09 00    ADC   A,0x0              (0497)     adc   A, 0
 00DA: 08       PUSH  A                  (0498)     push  A
 00DB: 28       ROMX                     (0499)     romx                               ; LSB of RAM addr (CPU.A <- *pXIData)
-00DC: 53 11    MOV   [__r0],A           (0500)     mov   [__r0], A                    ; RAM Addr now in [reg[MVW_PP],[__r0]]
+00DC: 53 19    MOV   [__r0],A           (0500)     mov   [__r0], A                    ; RAM Addr now in [reg[MVW_PP],[__r0]]
 00DE: 18       POP   A                  (0501)     pop   A                            ; restore pXIData to [A,X]
 00DF: 75       INC   X                  (0502)     inc   X                            ; pXIData++ (point to size)
 00E0: 09 00    ADC   A,0x0              (0503)     adc   A, 0
 00E2: 08       PUSH  A                  (0504)     push  A
 00E3: 28       ROMX                     (0505)     romx                               ; Get the size (CPU.A <- *pXIData)
 00E4: A0 1C    JZ    0x0101             (0506)     jz    .ClearRAMBlockToZero         ; If Size==0, then go clear RAM
-00E6: 53 10    MOV   [__r1],A           (0507)     mov   [__r1], A                    ;             else downcount in __r1
+00E6: 53 18    MOV   [__r1],A           (0507)     mov   [__r1], A                    ;             else downcount in __r1
 00E8: 18       POP   A                  (0508)     pop   A                            ; restore pXIData to [A,X]
                                         (0509) 
                                         (0510) .CopyNextByteLoop:
@@ -589,15 +589,15 @@ FILE: .\boot.asm
 00EA: 09 00    ADC   A,0x0              (0517)     adc   A, 0
 00EC: 08       PUSH  A                  (0518)     push  A
 00ED: 28       ROMX                     (0519)     romx                               ; Get the data value (CPU.A <- *pXIData)
-00EE: 3F 11    MVI   [__r0],A           (0520)     mvi   [__r0], A                    ; Transfer the data to RAM
-00F0: 47 11 FF TST   [__r0],0xFF        (0521)     tst   [__r0], 0xff                 ; Check for page crossing
+00EE: 3F 19    MVI   [__r0],A           (0520)     mvi   [__r0], A                    ; Transfer the data to RAM
+00F0: 47 19 FF TST   [__r0],0xFF        (0521)     tst   [__r0], 0xff                 ; Check for page crossing
 00F3: B0 06    JNZ   0x00FA             (0522)     jnz   .CopyLoopTail                ;   No crossing, keep going
 00F5: 5D D5    MOV   A,REG[0xD5]        (0523)     mov   A, reg[ MVW_PP]              ;   If crossing, bump MVW page reg
 00F7: 74       INC   A                  (0524)     inc   A
 00F8: 60 D5    MOV   REG[0xD5],A        (0525)     mov   reg[ MVW_PP], A
                                         (0526) .CopyLoopTail:
 00FA: 18       POP   A                  (0527)     pop   A                            ; restore pXIData to [A,X]
-00FB: 7A 10    DEC   [__r1]             (0528)     dec   [__r1]                       ; End of this array in flash?
+00FB: 7A 18    DEC   [__r1]             (0528)     dec   [__r1]                       ; End of this array in flash?
 00FD: BF EB    JNZ   0x00E9             (0529)     jnz   .CopyNextByteLoop            ;   No,  more bytes to copy
 00FF: 8F C9    JMP   0x00C9             (0530)     jmp   .AccessNextStructLoop        ;   Yes, initialize another RAM block
                                         (0531) 
@@ -607,22 +607,22 @@ FILE: .\boot.asm
 0103: 09 00    ADC   A,0x0              (0535)     adc   A, 0
 0105: 08       PUSH  A                  (0536)     push  A
 0106: 28       ROMX                     (0537)     romx                               ; Get the run length (CPU.A <- *pXIData)
-0107: 53 10    MOV   [__r1],A           (0538)     mov   [__r1], A                    ; Initialize downcounter
+0107: 53 18    MOV   [__r1],A           (0538)     mov   [__r1], A                    ; Initialize downcounter
 0109: 50 00    MOV   A,0x0              (0539)     mov   A, 0                         ; Initialize source data
                                         (0540) 
                                         (0541) .ClearRAMBlockLoop:
                                         (0542)     ; Assert: [reg[MVW_PP],[__r0]] points to next RAM destination and
                                         (0543)     ;         __r1 holds a non-zero count of the number of bytes remaining.
                                         (0544)     ;
-010B: 3F 11    MVI   [__r0],A           (0545)     mvi   [__r0], A                    ; Clear a byte
-010D: 47 11 FF TST   [__r0],0xFF        (0546)     tst   [__r0], 0xff                 ; Check for page crossing
+010B: 3F 19    MVI   [__r0],A           (0545)     mvi   [__r0], A                    ; Clear a byte
+010D: 47 19 FF TST   [__r0],0xFF        (0546)     tst   [__r0], 0xff                 ; Check for page crossing
 0110: B0 08    JNZ   0x0119             (0547)     jnz   .ClearLoopTail               ;   No crossing, keep going
 0112: 5D D5    MOV   A,REG[0xD5]        (0548)     mov   A, reg[ MVW_PP]              ;   If crossing, bump MVW page reg
 0114: 74       INC   A                  (0549)     inc   A
 0115: 60 D5    MOV   REG[0xD5],A        (0550)     mov   reg[ MVW_PP], A
 0117: 50 00    MOV   A,0x0              (0551)     mov   A, 0                         ; Restore the zero used for clearing
                                         (0552) .ClearLoopTail:
-0119: 7A 10    DEC   [__r1]             (0553)     dec   [__r1]                       ; Was this the last byte?
+0119: 7A 18    DEC   [__r1]             (0553)     dec   [__r1]                       ; Was this the last byte?
 011B: BF EF    JNZ   0x010B             (0554)     jnz   .ClearRAMBlockLoop           ;   No,  continue
 011D: 18       POP   A                  (0555)     pop   A                            ;   Yes, restore pXIData to [A,X] and
 011E: 8F AA    JMP   0x00C9             (0556)     jmp   .AccessNextStructLoop        ;        initialize another RAM block
@@ -1917,7 +1917,7 @@ FILE: lib\i2chw_1int.asm
 0434: 6D       RRC   A                  (0430)     rrc A                                                            ;carry now holds bit 0 (r/~w) from addr byte
                                         (0431) IF (I2CHW_1_AUTO_ADDR_CHECK^1)   ;; for CY8C28X45 chip: skip address comparison and NACK sending stage-hardware will do this for us  if AutoAddressCompare feature is enabled.
                                         (0432)                                           ;; The code in this pre-compiler directive will be executed for all chips except CY8C28X45.
-0435: 31 00    XOR   A,0x0              (0433)     xor A,  I2CHW_1_SLAVE_ADDR                                       ;for an equate
+0435: 31 01    XOR   A,0x1              (0433)     xor A,  I2CHW_1_SLAVE_ADDR                                       ;for an equate
 0437: B0 4E    JNZ   0x0486             (0434)     jnz I2C_Terminate
                                         (0435) ENDIF
 0439: 2E 01 80 OR    [0x1],0x80         (0436)     or [I2CHW_1_RsrcStatus], I2CHW_ISR_ACTIVE
@@ -2599,36 +2599,37 @@ FILE: C:\src\psoc\CY8C29~1\designer\i2c-uart\I2C_SL~1\I2C_SL~1\I2C_SL~1\main.c
 (0018) #define SW_BIT _BV(2) // switch
 (0019) 
 (0020) #define BUF_SIZE 8
-(0021) BYTE buf[BUF_SIZE];
-(0022) BYTE status;
-(0023) 
-(0024) void main(void)
+(0021) BYTE buf_rx[BUF_SIZE];
+(0022) BYTE buf_tx[BUF_SIZE] = {'x'};
+(0023) BYTE status;
+(0024) 
+(0025) void main(void)
 _main|__text_start|_main:
     0533: 71 01    OR    F,0x1
-(0025) {
-(0026)     M8C_EnableGInt;
-(0027)     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
+(0026) {
+(0027)     M8C_EnableGInt;
+(0028)     M8C_EnableIntMask(INT_MSK0, INT_MSK0_GPIO);
     0535: 43 E0 20 OR    REG[0xE0],0x20
-(0028)     I2CHW_1_Start();
+(0029)     I2CHW_1_Start();
     0538: 10       PUSH  X
     0539: 7C 03 63 LCALL 0x0363
-(0029)     I2CHW_1_EnableSlave();
+(0030)     I2CHW_1_EnableSlave();
     053C: 7C 03 8C LCALL 0x038C
-(0030)     I2CHW_1_EnableInt();
+(0031)     I2CHW_1_EnableInt();
     053F: 7C 03 67 LCALL 0x0367
     0542: 20       POP   X
-(0031)     I2CHW_1_InitRamRead(buf, BUF_SIZE);
+(0032)     I2CHW_1_InitRamRead(buf_tx, BUF_SIZE);
     0543: 10       PUSH  X
     0544: 50 08    MOV   A,0x8
     0546: 08       PUSH  A
     0547: 50 00    MOV   A,0x0
     0549: 08       PUSH  A
-    054A: 50 08    MOV   A,0x8
+    054A: 50 10    MOV   A,0x10
     054C: 08       PUSH  A
     054D: 7C 04 F1 LCALL 0x04F1
     0550: 38 FD    ADD   SP,0xFD
     0552: 20       POP   X
-(0032)     I2CHW_1_InitWrite(buf, BUF_SIZE);
+(0033)     I2CHW_1_InitWrite(buf_rx, BUF_SIZE);
     0553: 10       PUSH  X
     0554: 50 08    MOV   A,0x8
     0556: 08       PUSH  A
@@ -2639,97 +2640,102 @@ _main|__text_start|_main:
     055D: 7C 04 B3 LCALL 0x04B3
     0560: 38 FD    ADD   SP,0xFD
     0562: 20       POP   X
-(0033) 
-(0034)     for(;;){
-(0035)         status = I2CHW_1_bReadI2CStatus();
+(0034) 
+(0035)     for(;;){
+(0036)         status = I2CHW_1_bReadI2CStatus();
     0563: 10       PUSH  X
     0564: 7C 05 1F LCALL 0x051F
     0567: 20       POP   X
     0568: 62 D0 00 MOV   REG[0xD0],0x0
-    056B: 53 12    MOV   [status],A
-(0036)         if(status & I2CHW_WR_COMPLETE){
-    056D: 47 12 40 TST   [status],0x40
-    0570: A0 1F    JZ    0x0590
-(0037)             I2CHW_1_ClrWrStatus();
+    056B: 53 1A    MOV   [status],A
+(0037)         if(status & I2CHW_WR_COMPLETE){
+    056D: 47 1A 40 TST   [status],0x40
+    0570: A0 16    JZ    0x0587
+(0038)             I2CHW_1_ClrWrStatus();
     0572: 10       PUSH  X
     0573: 7C 05 2C LCALL 0x052C
     0576: 20       POP   X
-(0038)             buf[2] = 'C';
-    0577: 62 D0 00 MOV   REG[0xD0],0x0
-    057A: 55 0A 43 MOV   [buf+2],0x43
-(0039)             I2CHW_1_InitWrite(buf, BUF_SIZE);
-    057D: 10       PUSH  X
+(0039)             I2CHW_1_InitWrite(buf_rx, BUF_SIZE);
+    0577: 10       PUSH  X
+    0578: 50 08    MOV   A,0x8
+    057A: 08       PUSH  A
+    057B: 50 00    MOV   A,0x0
+    057D: 08       PUSH  A
     057E: 50 08    MOV   A,0x8
     0580: 08       PUSH  A
-    0581: 50 00    MOV   A,0x0
-    0583: 08       PUSH  A
-    0584: 50 08    MOV   A,0x8
-    0586: 08       PUSH  A
-    0587: 7C 04 B3 LCALL 0x04B3
-    058A: 38 FD    ADD   SP,0xFD
-    058C: 20       POP   X
-(0040)             LED_ON();
-    058D: 43 08 01 OR    REG[0x8],0x1
-(0041)         }
-(0042)         if(status & I2CHW_RD_COMPLETE){
-    0590: 62 D0 00 MOV   REG[0xD0],0x0
-    0593: 47 12 04 TST   [status],0x4
-    0596: AF CC    JZ    0x0563
-(0043)             I2CHW_1_ClrRdStatus();
-    0598: 10       PUSH  X
-    0599: 7C 05 25 LCALL 0x0525
-    059C: 20       POP   X
-(0044)             I2CHW_1_InitRamRead(buf, BUF_SIZE);
-    059D: 10       PUSH  X
-    059E: 50 08    MOV   A,0x8
-    05A0: 08       PUSH  A
-    05A1: 50 00    MOV   A,0x0
-    05A3: 08       PUSH  A
-    05A4: 50 08    MOV   A,0x8
-    05A6: 08       PUSH  A
-    05A7: 7C 04 F1 LCALL 0x04F1
-    05AA: 38 FD    ADD   SP,0xFD
-    05AC: 20       POP   X
-(0045)             LED_OFF();
-    05AD: 41 08 FE AND   REG[0x8],0xFE
-(0046)         }
+    0581: 7C 04 B3 LCALL 0x04B3
+    0584: 38 FD    ADD   SP,0xFD
+    0586: 20       POP   X
+(0040)         }
+(0041)         if(status & I2CHW_RD_COMPLETE){
+    0587: 62 D0 00 MOV   REG[0xD0],0x0
+    058A: 47 1A 04 TST   [status],0x4
+    058D: A0 16    JZ    0x05A4
+(0042)             I2CHW_1_ClrRdStatus();
+    058F: 10       PUSH  X
+    0590: 7C 05 25 LCALL 0x0525
+    0593: 20       POP   X
+(0043)             I2CHW_1_InitRamRead(buf_tx, BUF_SIZE);
+    0594: 10       PUSH  X
+    0595: 50 08    MOV   A,0x8
+    0597: 08       PUSH  A
+    0598: 50 00    MOV   A,0x0
+    059A: 08       PUSH  A
+    059B: 50 10    MOV   A,0x10
+    059D: 08       PUSH  A
+    059E: 7C 04 F1 LCALL 0x04F1
+    05A1: 38 FD    ADD   SP,0xFD
+    05A3: 20       POP   X
+(0044)         }
+(0045)         if(buf_rx[0] == 'A') LED_ON();
+    05A4: 62 D0 00 MOV   REG[0xD0],0x0
+    05A7: 3C 08 41 CMP   [buf_rx],0x41
+    05AA: B0 06    JNZ   0x05B1
+    05AC: 43 08 01 OR    REG[0x8],0x1
+    05AF: 8F B3    JMP   0x0563
+(0046)         else if(buf_rx[0] == 'B') LED_OFF();
+    05B1: 62 D0 00 MOV   REG[0xD0],0x0
+    05B4: 3C 08 42 CMP   [buf_rx],0x42
+    05B7: BF AB    JNZ   0x0563
+    05B9: 41 08 FE AND   REG[0x8],0xFE
 (0047)     }
-    05B0: 8F B2    JMP   0x0563
-    05B2: 8F FF    JMP   0x05B2
+    05BC: 8F A6    JMP   0x0563
+    05BE: 8F FF    JMP   0x05BE
 (0048) }
 (0049) 
 (0050) #pragma interrupt_handler INT_GPIO
 (0051) void INT_GPIO(void){
 _INT_GPIO:
-    05B4: 71 C0    OR    F,0xC0
-    05B6: 08       PUSH  A
-    05B7: 5D D0    MOV   A,REG[0xD0]
-    05B9: 08       PUSH  A
-    05BA: 62 D0 00 MOV   REG[0xD0],0x0
-    05BD: 51 11    MOV   A,[__r0]
-    05BF: 08       PUSH  A
-(0052)     if(bit_is_set(SW_PORT, SW_BIT)){
-    05C0: 5D 08    MOV   A,REG[0x8]
-    05C2: 62 D0 00 MOV   REG[0xD0],0x0
-    05C5: 53 11    MOV   [__r0],A
-    05C7: 47 11 04 TST   [__r0],0x4
-    05CA: A0 06    JZ    0x05D1
-(0053)         LED_ON();
-    05CC: 43 08 01 OR    REG[0x8],0x1
+    05C0: 71 C0    OR    F,0xC0
+    05C2: 08       PUSH  A
+    05C3: 5D D0    MOV   A,REG[0xD0]
+    05C5: 08       PUSH  A
+    05C6: 62 D0 00 MOV   REG[0xD0],0x0
+    05C9: 51 19    MOV   A,[__r0]
+    05CB: 08       PUSH  A
+(0052)     if(bit_is_set(SW_PORT, SW_BIT)){ // ƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚¢‚éŽž
+    05CC: 5D 08    MOV   A,REG[0x8]
+    05CE: 62 D0 00 MOV   REG[0xD0],0x0
+    05D1: 53 19    MOV   [__r0],A
+    05D3: 47 19 04 TST   [__r0],0x4
+    05D6: A0 09    JZ    0x05E0
+(0053)         buf_tx[0] = 'd'; // ‰Ÿ‰º‚ðmaster‚É’Ê’m
+    05D8: 62 D0 00 MOV   REG[0xD0],0x0
+    05DB: 55 10 64 MOV   [buf_tx],0x64
 (0054)     }
-    05CF: 80 04    JMP   0x05D4
+    05DE: 80 07    JMP   0x05E6
 (0055)     else{
-(0056)         LED_OFF();
-    05D1: 41 08 FE AND   REG[0x8],0xFE
+(0056)         buf_tx[0] = 'u';
+    05E0: 62 D0 00 MOV   REG[0xD0],0x0
+    05E3: 55 10 75 MOV   [buf_tx],0x75
 (0057)     }
-    05D4: 62 D0 00 MOV   REG[0xD0],0x0
-    05D7: 18       POP   A
-    05D8: 53 11    MOV   [__r0],A
-    05DA: 18       POP   A
-    05DB: 60 D0    MOV   REG[0xD0],A
-    05DD: 18       POP   A
+    05E6: 62 D0 00 MOV   REG[0xD0],0x0
+    05E9: 18       POP   A
+    05EA: 53 19    MOV   [__r0],A
+    05EC: 18       POP   A
+    05ED: 60 D0    MOV   REG[0xD0],A
+    05EF: 18       POP   A
 (0058) }
-(0059) 
 FILE: lib\psocgpioint.asm
                                         (0001) ; Generated by PSoC Designer 5.0.1127.0
                                         (0002) ;
@@ -2791,14 +2797,14 @@ FILE: lib\psocgpioint.asm
                                         (0058)    ;---------------------------------------------------
                                         (0059)    
 
-05DF: 7D 05 B4 LJMP  _INT_GPIO          (0060)    ljmp _INT_GPIO
+05F1: 7D 05 C0 LJMP  _INT_GPIO          (0060)    ljmp _INT_GPIO
                                         (0061) 
                                         (0062)    ;---------------------------------------------------
                                         (0063)    ; Insert your custom code above this banner
                                         (0064)    ;---------------------------------------------------
                                         (0065)    ;@PSoC_UserCode_END@ (Do not change this line.)
                                         (0066) 
-05E2: 7E       RETI                     (0067)    reti
+05F4: 7E       RETI                     (0067)    reti
 (0068) 
 (0069) 
 (0070) ; end of file PSoCGPIOINT.asm

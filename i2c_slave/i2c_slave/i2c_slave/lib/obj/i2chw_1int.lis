@@ -998,7 +998,7 @@
  0000                 REG_RESTORE IDX_PP
  0000                 REG_RESTORE CUR_PP
  0000              ENDIF
- 0000           I2CHW_1_SLAVE_ADDR:                         equ        0h     ;     Permanent Slave Address
+ 0001           I2CHW_1_SLAVE_ADDR:                         equ        1h     ;     Permanent Slave Address
  0000           I2CHW_1_USED_I2C_BLOCK:                equ   0                       ;CY8C28X45 have 0 for I2C Controller_0 and 1 for I2C Controller_1, other have 0
  0000           
  0000           I2CHW_1_ADDR_REG_PRESENT:                   equ   0                  ;CY8C28X45 have 1 always while all other have 0
@@ -1810,7 +1810,7 @@
  0098 6D            rrc A                                                            ;carry now holds bit 0 (r/~w) from addr byte
                 IF (I2CHW_1_AUTO_ADDR_CHECK^1)   ;; for CY8C28X45 chip: skip address comparison and NACK sending stage-hardware will do this for us  if AutoAddressCompare feature is enabled.
                                                           ;; The code in this pre-compiler directive will be executed for all chips except CY8C28X45.
- 0099 3100          xor A,  I2CHW_1_SLAVE_ADDR                                       ;for an equate
+ 0099 3101          xor A,  I2CHW_1_SLAVE_ADDR                                       ;for an equate
  009B B04E          jnz I2C_Terminate
                 ENDIF
  009D 2E0180        or [I2CHW_1_RsrcStatus], I2CHW_ISR_ACTIVE

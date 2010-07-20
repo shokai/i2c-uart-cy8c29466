@@ -1,11 +1,11 @@
 Project:      output/i2c_slave
 Build Number: 0
-Date:         Tue Jul 20 06:56:37 2010
+Date:         Tue Jul 20 16:19:34 2010
 Compiler:     ICCM8C
 Version:      7.02.004
 
-  ROM 4% full. 1091 out of 32768 bytes used (does not include absolute areas).
-  RAM 2% full. 19 bytes used (does not include stack usage).
+  ROM 4% full. 1109 out of 32768 bytes used (does not include absolute areas).
+  RAM 2% full. 27 bytes used (does not include stack usage).
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -84,16 +84,16 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   0533   00B0 =    176. bytes (rel,con,rom)
+                            text   0533   00C2 =    194. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
        0533  _main
        0533  __text_start
-       05B4  _INT_GPIO
-       05DF  PSoC_GPIO_ISR
-       05E3  __text_end
-       05ED  __xidata_end
+       05C0  _INT_GPIO
+       05F1  PSoC_GPIO_ISR
+       05F5  __text_end
+       0607  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -136,22 +136,23 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-               virtual_registers   0010   0002 =      2. bytes (rel,con,ram)
+               virtual_registers   0018   0002 =      2. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
-       0010  __r1
-       0011  __r0
+       0018  __r1
+       0019  __r0
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            data   0000   0009 =      9. bytes (rel,con,ram)
+                            data   0000   0011 =     17. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
        0000  __data_start
-       0008  _buf
-       0012  _status
+       0008  _buf_rx
+       0010  _buf_tx
+       001A  _status
 
 Files Linked      [ module(s) ]
 
@@ -165,6 +166,6 @@ Area Definitions
 -blit:0x1a0.0x7fff
 -bdata:0.0x6ff
 -BInterruptRAM:0	allocated at: 0
--Bvirtual_registers	allocated at: 0x10
+-Bvirtual_registers	allocated at: 0x18
 -Bi2c_slave_RAM
 
